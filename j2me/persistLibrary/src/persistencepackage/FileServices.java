@@ -27,14 +27,34 @@ public class FileServices {
         
         FileConnection fci = (FileConnection)Connector.open(correctURL(path1),Connector.READ);
         InputStream is = (InputStream)fci.openInputStream();
-        
+        String cad;
         int datum;
         
         try{
             while (true) {
                 datum = is.read();
                 if (datum!=-1){
-                    cadena = cadena + "" + (char)datum;
+                    switch (datum){
+                        case '…':
+                        case '\u0085':
+                            cad = "...";
+                            break;
+                        case '“':
+                        case '”':
+                        case '\u0093':
+                        case '\u0094':
+                            cad = "\"";
+                            break;
+                        case '’':
+                        case '\u0092':
+                            cad = "'";
+                            break;
+                        default:
+                            cad = "" + (char)datum;
+                            break;   
+                                
+                    }
+                   cadena = cadena + cad; 
                 }else{
                     break;
                 }
@@ -69,8 +89,8 @@ public class FileServices {
                 /* Intento de escritura. */
 
                 try{
-                    c = javax.microedition.io.Connector.open(FileServices.correctURL(path), javax.microedition.io.Connector.WRITE, true); 
-                    javax.microedition.io.file.FileConnection fc = (javax.microedition.io.file.FileConnection) c; 
+                    c = Connector.open(FileServices.correctURL(path), Connector.READ_WRITE); 
+                    FileConnection fc = (FileConnection) c; 
                     if (!fc.exists()) 
                         fc.create(); 
                     else 
@@ -90,6 +110,7 @@ public class FileServices {
                         os.close(); 
                     if (c != null) 
                         c.close(); 
+                    
                     if (fl!=null)
                         fl.writeOperationReady(id, path, true);
                     

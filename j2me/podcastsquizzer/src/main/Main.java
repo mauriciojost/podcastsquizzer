@@ -58,7 +58,6 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         playerForm = new PlayerForm(
                 this.getDisplay(), 
                 this.getForm(), 
-                new Tuple("English", "Explanation", "Examples"), 
                 parser);                    /* Creating a new PlayerForm. */
         
         try {
@@ -192,7 +191,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public Form getForm() {
         if (form == null) {//GEN-END:|14-getter|0|14-preInit
             // write pre-init user code here
-            form = new Form("PodcastsQuizzer by M. Jost", new Item[] { getGlossaryItem(), getListeningItem(), getOtherItem() });//GEN-BEGIN:|14-getter|1|14-postInit
+            form = new Form("PodcastsQuizzer by M. Jost", new Item[] { getListeningItem(), getGlossaryItem(), getOtherItem() });//GEN-BEGIN:|14-getter|1|14-postInit
             form.addCommand(getExitCommand());
             form.addCommand(getBrowseGlossaryCommand());
             form.addCommand(getPlayerCommand());
@@ -304,7 +303,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public StringItem getOtherItem() {
         if (otherItem == null) {//GEN-END:|30-getter|0|30-preInit
             // write pre-init user code here
-            otherItem = new StringItem("Other File", "");//GEN-BEGIN:|30-getter|1|30-postInit
+            otherItem = new StringItem("Transcript File", "");//GEN-BEGIN:|30-getter|1|30-postInit
             otherItem.setFont(getSmallFont());//GEN-END:|30-getter|1|30-postInit
             // write post-init user code here
         }//GEN-BEGIN:|30-getter|2|
@@ -369,9 +368,9 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             if (path != null){
                 try {
                     text = FileServices.readTXTFile(path);
-                    this.glossaryItem.setText("TXT file successfully loaded: '"+path+"'.");
+                    this.glossaryItem.setText("OK: TXT file successfully loaded ('"+path+"').");
                 } catch (Exception ex) {
-                    this.glossaryItem.setText("Cannot load TXT file: '"+path+"'. " + ex.getMessage());
+                    this.glossaryItem.setText("CANNOT load TXT file ('"+path+"'). " + ex.getMessage());
                 }
                 vector = this.parser.txt2vector(text);
                 //this.ts.setIterator(new SequentialIterator(vector));
@@ -384,14 +383,14 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                     String txtPath = "";
                     String traPath = "";
                     MediaServices.getMediaServices().load(path);
-                    this.listeningItem.setText("MP3 file successfully loaded ("+path+").");
+                    this.listeningItem.setText("OK: MP3 file successfully loaded ("+path+").");
                     this.lastfilepath = path;
                     txtPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + ".txt";
                     traPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + "_.txt";
                     this.browserReady("Glossary", txtPath);
                     this.browserReady("Transcript", traPath);
                 }catch(Exception e){
-                    this.listeningItem.setText("Cannot load MP3 file: '" + path + "'. "+ e.getMessage());
+                    this.listeningItem.setText("CANNOT load MP3 file ('" + path + "'). "+ e.getMessage());
                 }
             }
         }
@@ -402,9 +401,9 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             if (path != null){
                 try {
                     text = FileServices.readTXTFile(path);
-                    this.otherItem.setText("Transcript file successfully loaded ("+path+").");
+                    this.otherItem.setText("OK: Transcript file successfully loaded ('"+path+"').");
                 } catch (Exception ex) {
-                    this.otherItem.setText("Cannot load transcript file: '" + path + "'. "+ ex.getMessage());
+                    this.otherItem.setText("CANNOT load transcript file ('" + path + "'). "+ ex.getMessage());
                 }
                 vector = this.parser.txt2vector(text);
                 this.playerForm.setTranscript(vector);

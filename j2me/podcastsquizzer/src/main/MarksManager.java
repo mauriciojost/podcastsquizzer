@@ -67,24 +67,34 @@ public class MarksManager implements FileActionListener{
         return tuple;
     }
     
-    public Tuple getNext() throws Exception{
-        
+    public Tuple getNext(boolean move) throws Exception{
+        int cti = currentTupleIndex;
         if (marksVector!=null) {
             marksVector.trimToSize();
-            this.currentTupleIndex = (this.currentTupleIndex + 1) % marksVector.size();
-            return (Tuple)marksVector.elementAt(this.currentTupleIndex);
+            cti = (cti + 1) % marksVector.size();
+            
+            if (move){
+                currentTupleIndex = cti;
+            }
+            
+            return (Tuple)marksVector.elementAt(cti);
         }
         return new Tuple("","");
     }
     
-    public Tuple getPrevious() throws Exception{
+    public Tuple getPrevious(boolean move) throws Exception{
+        int cti = currentTupleIndex;
         if (marksVector!=null) {
             marksVector.trimToSize();
-            this.currentTupleIndex = (this.currentTupleIndex - 1);
-            if (this.currentTupleIndex<0){
-                this.currentTupleIndex = marksVector.size()-1;
+            
+            cti = (cti - 1);
+            if (cti<0){
+                cti = marksVector.size()-1;
             }
-            return (Tuple)marksVector.elementAt(this.currentTupleIndex);
+            if (move) {
+                this.currentTupleIndex = cti;
+            }
+            return (Tuple)marksVector.elementAt(cti);
         }
         return new Tuple("","");
     }

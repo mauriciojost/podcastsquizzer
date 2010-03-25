@@ -75,7 +75,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     private boolean showInstructions = false;   
     //</editor-fold>
     
-    public PlayerForm (Display display, Displayable previous, Tuple names, Parser parser) {
+    public PlayerForm (Display display, Displayable previous, Parser parser) {
         //<editor-fold defaultstate="collapsed" desc=" General Initialization ">
         int border = 10;
         
@@ -84,12 +84,12 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         
         this.textPainter = new TextPainter(font, new Rectangle(border,border,this.getWidth()-(border*2), this.getHeight()-(border*2)));
         MediaServices.getMediaServices().setPlayerListener(this);
-        this.setNames(names);
         //this.iterator = new SequentialIterator(txtpath);
         this.tupleRevelator = new TupleRevelator(this);
         
         this.parser = parser;
         this.marksManager = new MarksManager(parser);
+        this.changeMode(true);
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc=" Visual Thread (100ms) ">
         new Thread(
@@ -187,8 +187,21 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         this.repaint();
     }
 
-    private void changeMode() {
-       this.mode = (mode+1)%MODES_NUMBER;
+    private String changeMode(boolean initialize) {
+        if (initialize) {
+            this.mode = 0;
+        }else{
+            this.mode = (mode+1)%MODES_NUMBER;
+        }
+        switch(mode){
+            case MODE_TUPLES:   this.namesTuple = new Tuple("Expression","Explanation","Examples"); break;
+            case MODE_ANIMATED: this.namesTuple = new Tuple("Text","Comment","Time"); break;
+            case MODE_MARKS:    this.namesTuple = new Tuple("Coming: listen->*key","Current","Past"); break;
+            default:
+                break;
+        }
+        this.valuesTuple = new Tuple("","","");
+        return PlayerForm.modeName[this.mode];
     }
 
     /** 
@@ -266,6 +279,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     }
       
     private void modeMarksKeyPressed(int keyCode){
+        this.tupleRevelator.setMode(TupleRevelator.MODE_ALL);
         if (keyCode>0){
             switch(keyCode){
                 
@@ -294,17 +308,31 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                 case '7':
                     try {
                         this.putTitle("PREVIOUS MARK", 1);
-                        this.tupleRevelator.setTuple(marksManager.getPrevious());
+                        
+                        Tuple tupleScreen;
+                        String curr = marksManager.getPrevious(true).getKey();  // Retroceder y obtener el nuevo actual.
+                        String next = marksManager.getNext(false).getKey();     // Obtener el próximo (sin avance).
+                        String prev = marksManager.getPrevious(false).getKey(); // Obtener el previo (sin retroceso).
+                        
+                        tupleScreen = new Tuple( next,curr,prev);
+                        
+                        this.tupleRevelator.setTuple(tupleScreen);
                     } catch (Exception ex) {
                         this.putTitle("MARK ERROR", 1);
                     }
                     break;
                 case '8':
                     try {
-                        this.putTitle("APPLIED MARK", 1);
-                        this.tupleRevelator.setTuple(marksManager.getCurrent());
+                        Tuple tupleScreen;
+                        this.putTitle("APPLIED MARK " + this.timeText, 1);
+                        
+                        String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
                         marksManager.applyTimeToCurrentMark(MediaServices.getMediaServices().getPositionSeconds());
-                        this.tupleRevelator.setTuple(marksManager.getNext());
+                        String next = marksManager.getNext(false).getKey();     // Obtener el próximo (sin avance).
+                        String prev = marksManager.getPrevious(false).getKey(); // Obtener el previo (sin retroceso).
+                        
+                        tupleScreen = new Tuple( next,curr,prev);
+                        this.tupleRevelator.setTuple(tupleScreen);
                     } catch (Exception ex) {
                         this.putTitle("MARK ERROR", 1);
                     }
@@ -312,7 +340,15 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                 case '9':
                     try {
                         this.putTitle("NEXT MARK", 1);
-                        this.tupleRevelator.setTuple(marksManager.getNext());
+                        
+                        Tuple tupleScreen;
+                        String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
+                        String next = marksManager.getNext(false).getKey();     // Obtener el próximo (sin avance).
+                        String prev = marksManager.getPrevious(false).getKey(); // Obtener el previo (sin retroceso).
+                        
+                        tupleScreen = new Tuple( next,curr,prev);
+                        
+                        this.tupleRevelator.setTuple(tupleScreen);
                     } catch (Exception ex) {
                         this.putTitle("MARK ERROR", 1);
                     }
@@ -329,6 +365,10 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     private void modeAnimatedKeyPressed(int keyCode){
         if (keyCode>0){
             switch(keyCode){
+                case '8':
+                    this.putTitle("REVELATION MODE", 1);
+                    this.tupleRevelator.nextMode();
+                    break;
                 default:
                     modeDefaultKeyPressed(keyCode);
                     break;
@@ -346,8 +386,8 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     goPreviousForm();
                     break;
                 case '#':
-                    this.changeMode();
-                    this.putTitle("MODE CHANGED", 1);
+                    String mn = this.changeMode(false);
+                    this.putTitle("MODE " + mn, 1);
                     break;
                 case '0':
                     this.putTitle("SHOW/HIDE INSTR.", 1);
@@ -356,7 +396,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                 
                     
                 case '1':
-                    this.putTitle("REWIND", 1);
+                    this.putTitle("REWIND "+ this.timeText, 1);
                     MediaServices.getMediaServices().goBack(); 
                     break;
                 case '2':
@@ -368,7 +408,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     }
                     break;
                 case '3':
-                    this.putTitle("FORWARD", 1);
+                    this.putTitle("FORWARD " + this.timeText, 1);
                     MediaServices.getMediaServices().goForward(); 
                     break;
                     
@@ -420,7 +460,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         long current;
         Tuple t;
         
-        current = pl.getMediaTime()/MediaServices.TIME_FACTOR;
+        current = Math.max(0, (pl.getMediaTime()/MediaServices.TIME_FACTOR)+1); /* 1 segundo de anticipación */
         this.setTimeText(current, pl.getDuration()/MediaServices.TIME_FACTOR);    
         
         if (this.mode == PlayerForm.MODE_ANIMATED){
@@ -434,9 +474,9 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         
     }
     
-    public void setNames(Tuple names) {
+    /*public void setNames(Tuple names) {
         this.namesTuple = names;
-    }
+    }*/
     public void setValues(Tuple values) {
         this.valuesTuple = values;
     }

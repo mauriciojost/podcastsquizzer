@@ -59,7 +59,7 @@
                     <Property name="commands" typeID="1C#CommandEventSource" value="A4:3_R193_R223_R243_R28"/>
                     <Property name="title" typeID="Pjava.lang.String" value="VPodcastsQuizzer by M. Jost"/>
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
-                    <Property name="items" typeID="1Cjavax.microedition.lcdui.Item" value="A3:3_R163_R293_R30"/>
+                    <Property name="items" typeID="1Cjavax.microedition.lcdui.Item" value="A3:3_R293_R163_R30"/>
                     <Component componentID="16" typeID="Cjavax.microedition.lcdui.StringItem">
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VglossaryItem"/>
                         <Property name="label" typeID="Pjava.lang.String" value="VGlossary File"/>
@@ -97,7 +97,7 @@
                     </Component>
                     <Component componentID="30" typeID="Cjavax.microedition.lcdui.StringItem">
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VotherItem"/>
-                        <Property name="label" typeID="Pjava.lang.String" value="VOther File"/>
+                        <Property name="label" typeID="Pjava.lang.String" value="VTranscript File"/>
                         <Property name="itemCommandListener" typeID="C#ItemCommandListener" value="R17"/>
                         <Property name="text" typeID="Pjava.lang.String" value="V"/>
                         <Property name="font" typeID="Cjavax.microedition.lcdui.Font" value="R31"/>
@@ -115,7 +115,7 @@
         </Component>
     </Document>
     <FlowScene version="1">
-        <Node componentID="14" descriptorID="componentNode14" x="278" y="162"/>
         <Node componentID="2" descriptorID="componentNode2" x="24" y="26"/>
+        <Node componentID="14" descriptorID="componentNode14" x="278" y="162"/>
     </FlowScene>
 </VisualDesign>

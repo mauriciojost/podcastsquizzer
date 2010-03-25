@@ -112,11 +112,13 @@ public class TextPainter {
     public int paintLine(Graphics g, Vector line, int row){
         int basex = 0, max_height=0;
         Word word;
+        
         Enumeration iterator = line.elements();
         while (iterator.hasMoreElements()){
             word = (Word)iterator.nextElement();
             g.setFont(word.getFont());
             max_height = Math.max(max_height, word.getFont().getHeight());
+            
             g.drawString(word.getWord(), bounds.getX()+basex, bounds.getY() + row, Graphics.TOP|Graphics.LEFT);
             basex += word.getWidth();
         }
