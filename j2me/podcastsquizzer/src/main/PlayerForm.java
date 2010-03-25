@@ -13,6 +13,7 @@ import mediaservicespackage.*;
 import persistencepackage.*;
 import tuplesshowerpackage.*;
 import canvaspackage.*;
+import java.io.IOException;
 
 
 /**
@@ -20,6 +21,10 @@ import canvaspackage.*;
  * the listening, add and look for the marks.
  */
 public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerInterface {
+    private static final int MODE_NORMAL = 0;
+    private static final int MODE_MARKS = 1;
+    
+    
     private Font font = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL);
     private Displayable previousDisplayable;
     private Display display;
@@ -68,25 +73,25 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     
     private boolean showMessageTitle = false;
     
+    private int mode = MODE_NORMAL;
+    
+    private MarksManager marksManager;
+    
     public PlayerForm (Display display, Displayable previous, Tuple names, Iterator iterator, Parser parser) {
-        this.display = display;
-        this.previousDisplayable = previous;
-        
         int border = 10;
         
+        this.display = display;
+        this.previousDisplayable = previous;
         Rectangle bounds = new Rectangle(border,border,this.getWidth()-(border*2), this.getHeight()-(border*2));
         this.textPainter = new TextPainter(font, bounds);
-        //this.key2Text = new Key2Text();
-        
         MediaServices.getMediaServices().setPlayerListener(this);
-                
         this.setNames(names);
         this.setIterator(iterator);
         this.tupleRevelator = new TupleRevelator(this);
-        
         this.marksVector = new Vector();
-        
         this.parser = parser;
+        
+        this.marksManager = new MarksManager(parser, marksVector);
         
         new Thread(
         new Runnable() {
@@ -108,7 +113,6 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
             }
         }
         ).start();
-        
     }
     
     public void setListening(String currentListeningPath) throws Exception{
@@ -148,7 +152,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         g.setFont(font);
         
         g.setColor(0x000000);
-        g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        //g.fillRect(0, 0, this.getWidth(), this.getHeight());
         g.setColor(0xFFFFFF);
         g.translate(0, yTranslation);
         textPainter.paintTextComplex(g, buildMainText());        
@@ -156,79 +160,169 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     
     protected void keyPressed(int keyCode) {
         
+        this.putTitle("Not supported (" + keyCode +")", 1);
         
+        if (this.mode==MODE_NORMAL)
+            this.modeTuplesKeyPressed(keyCode);
+        
+        if (this.mode==MODE_MARKS)
+            this.modeMarksKeyPressed(keyCode);
+        
+        
+        this.repaint();
+    }
+
+    private void changeMode() {
+       this.mode = (mode+1)%2;
+    }
+
+    /** 
+     * GENERAL KEYS
+     * ------- ----
+     * RETURN               *
+     * CHANGE MODE          # 
+     * S/HIDE INSTRUCTIONS  0
+     * REWIND               1
+     * PLAY/STOP            2
+     * FORWARD              3
+     * UP   PAGE            LEFT
+     * DOWN PAGE            RIGHT
+     * UP   LINE            UP
+     * DOWN LINE            DOWN
+     * 
+     * MARKS MODE
+     * ----- ----
+     * ADD MARK             4
+     * COMMENT MARK         5
+     * SAVE MARKS           6
+     *                      7
+     *                      8
+     *                      9
+     * 
+     * TUPLES MODE
+     * ------ ----
+     * PREVIOUS TUPLE       4
+     * REVEAL               5
+     * NEXT TUPLE           6
+     *                      7
+     * CHANGE TUPLE MODE    8
+     *                      9
+     * 
+    
+     */
+    private void modeTuplesKeyPressed(int keyCode) {
         if (keyCode>0){
             switch(keyCode){
-                case '0':
-                    showInstructions = !showInstructions; /* Show/hide instructions. */
+                case '4':
+                    if (iterator!=null)
+                        this.tupleRevelator.setTuple(this.iterator.getPrevious());
+                    this.putTitle("PREVIOUS RECORD", 1);
                     break;
-                case '1':
-                    goPreviousForm();
-                    
-                    break;
-                case '2':
-                    this.tupleRevelator.nextMode();
-                    this.putTitle("Next mode", 1);
-                    break;
-                case '3':
-                    this.addMarkNow();
-                    break;
-                case '7':
-                    MediaServices.getMediaServices().goBack(); 
-                    this.putTitle("<<<", 1);
-                    break;
-                case '8':
-                    MediaServices.getMediaServices().playPause(); 
-                    this.putTitle("PLAY/PAUSE", 1);
-                    break;
-                case '9':
-                    MediaServices.getMediaServices().goForward(); 
-                    this.putTitle(">>>", 1);
-                    break;
-                default:
+                case '5': 
+                    this.tupleRevelator.nextRevelation();
+                    this.putTitle("REVEAL", 1);
                     break;
                 case '6':
                     if (iterator!=null)
                         this.tupleRevelator.setTuple(this.iterator.getNext());
-                    this.putTitle("Next tuple", 1);
+                    this.putTitle("NEXT RECORD", 1);
                     break;
+                case '8':
+                    this.tupleRevelator.nextMode();
+                    this.putTitle("REVELATION MODE", 1);
+                    break;
+                default:
+                    modeDefaultKeyPressed(keyCode);
+                    break;
+            }
+        }
+    }
+    private void modeMarksKeyPressed(int keyCode){
+        if (keyCode>0){
+            switch(keyCode){
+                
                 case '4':
-                    if (iterator!=null)
-                        this.tupleRevelator.setTuple(this.iterator.getPrevious());
-                    this.putTitle("Previous tuple", 1);
+                    try{
+                        String mark = marksManager.addMarkNow(MediaServices.getMediaServices().getPositionSeconds());
+                        this.putTitle("MARK: " + mark, 1);
+                    }catch(Exception e){
+                        this.putTitle("ERROR ADDING MARK...",1);
+                    }
                     break;
-                case '5': 
-                    this.tupleRevelator.nextRevelation();
-                    this.putTitle("Reveal", 1);
+                case '5':
+                    /* COMMENT MARK */
+                    break;
+                        
+                case '6': 
+                    try{
+                        marksManager.saveMarks();
+                        this.putTitle("MARKS SAVED", 1);
+                    }catch(IOException e){
+                        this.putTitle("MARKS ERROR", 1);
+                    }
+                    break;    
+                default:
+                    modeDefaultKeyPressed(keyCode);
+                    break;
+            }
+        }
+    }
+    private void modeDefaultKeyPressed(int keyCode){
+        if (keyCode>0){
+            switch(keyCode){
+                
+                case '*':
+                    goPreviousForm();
+                    break;
+                case '#':
+                    this.changeMode();
+                    break;
+                case '0':
+                    showInstructions = !showInstructions; /* Show/hide instructions. */
+                    break;
+                
+                    
+                case '1':
+                    MediaServices.getMediaServices().goBack(); 
+                    this.putTitle("REWIND", 1);
+                    break;
+                case '2':
+                    MediaServices.getMediaServices().playPause(); 
+                    this.putTitle("PLAY/PAUSE", 1);
+                    break;
+                case '3':
+                    MediaServices.getMediaServices().goForward(); 
+                    this.putTitle("FORWARD", 1);
+                    break;
+                    
+                default:
                     break;
             }
         }else{
             switch(this.getGameAction(keyCode)){
                 case PlayerForm.DOWN:
-                    yTranslation -=15;
-                    this.putTitle("Down", 1);
+                    yTranslation -=20;
+                    this.putTitle("DOWN LINE", 1);
                     break;
                 case PlayerForm.UP:
-                    yTranslation +=15;
-                    this.putTitle("Up", 1);
+                    yTranslation +=20;
+                    this.putTitle("UP LINE", 1);
+                    break;
+                    
+                case PlayerForm.RIGHT:
+                    yTranslation -=80;
+                    this.putTitle("DOWN PAGE", 1);
+                    break;
+                case PlayerForm.LEFT:
+                    yTranslation +=80;
+                    this.putTitle("UP PAGE", 1);
                     break;
                 default:
                     break;
             }
         }
-        
-        
-        this.repaint();
-        
-        /*if (keyCode=='1') {
-            display.setCurrent(previousDisplayable);
-        } else {
-            this.mainText = this.key2Text.newKey(keyCode);
-            this.repaint();
-        }*/    
     }
-
-        
+    
     public void setIterator(Iterator iterator) {
         this.iterator = iterator;
     }
@@ -255,43 +349,9 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     public void setValues(Tuple values) {
         this.valuesTuple = values;
     }
-    public void addMarkNow(){
-        String text;
-        long seg;
-        try{
-            seg = MediaServices.getMediaServices().getPositionSeconds();
-            text =  Parser.sec2hours(seg);
-            this.marksVector.addElement(new Tuple(text,"",""));
-            this.putTitle("Mark: " + text, 1);
-        }catch(Exception e){
-            this.putTitle("Error adding mark...",1);
-        }
-        
-    }
     
     private void goPreviousForm(){
-        this.saveMarks();
         display.setCurrent(previousDisplayable); /* Return. */
-    }
-    
-    private void saveMarks(){
-        String text;
-        
-        marksVector.trimToSize();
-        if (marksVector.size()!=0) {
-            text = this.parser.vector2txt(marksVector);
-            try {
-
-                String currentPath = MediaServices.getMediaServices().getCurrentPath();        
-                String newFilePath = FileServices.getDirectory(currentPath) + FileServices.getFilenameWExtensionFromPath(currentPath) + "_.txt";
-
-                FileServices.writeTXTFile(newFilePath, text.getBytes());
-                this.putTitle("Marks saved.", 1);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    
     }
     
     private void putTitle(String title, int seconds){
