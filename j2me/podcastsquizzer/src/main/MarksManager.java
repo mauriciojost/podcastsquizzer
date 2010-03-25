@@ -19,6 +19,7 @@ public class MarksManager {
     private Vector marksVector;
     private TupleFinder tupleFinder;
     private int counter=0;
+    private int currentTupleIndex=-1;
     
     public MarksManager(Parser parser){
         this.parser = parser;
@@ -58,5 +59,47 @@ public class MarksManager {
         text =  Parser.sec2hours(seg);
         tuple = this.tupleFinder.lookFor(new Tuple(null,null,text));
         return tuple;
+    }
+    
+    public Tuple getNext() throws Exception{
+        
+        if (marksVector!=null) {
+            marksVector.trimToSize();
+            this.currentTupleIndex = (this.currentTupleIndex + 1) % marksVector.size();
+            return (Tuple)marksVector.elementAt(this.currentTupleIndex);
+        }
+        return new Tuple("","");
+    }
+    
+    public Tuple getPrevious() throws Exception{
+        if (marksVector!=null) {
+            marksVector.trimToSize();
+            this.currentTupleIndex = (this.currentTupleIndex - 1);
+            if (this.currentTupleIndex<0){
+                this.currentTupleIndex = marksVector.size()-1;
+            }
+            return (Tuple)marksVector.elementAt(this.currentTupleIndex);
+        }
+        return new Tuple("","");
+    }
+    
+    public Tuple getCurrent() throws Exception{
+        if (marksVector!=null) {
+            marksVector.trimToSize();
+            if (this.currentTupleIndex<0){
+                this.currentTupleIndex = 0;
+            }
+            if (this.currentTupleIndex>marksVector.size()-1){
+                this.currentTupleIndex = marksVector.size()-1;
+            }
+            return (Tuple)marksVector.elementAt(this.currentTupleIndex);
+        }
+        return new Tuple("","");
+    }
+    
+    public void applyTimeToCurrentMark(long sec) throws Exception{
+        Tuple t;
+        t = getCurrent();
+        t.setExtra(Parser.sec2hours(sec));
     }
 }

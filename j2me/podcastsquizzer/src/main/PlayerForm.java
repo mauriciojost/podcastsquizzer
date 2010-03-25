@@ -206,9 +206,9 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
      * ADD MARK             4
      * COMMENT MARK         5
      * SAVE MARKS           6
-     *                      7
-     *                      8
-     *                      9
+     * MOVE BACK            7
+     * ADD THIS MARK HERE   8
+     * MOVE FORWARD         9
      * 
      * TUPLES MODE (0)
      * ------ ----
@@ -273,7 +273,33 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     }catch(IOException e){
                         this.putTitle("MARKS ERROR", 3);
                     }
-                    break;    
+                    break;
+                    
+                case '7':
+                    try {
+                        this.putTitle("PREVIOUS MARK", 1);
+                        this.tupleRevelator.setTuple(marksManager.getPrevious());
+                    } catch (Exception ex) {
+                        this.putTitle("MARK ERROR", 1);
+                    }
+                    break;
+                case '8':
+                    try {
+                        this.putTitle("APPLIED MARK", 1);
+                        this.tupleRevelator.setTuple(marksManager.getCurrent());
+                        marksManager.applyTimeToCurrentMark(MediaServices.getMediaServices().getPositionSeconds());
+                    } catch (Exception ex) {
+                        this.putTitle("MARK ERROR", 1);
+                    }
+                    break;
+                case '9':
+                    try {
+                        this.putTitle("NEXT MARK", 1);
+                        this.tupleRevelator.setTuple(marksManager.getNext());
+                    } catch (Exception ex) {
+                        this.putTitle("MARK ERROR", 1);
+                    }
+                    break;
                 default:
                     modeDefaultKeyPressed(keyCode);
                     break;
@@ -389,5 +415,4 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     }
     //</editor-fold>
 }
-
 

@@ -23,11 +23,29 @@ public class Tuple {
         this.extra = extra;
     }
     
+    private void reeplaceChars(String str, String newc, String oldc){
+        str.replace(oldc.charAt(0), newc.charAt(0));
+        /* En el caso de utilizar separadores de más de un caracter traería problemas... */
+    }
+    
+    public void setExtra(String a){
+        this.extra = a;
+    }
+    public void setValue(String a){
+        this.value = a;
+    }
+    public void setKey(String a){
+        this.key = a;
+    }
     public String getExtra(){return extra;}
     public String getValue(){return value;}
     public String getKey(){return key;}
     public String getString(String vseparator, String lseparator){
         String vseparator2 = " " + vseparator + " ";
+        
+        reeplaceChars(extra, vseparator, lseparator);
+        reeplaceChars(key, vseparator, lseparator);
+        reeplaceChars(value, vseparator, lseparator);
         
         if (extra.compareTo("")==0) {
             if (value.compareTo("")==0) {
