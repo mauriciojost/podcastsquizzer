@@ -4,6 +4,7 @@
  * 
  */
 
+
 package main;
 
 
@@ -11,7 +12,6 @@ import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
 import java.util.Vector;
 import mediaservicespackage.*;
-import tuplesshowerpackage.*;
 import browserpackage.*;
 import persistencepackage.*;
 
