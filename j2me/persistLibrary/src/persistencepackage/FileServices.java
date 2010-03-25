@@ -22,7 +22,7 @@ public class FileServices {
         return System.getProperty("fileconn.dir.memorycard");
     }
     
-    public static String readTXTFile(String path1) throws IOException{
+    public static String readTXTFile(String path1) throws Exception{
         String cadena = "";
         
         FileConnection fci = (FileConnection)Connector.open(correctURL(path1),Connector.READ);
@@ -30,53 +30,87 @@ public class FileServices {
         
         int datum;
         
-        while (true) {
-            datum = is.read();
-            if (datum!=-1){
-                cadena = cadena + "" + (char)datum;
-            }else{
-                break;
+        try{
+            while (true) {
+                datum = is.read();
+                if (datum!=-1){
+                    cadena = cadena + "" + (char)datum;
+                }else{
+                    break;
+                }
             }
+
+            is.close();
+        }catch(IOException e){
+            is.close();
+            throw e;
         }
-        
-        is.close();
         return cadena;
         
     }    
     
+    public static boolean writeTXTFile(String pat, byte[] dat) throws Exception { 
+        return writeTXTFile(pat, dat, null, null);
+    }
             
-    public static boolean writeTXTFile(String path, byte[] data) throws IOException { 
+    public static boolean writeTXTFile(String path1, byte[] data1, FileActionListener fl1, String id1) throws Exception { 
         
-        final String path1 = path;
+        final byte[] data = data1;
+        final String path = path1;
+        final String id = id1;
+        final FileActionListener fl = fl1;
         
-        javax.microedition.io.Connection c = null; 
-        java.io.OutputStream os = null; 
+        Runnable runnab = new Runnable() {
+            public void run(){
 
-        /* Intento de escritura. */
-        c = javax.microedition.io.Connector.open(FileServices.correctURL(path1), javax.microedition.io.Connector.READ_WRITE); 
-        javax.microedition.io.file.FileConnection fc = (javax.microedition.io.file.FileConnection) c; 
-        if (!fc.exists()) 
-            fc.create(); 
-        else 
-            fc.truncate(0); 
+                javax.microedition.io.Connection c = null; 
+                java.io.OutputStream os = null; 
 
-        os = fc.openOutputStream(); 
+                /* Intento de escritura. */
+
+                try{
+                    c = javax.microedition.io.Connector.open(FileServices.correctURL(path), javax.microedition.io.Connector.WRITE, true); 
+                    javax.microedition.io.file.FileConnection fc = (javax.microedition.io.file.FileConnection) c; 
+                    if (!fc.exists()) 
+                        fc.create(); 
+                    else 
+                        fc.truncate(0); 
+
+                    os = fc.openOutputStream(); 
+
+                    for (int i=0;i<data.length;i++){
+                        os.write(data[i]); 
+                    }
+
+                    os.flush(); 
+
+
+                    /* Cierre del archivo. */
+                    if (os != null) 
+                        os.close(); 
+                    if (c != null) 
+                        c.close(); 
+                    if (fl!=null)
+                        fl.writeOperationReady(id, path, true);
+                    
+                }catch(Exception e){
+                    
+                    try{
+                        if (os != null) 
+                            os.close(); 
+                        if (c != null) 
+                            c.close(); 
+                    }catch(Exception er){}
+                    
+                    if (fl!=null)
+                        fl.writeOperationReady(id, path, false);
+                    
+                }
+            }
+        };
         
-        for (int i=0;i<data.length;i++){
-            os.write(data[i]); 
-        }
+        new Thread(runnab).start();
         
-        os.flush(); 
-
-
-        /* Cierre del archivo. */
-
-        if (os != null) 
-            os.close(); 
-        if (c != null) 
-            c.close(); 
-
-
         return false;
     }
     

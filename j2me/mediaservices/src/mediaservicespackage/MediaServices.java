@@ -124,22 +124,18 @@ public class MediaServices implements Runnable{
         this.step = step;
     }
     
-    public void playPause() {
+    public void playPause() throws Exception {
         if (playing == true) {
-            try {
-                this.player.stop();
-                playing = false;
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            this.player.stop();
+            playing = false;
         } else {
-            try {
-                this.player.start();
-                playing = true;
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            this.player.start();
+            playing = true;
         }
+    }
+    
+    public boolean isItPlaying(){
+        return playing;
     }
     
     public long getDuration() {

@@ -99,7 +99,20 @@ public class Parser {
     
     
     
+    public static String sec2hoursShort(long sec){
+        String ret;
         
+        ret = Parser.sec2hours(sec);
+        
+        if (ret.startsWith("00:")) {
+            ret = ret.substring(3,ret.length());
+        }
+        if (ret.startsWith("0")) {
+            ret = ret.substring(1,ret.length());
+        }
+        
+        return ret;
+    }
     
     
     public static String sec2hours(long sec){

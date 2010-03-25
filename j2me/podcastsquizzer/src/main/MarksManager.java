@@ -5,7 +5,6 @@
 
 package main;
 
-import java.io.IOException;
 import java.util.Vector;
 import mediaservicespackage.MediaServices;
 import persistencepackage.*;
@@ -14,12 +13,13 @@ import persistencepackage.*;
  *
  * @author Mauricio
  */
-public class MarksManager {
+public class MarksManager implements FileActionListener{
     private Parser parser;
     private Vector marksVector;
     private TupleFinder tupleFinder;
     private int counter=0;
     private int currentTupleIndex=-1;
+    private boolean successfullySaved = false;
     
     public MarksManager(Parser parser){
         this.parser = parser;
@@ -32,7 +32,7 @@ public class MarksManager {
         this.tupleFinder = new TupleFinder(marksVector);
     }
             
-    public void saveMarks() throws IOException{
+    public void saveMarks() throws Exception{
         String text;
         
         marksVector.trimToSize();
@@ -40,7 +40,13 @@ public class MarksManager {
             text = parser.vector2txt(marksVector);
             String currentPath = MediaServices.getMediaServices().getCurrentPath();        
             String newFilePath = FileServices.getDirectory(currentPath) + FileServices.getFilenameWExtensionFromPath(currentPath) + "_.txt";
-            FileServices.writeTXTFile(newFilePath, text.getBytes());
+            FileServices.writeTXTFile(newFilePath, text.getBytes(), this, "saveMarks");
+            
+            Thread.sleep(2000);
+            if (this.successfullySaved==false){
+                throw new Exception("Marks not saved yet...");
+            }
+            
         }
     
     }
@@ -101,5 +107,9 @@ public class MarksManager {
         Tuple t;
         t = getCurrent();
         t.setExtra(Parser.sec2hours(sec));
+    }
+
+    public void writeOperationReady(String id, String path, boolean operation_successfully) {
+        this.successfullySaved = operation_successfully;
     }
 }

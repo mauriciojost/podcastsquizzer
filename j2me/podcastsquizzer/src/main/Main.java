@@ -371,7 +371,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                     text = FileServices.readTXTFile(path);
                     this.glossaryItem.setText("TXT file successfully loaded: '"+path+"'.");
                 } catch (Exception ex) {
-                    this.glossaryItem.setText("Error while loading TXT file: '"+path+"'. " + ex.getMessage());
+                    this.glossaryItem.setText("Cannot load TXT file: '"+path+"'. " + ex.getMessage());
                 }
                 vector = this.parser.txt2vector(text);
                 //this.ts.setIterator(new SequentialIterator(vector));
@@ -391,7 +391,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                     this.browserReady("Glossary", txtPath);
                     this.browserReady("Transcript", traPath);
                 }catch(Exception e){
-                    this.listeningItem.setText("Error while loading MP3 file: '" + path + "'. "+ e.getMessage());
+                    this.listeningItem.setText("Cannot load MP3 file: '" + path + "'. "+ e.getMessage());
                 }
             }
         }
@@ -404,7 +404,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                     text = FileServices.readTXTFile(path);
                     this.otherItem.setText("Transcript file successfully loaded ("+path+").");
                 } catch (Exception ex) {
-                    this.otherItem.setText("Error while loading transcript file: '" + path + "'. "+ ex.getMessage());
+                    this.otherItem.setText("Cannot load transcript file: '" + path + "'. "+ ex.getMessage());
                 }
                 vector = this.parser.txt2vector(text);
                 this.playerForm.setTranscript(vector);
@@ -416,6 +416,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     
     /** 
      * It loads the last listening file choosen in the previous session. 
+     * If no previous record exists, nothing will be done.
      */
     public void loadLastListeningFile(){
         Tuple lfile;
