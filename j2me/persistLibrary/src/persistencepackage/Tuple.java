@@ -28,19 +28,29 @@ public class Tuple {
     public String getKey(){return key;}
     public String getString(String vseparator, String lseparator){
         String vseparator2 = " " + vseparator + " ";
-        if ((key.compareTo("")!=0) && (value.compareTo("")!=0) && (extra.compareTo("")!=0))
+        
+        if (extra.compareTo("")==0) {
+            if (value.compareTo("")==0) {
+                if (key.compareTo("")==0){
+                    return "" + lseparator;
+                }else{
+                    return key + lseparator;
+                }
+            }else{
+                return key + vseparator2 + value + lseparator;
+            }
+        } else { 
             return key + vseparator2 + value + vseparator2 + extra + lseparator;
-        else if ((key.compareTo("")!=0) && (value.compareTo("")!=0))
-            return key + vseparator2 + value + lseparator;
-        else 
-            return key + lseparator;
+        }
+
+            
        
     }
     
     public void copy(Tuple t){
-        this.key = t.getKey();
-        this.value = t.getValue();
-        this.extra = t.getExtra();
+        this.key = new String(t.getKey());
+        this.value = new String(t.getValue());
+        this.extra = new String(t.getExtra());
     }
 }
 

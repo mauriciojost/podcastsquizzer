@@ -59,7 +59,6 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 this.getDisplay(), 
                 this.getForm(), 
                 new Tuple("English", "Explanation", "Examples"), 
-                null, 
                 parser);                    /* Creating a new PlayerForm. */
         
         try {
@@ -376,21 +375,39 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 }
                 vector = this.parser.txt2vector(text);
                 //this.ts.setIterator(new SequentialIterator(vector));
-                this.playerForm.setIterator(new SequentialIterator(vector));
+                this.playerForm.setGlossaryVectorSequentially(vector);
             }
         }
         if (title.compareTo("Listening")==0) {
             if (path != null){
                 try{
                     String txtPath = "";
+                    String traPath = "";
                     MediaServices.getMediaServices().load(path);
                     this.listeningItem.setText("MP3 file successfully loaded ("+path+").");
                     this.lastfilepath = path;
                     txtPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + ".txt";
+                    traPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + "_.txt";
                     this.browserReady("Glossary", txtPath);
+                    this.browserReady("Transcript", traPath);
                 }catch(Exception e){
                     this.listeningItem.setText("Error while loading MP3 file: '" + path + "'. "+ e.getMessage());
                 }
+            }
+        }
+        
+        if (title.compareTo("Transcript")==0) {
+            String text = "";
+            Vector vector;
+            if (path != null){
+                try {
+                    text = FileServices.readTXTFile(path);
+                    this.otherItem.setText("Transcript file successfully loaded ("+path+").");
+                } catch (Exception ex) {
+                    this.otherItem.setText("Error while loading transcript file: '" + path + "'. "+ ex.getMessage());
+                }
+                vector = this.parser.txt2vector(text);
+                this.playerForm.setTranscript(vector);
             }
         }
             
