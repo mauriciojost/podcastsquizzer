@@ -13,7 +13,7 @@ import javax.microedition.media.control.VolumeControl;
 
 /**
  *
- * @author Mauricio
+ * @author Mauri
  */
 public class MediaServices implements Runnable{
     
@@ -42,7 +42,6 @@ public class MediaServices implements Runnable{
         VolumeControl vc;
         playing = false;
         
-        //String path2 = /*FileServices.correctURL(path);*/ FileServices.getStandardPath(path1);
         this.path = path1;
         String path2 = path1;
             
@@ -50,9 +49,6 @@ public class MediaServices implements Runnable{
             player.deallocate();
         }
         
-        
-        
-
         try{
             /* Nokia S40 series. */
             player = Manager.createPlayer(path2); 
@@ -109,7 +105,7 @@ public class MediaServices implements Runnable{
     
     public void goBack() {
         try {
-            this.player.setMediaTime(this.player.getMediaTime() - ((this.player.getDuration()/1000)*step));
+            this.player.setMediaTime(this.player.getMediaTime() - ((this.length/1000)*step));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -117,7 +113,7 @@ public class MediaServices implements Runnable{
     
     public void goForward() {
         try {
-            this.player.setMediaTime(this.player.getMediaTime() + ((this.player.getDuration()/1000)*step));
+            this.player.setMediaTime(this.player.getMediaTime() + ((this.length/1000)*step));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -173,19 +169,14 @@ public class MediaServices implements Runnable{
         return (this.getPosition()/MediaServices.TIME_FACTOR);
     }
     public void setPlayerListener(PlayerListener pl){
-        //if (this.player!=null) {
-            this.playerListener = pl;
-            //this.player.addPlayerListener(pl);
-        //}
+        this.playerListener = pl;
     }
-    
     
     public String getCurrentPath(){
         return this.path;
     }
 
     public void run() {
-        
         while (true){
             try { Thread.sleep(200); } catch (InterruptedException ex) { ex.printStackTrace(); }
             

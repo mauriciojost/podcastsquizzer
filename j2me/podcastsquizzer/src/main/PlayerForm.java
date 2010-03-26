@@ -195,7 +195,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         switch(mode){
             case MODE_TUPLES:   this.namesTuple = new Tuple("Expression","Explanation","Examples"); break;
             case MODE_ANIMATED: this.namesTuple = new Tuple("Text","Comment","Time"); break;
-            case MODE_MARKS:    this.namesTuple = new Tuple("Coming: listen-> *key ","Current","Past"); break;
+            case MODE_MARKS:    this.namesTuple = new Tuple("Current","Coming" ,""); break;
             default:
                 break;
         }
@@ -291,7 +291,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                 }
                 break;
             case '5':
-                /* COMMENT MARK */
+                this.putTitle("TO COMMENT...", 1);
                 break;
 
             case '6': 
@@ -311,10 +311,9 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
 
                     Tuple tupleScreen;
                     String curr = marksManager.getPrevious(true).getKey();  // Retroceder y obtener el nuevo actual.
-                    String next = marksManager.getNext(false).getKey();     // Obtener el próximo (sin avance).
-                    String prev = marksManager.getPrevious(false).getKey(); // Obtener el previo (sin retroceso).
+                    String com = marksManager.getNext(false).getKey();     // Obtener el previo (sin retroceso).
 
-                    tupleScreen = new Tuple( next,curr,prev);
+                    tupleScreen = new Tuple(curr,com,"");
 
                     this.tupleRevelator.setTuple(tupleScreen);
                 } catch (Exception ex) {
@@ -328,10 +327,10 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
 
                     String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
                     marksManager.applyTimeToCurrentMark(MediaServices.getMediaServices().getPositionSeconds());
-                    String next = marksManager.getNext(false).getKey();     // Obtener el próximo (sin avance).
-                    String prev = marksManager.getPrevious(false).getKey(); // Obtener el previo (sin retroceso).
+                    String com = marksManager.getNext(false).getKey(); // Obtener el previo (sin retroceso).
 
-                    tupleScreen = new Tuple( next,curr,prev);
+                    tupleScreen = new Tuple(curr,com,"");
+                    this.yTranslation = 0;
                     this.tupleRevelator.setTuple(tupleScreen);
                 } catch (Exception ex) {
                     this.putTitle("MARK ERROR", 1);
@@ -343,10 +342,9 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
 
                     Tuple tupleScreen;
                     String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
-                    String next = marksManager.getNext(false).getKey();     // Obtener el próximo (sin avance).
-                    String prev = marksManager.getPrevious(false).getKey(); // Obtener el previo (sin retroceso).
+                    String com = marksManager.getNext(false).getKey(); // Obtener el previo (sin retroceso).
 
-                    tupleScreen = new Tuple( next,curr,prev);
+                    tupleScreen = new Tuple(curr,com,"");
 
                     this.tupleRevelator.setTuple(tupleScreen);
                 } catch (Exception ex) {
@@ -385,13 +383,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     String mn = this.changeMode(false);
                     this.putTitle("MODE " + mn, 1);
                     break;
-                case '0':
-                    this.putTitle("NOT USED", 1);
-                    
-                    break;
-                
                 case '1':
-                    
                     this.timeChangeInProgress = true;
                     this.desiredTimeChange = desiredTimeChange - 1;
                     this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
@@ -407,14 +399,13 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     agileKey = true;
                     break;
                 case '3':
-                    
                     this.timeChangeInProgress = true;
                     this.desiredTimeChange = desiredTimeChange + 1;
                     this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
                     agileKey = true;
                     break;
-                    
                 default:
+                    this.putTitle("NOT USED", 1);
                     break;
             }
         }else{
@@ -437,6 +428,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     yTranslation = Math.max(yTranslation - 5,0);
                     break;
                 default:
+                    this.putTitle("NOT USED", 1);
                     break;
             }
         }
@@ -447,12 +439,13 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         long current;
         Tuple t;
         
-        current = (pl.getMediaTime()/MediaServices.TIME_FACTOR)+1; /* 1 segundo de anticipación */
+        current = (pl.getMediaTime()/MediaServices.TIME_FACTOR); 
         this.setTimeText(current, pl.getDuration()/MediaServices.TIME_FACTOR);    
         
         if (this.mode == PlayerForm.MODE_ANIMATED){
             try{
                 t = this.marksManager.getMark(current);
+                this.yTranslation = 0;
                 this.setValues(t);
                 this.repaint();
             }catch(Exception e){

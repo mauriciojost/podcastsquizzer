@@ -55,6 +55,9 @@ public class TextPainter {
                 row += aux+2;
             }
             line_number++;
+            if (row>bounds.getHeigth()){
+                break;
+            }
         }
         
        
