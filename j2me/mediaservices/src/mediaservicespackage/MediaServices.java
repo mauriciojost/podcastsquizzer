@@ -5,6 +5,7 @@ import java.io.InputStream;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.media.Manager;
+import javax.microedition.media.MediaException;
 import javax.microedition.media.Player;
 import javax.microedition.media.PlayerListener;
 import javax.microedition.media.control.VolumeControl;
@@ -97,6 +98,10 @@ public class MediaServices implements Runnable{
         player.start();
         playing = true;
 
+    }
+    
+    public void setPosition(int seconds_change) throws MediaException{
+        this.player.setMediaTime(this.player.getMediaTime() + (seconds_change*TIME_FACTOR));
     }
     
     public void goBack() {

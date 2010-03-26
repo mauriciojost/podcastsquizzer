@@ -73,6 +73,8 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     private boolean stopThread = false;
     private boolean showMessageTitle = false;        
     private boolean showInstructions = false;   
+    private boolean timeChangeInProgress = false;
+    private int desiredTimeChange = 0;
     //</editor-fold>
     
     public PlayerForm (Display display, Displayable previous, Parser parser) {
@@ -102,11 +104,27 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                         ex.printStackTrace();
                     }
                     if (titleTimeCounter>=0){
+                        
                         titleTimeCounter--;
                         showMessageTitle = true;
+                        
+                        
+                        if (titleTimeCounter==0){
+                            if (timeChangeInProgress){
+                                timeChangeInProgress = false;
+                                desiredTimeChange = 0;
+                                try{
+                                    MediaServices.getMediaServices().setPosition(desiredTimeChange);
+                                }catch(Exception e){}
+                            }
+                        }
+                        
                     }else{
                         showMessageTitle = false;
                     }
+                    
+                    
+                    
                     buildTitle();
                 }
             }
@@ -170,11 +188,11 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         textPainter.paintTextComplex(g, buildMainText());        
     }
     
+    protected void keyReleased(int keyCode){
+    
+    }
+    
     protected void keyPressed(int keyCode) {
-        
-        //this.putTitle("Not supported (" + keyCode +")", 1);
-        
-        
         if (this.mode==MODE_TUPLES) {
             this.modeTuplesKeyPressed(keyCode);
         } else if (this.mode==MODE_MARKS) {
@@ -196,7 +214,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         switch(mode){
             case MODE_TUPLES:   this.namesTuple = new Tuple("Expression","Explanation","Examples"); break;
             case MODE_ANIMATED: this.namesTuple = new Tuple("Text","Comment","Time"); break;
-            case MODE_MARKS:    this.namesTuple = new Tuple("Coming: listen->*key","Current","Past"); break;
+            case MODE_MARKS:    this.namesTuple = new Tuple("Coming: listen-> *key ","Current","Past"); break;
             default:
                 break;
         }
@@ -249,133 +267,128 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     
      */
     private void modeTuplesKeyPressed(int keyCode) {
-        if (keyCode>0){
-            switch(keyCode){
-                case '4':
-                    this.putTitle("PREVIOUS RECORD", 1);
-                    if (iterator!=null)
-                        this.tupleRevelator.setTuple(this.iterator.getPrevious());
-                    break;
-                case '5': 
-                    this.putTitle("REVEAL", 1);
-                    this.tupleRevelator.nextRevelation();
-                    break;
-                case '6':
-                    this.putTitle("NEXT RECORD", 1);
-                    if (iterator!=null)
-                        this.tupleRevelator.setTuple(this.iterator.getNext());
-                    break;
-                case '8':
-                    this.putTitle("REVELATION MODE", 1);
-                    this.tupleRevelator.nextMode();
-                    break;
-                default:
-                    modeDefaultKeyPressed(keyCode);
-                    break;
-            }
-        }else{
-            modeDefaultKeyPressed(keyCode);
+        
+        switch(keyCode){
+            case '4':
+                this.putTitle("PREVIOUS RECORD", 1);
+                if (iterator!=null)
+                    this.tupleRevelator.setTuple(this.iterator.getPrevious());
+                break;
+            case '5': 
+                this.putTitle("REVEAL", 1);
+                this.tupleRevelator.nextRevelation();
+                break;
+            case '6':
+                this.putTitle("NEXT RECORD", 1);
+                if (iterator!=null)
+                    this.tupleRevelator.setTuple(this.iterator.getNext());
+                break;
+            case '8':
+                this.putTitle("REVELATION MODE", 1);
+                this.tupleRevelator.nextMode();
+                break;
+            default:
+                modeDefaultKeyPressed(keyCode);
+                break;
         }
+        
+        
     }
       
     private void modeMarksKeyPressed(int keyCode){
         this.tupleRevelator.setMode(TupleRevelator.MODE_ALL);
-        if (keyCode>0){
-            switch(keyCode){
-                
-                case '4':
-                    try{
-                        String mark = marksManager.addMarkNow(MediaServices.getMediaServices().getPositionSeconds());
-                        this.putTitle("MARK: " + mark, 1);
-                    }catch(Exception e){
-                        this.putTitle("ERROR ADDING MARK...",1);
-                    }
-                    break;
-                case '5':
-                    /* COMMENT MARK */
-                    break;
-                        
-                case '6': 
-                    try{
-                        this.putTitle("SAVING MARKS...", 2);
-                        marksManager.saveMarks();
-                        this.putTitle("MARKS SAVED", 2);
-                    }catch(Exception e){
-                        this.putTitle("MARKS NOT SAVED", 10);
-                    }
-                    break;
-                    
-                case '7':
-                    try {
-                        this.putTitle("PREVIOUS MARK", 1);
-                        
-                        Tuple tupleScreen;
-                        String curr = marksManager.getPrevious(true).getKey();  // Retroceder y obtener el nuevo actual.
-                        String next = marksManager.getNext(false).getKey();     // Obtener el próximo (sin avance).
-                        String prev = marksManager.getPrevious(false).getKey(); // Obtener el previo (sin retroceso).
-                        
-                        tupleScreen = new Tuple( next,curr,prev);
-                        
-                        this.tupleRevelator.setTuple(tupleScreen);
-                    } catch (Exception ex) {
-                        this.putTitle("MARK ERROR", 1);
-                    }
-                    break;
-                case '8':
-                    try {
-                        Tuple tupleScreen;
-                        this.putTitle("APPLIED MARK " + this.timeText, 1);
-                        
-                        String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
-                        marksManager.applyTimeToCurrentMark(MediaServices.getMediaServices().getPositionSeconds());
-                        String next = marksManager.getNext(false).getKey();     // Obtener el próximo (sin avance).
-                        String prev = marksManager.getPrevious(false).getKey(); // Obtener el previo (sin retroceso).
-                        
-                        tupleScreen = new Tuple( next,curr,prev);
-                        this.tupleRevelator.setTuple(tupleScreen);
-                    } catch (Exception ex) {
-                        this.putTitle("MARK ERROR", 1);
-                    }
-                    break;
-                case '9':
-                    try {
-                        this.putTitle("NEXT MARK", 1);
-                        
-                        Tuple tupleScreen;
-                        String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
-                        String next = marksManager.getNext(false).getKey();     // Obtener el próximo (sin avance).
-                        String prev = marksManager.getPrevious(false).getKey(); // Obtener el previo (sin retroceso).
-                        
-                        tupleScreen = new Tuple( next,curr,prev);
-                        
-                        this.tupleRevelator.setTuple(tupleScreen);
-                    } catch (Exception ex) {
-                        this.putTitle("MARK ERROR", 1);
-                    }
-                    break;
-                default:
-                    modeDefaultKeyPressed(keyCode);
-                    break;
-            }
-        }else{
-            modeDefaultKeyPressed(keyCode);
+        
+        switch(keyCode){
+
+            case '4':
+                try{
+                    String mark = marksManager.addMarkNow(MediaServices.getMediaServices().getPositionSeconds());
+                    this.putTitle("MARK: " + mark, 1);
+                }catch(Exception e){
+                    this.putTitle("ERROR ADDING MARK...",1);
+                }
+                break;
+            case '5':
+                /* COMMENT MARK */
+                break;
+
+            case '6': 
+                try{
+                    this.putTitle("SAVING MARKS...", 2);
+                    marksManager.saveMarks();
+                    this.putTitle("MARKS SAVED", 2);
+                }catch(Exception e){
+                    this.putTitle("MARKS NOT SAVED", 10);
+                }
+                break;
+
+            case '7':
+                try {
+                    this.putTitle("PREVIOUS MARK", 1);
+
+                    Tuple tupleScreen;
+                    String curr = marksManager.getPrevious(true).getKey();  // Retroceder y obtener el nuevo actual.
+                    String next = marksManager.getNext(false).getKey();     // Obtener el próximo (sin avance).
+                    String prev = marksManager.getPrevious(false).getKey(); // Obtener el previo (sin retroceso).
+
+                    tupleScreen = new Tuple( next,curr,prev);
+
+                    this.tupleRevelator.setTuple(tupleScreen);
+                } catch (Exception ex) {
+                    this.putTitle("MARK ERROR", 1);
+                }
+                break;
+            case '8':
+                try {
+                    Tuple tupleScreen;
+                    this.putTitle("APPLIED MARK " + this.timeText, 1);
+
+                    String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
+                    marksManager.applyTimeToCurrentMark(MediaServices.getMediaServices().getPositionSeconds());
+                    String next = marksManager.getNext(false).getKey();     // Obtener el próximo (sin avance).
+                    String prev = marksManager.getPrevious(false).getKey(); // Obtener el previo (sin retroceso).
+
+                    tupleScreen = new Tuple( next,curr,prev);
+                    this.tupleRevelator.setTuple(tupleScreen);
+                } catch (Exception ex) {
+                    this.putTitle("MARK ERROR", 1);
+                }
+                break;
+            case '9':
+                try {
+                    this.putTitle("NEXT MARK", 1);
+
+                    Tuple tupleScreen;
+                    String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
+                    String next = marksManager.getNext(false).getKey();     // Obtener el próximo (sin avance).
+                    String prev = marksManager.getPrevious(false).getKey(); // Obtener el previo (sin retroceso).
+
+                    tupleScreen = new Tuple( next,curr,prev);
+
+                    this.tupleRevelator.setTuple(tupleScreen);
+                } catch (Exception ex) {
+                    this.putTitle("MARK ERROR", 1);
+                }
+                break;
+            default:
+                modeDefaultKeyPressed(keyCode);
+                break;
         }
+        
     }
     
     private void modeAnimatedKeyPressed(int keyCode){
-        if (keyCode>0){
-            switch(keyCode){
-                case '8':
-                    this.putTitle("REVELATION MODE", 1);
-                    this.tupleRevelator.nextMode();
-                    break;
-                default:
-                    modeDefaultKeyPressed(keyCode);
-                    break;
-            }
-        }else{
-            modeDefaultKeyPressed(keyCode);
+        
+        switch(keyCode){
+            case '8':
+                this.putTitle("REVELATION MODE", 1);
+                this.tupleRevelator.nextMode();
+                break;
+            default:
+                modeDefaultKeyPressed(keyCode);
+                break;
         }
+        
     }
     
     private void modeDefaultKeyPressed(int keyCode){
@@ -396,8 +409,11 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                 
                     
                 case '1':
-                    this.putTitle("REWIND "+ this.timeText, 1);
-                    MediaServices.getMediaServices().goBack(); 
+                    
+                    this.timeChangeInProgress = true;
+                    this.desiredTimeChange = desiredTimeChange - 1;
+                    this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
+                    
                     break;
                 case '2':
                     this.putTitle("PLAY/PAUSE", 1);
@@ -408,8 +424,11 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     }
                     break;
                 case '3':
-                    this.putTitle("FORWARD " + this.timeText, 1);
-                    MediaServices.getMediaServices().goForward(); 
+                    
+                    this.timeChangeInProgress = true;
+                    this.desiredTimeChange = desiredTimeChange + 1;
+                    this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
+                    
                     break;
                     
                 default:
@@ -456,11 +475,12 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         buildTitle();
     }
     
+    
     public void playerUpdate(Player pl, String str, Object obj) {
         long current;
         Tuple t;
         
-        current = Math.max(0, (pl.getMediaTime()/MediaServices.TIME_FACTOR)+1); /* 1 segundo de anticipación */
+        current = (pl.getMediaTime()/MediaServices.TIME_FACTOR)+1; /* 1 segundo de anticipación */
         this.setTimeText(current, pl.getDuration()/MediaServices.TIME_FACTOR);    
         
         if (this.mode == PlayerForm.MODE_ANIMATED){
@@ -485,8 +505,8 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         display.setCurrent(previousDisplayable); /* Return. */
     }
     
-    private void putTitle(String title, int seconds){
-        this.titleTimeCounter = seconds*10;
+    private void putTitle(String title, float seconds){
+        this.titleTimeCounter = (int)(seconds*10);
         this.messageTitle = title;
     }
     //</editor-fold>
