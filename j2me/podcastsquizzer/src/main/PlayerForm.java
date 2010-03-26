@@ -24,8 +24,10 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     private static final int MODE_TUPLES = 0;
     private static final int MODE_MARKS = 1;
     private static final int MODE_ANIMATED = 2;
-    private static final int MODES_NUMBER = 3;
-    private static final String[] modeName = {"Quizzer","Marks","Animation"};
+    private static final int MODE_HELP = 3;
+    private static final int MODES_NUMBER = 4;
+    private static final String[] modeName = {"QUIZ","MARK","ANIMATION", "HELP"};
+    private int mode = MODE_TUPLES;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc=" Useful objects ">                      
     private Displayable previousDisplayable;
@@ -51,13 +53,17 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     
     private int yTranslation = 0;
     private int titleTimeCounter = -1;
-    private int mode = MODE_TUPLES;
+    
+    private int baseTimeForChange=0;
     
     private boolean stopThread = false;
     private boolean showMessageTitle = false;        
     private boolean timeChangeInProgress = false;
     private int desiredTimeChange = 0;
     private boolean agileKey = false;
+    private boolean goForwardFlag = false; /* Bandera para saber si la tecla de adelantamiento de audio está presionada. */
+    private boolean goBackFlag = false; /* Idem con la tecla de retroceso. */
+    
     //</editor-fold>
     
     public PlayerForm (Display display, Displayable previous, Parser parser) {
@@ -96,7 +102,8 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                             if (timeChangeInProgress){
                                 timeChangeInProgress = false;
                                 try{
-                                    MediaServices.getMediaServices().movePosition(desiredTimeChange);
+                                    //MediaServices.getMediaServices().movePosition(desiredTimeChange);
+                                    MediaServices.getMediaServices().setPosition(baseTimeForChange + desiredTimeChange);
                                 }catch(Exception e){}
                                 desiredTimeChange = 0;
                             }
@@ -106,6 +113,15 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                         showMessageTitle = false;
                     }
                     
+                    
+                    if (goForwardFlag){
+                        desiredTimeChange+=2;
+                        putTitle("MOVE "+ desiredTimeChange + " sec.", (float)0.5);
+                    }
+                    if (goBackFlag){
+                        desiredTimeChange-=2;
+                        putTitle("MOVE "+ desiredTimeChange + " sec.", (float)0.5);
+                    }
                     
                     
                     buildTitle();
@@ -135,7 +151,12 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     
     
     public String buildMainText(){
-        String mainText =  
+        String mainText;
+        
+        if (mode==MODE_HELP){
+            mainText = Help.getIntructionsHelp();
+        }else{
+            mainText =  
                 "*" + namesTuple.getKey() + "\n" + 
                 valuesTuple.getKey() + "\n" + 
                 
@@ -144,6 +165,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                 
                 "*" + namesTuple.getExtra() + "\n" + 
                 valuesTuple.getExtra() + "\n";
+        }
         return mainText;
     }
     
@@ -151,9 +173,9 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         String title;
         
         if (showMessageTitle) {
-            title = this.messageTitle;
+            title = ">" + this.messageTitle;
         } else {
-            title = "PQ ("+PlayerForm.modeName[this.mode]+") " + this.timeText;
+            title = PlayerForm.modeName[this.mode]+" " + this.timeText;
         }
         
         this.setTitle(title);
@@ -170,6 +192,18 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         textPainter.paintTextComplex(g, buildMainText());        
     }
     
+    protected void keyReleased(int keyCode) {
+        //switch (keyCode){
+       //     case '1':
+                this.goBackFlag=false;
+       //         break;
+       //     case '3':
+                this.goForwardFlag=false;
+       //         break;
+        //}
+        
+    }
+    
     protected void keyPressed(int keyCode) {
         agileKey = false;
         if (this.mode==MODE_TUPLES) {
@@ -178,6 +212,8 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
             this.modeMarksKeyPressed(keyCode);
         } else if (this.mode==MODE_ANIMATED) {
             this.modeAnimatedKeyPressed(keyCode);
+        }else{
+            this.modeDefaultKeyPressed(keyCode);
         }
         
         if (agileKey==false){
@@ -195,58 +231,20 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         switch(mode){
             case MODE_TUPLES:   this.namesTuple = new Tuple("Expression","Explanation","Examples"); break;
             case MODE_ANIMATED: this.namesTuple = new Tuple("Text","Comment","Time"); break;
-            case MODE_MARKS:    this.namesTuple = new Tuple("Current","Coming" ,""); break;
+            case MODE_MARKS:    this.namesTuple = new Tuple("Current","Coming",""); break;
+            case MODE_HELP:     this.namesTuple = new Tuple("","",""); break;
             default:
                 break;
         }
         this.valuesTuple = new Tuple("","","");
+        this.yTranslation = 0;
+        
         return PlayerForm.modeName[this.mode];
+        
     }
 
-    /** 
-     * GENERAL KEYS
-     * ------- ----
-     * RETURN               *
-     * CHANGE MODE          # 
-     * S/HIDE INSTRUCTIONS  0
-     * REWIND               1
-     * PLAY/STOP            2
-     * FORWARD              3
-     * UP   PAGE            LEFT
-     * DOWN PAGE            RIGHT
-     * UP   LINE            UP
-     * DOWN LINE            DOWN
-     * 
-     * TUPLES MODE (0)
-     * ------ ----
-     * PREVIOUS TUPLE       4
-     * REVEAL               5
-     * NEXT TUPLE           6
-     *                      7
-     * CHANGE TUPLE MODE    8
-     *                      9
-     * MARKS MODE (1)
-     * ----- ----
-     * ADD MARK             4
-     * COMMENT MARK         5
-     * SAVE MARKS           6
-     * MOVE BACK            7
-     * ADD THIS MARK HERE   8
-     * MOVE FORWARD         9
-     * 
-     * ANIMATED MODE (2)
-     * -------- ----
-     * ADD MARK             4
-     * COMMENT MARK         5
-     * SAVE MARKS           6
-     * MOVE BACK            7
-     * ADD THIS MARK HERE   8
-     * MOVE FORWARD         9
-     * 
-     
-     * 
     
-     */
+    
     private void modeTuplesKeyPressed(int keyCode) {
         
         switch(keyCode){
@@ -384,9 +382,13 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     this.putTitle("MODE " + mn, 1);
                     break;
                 case '1':
+                    try{
+                        this.baseTimeForChange = (int)(MediaServices.getMediaServices().getPosition()/MediaServices.TIME_FACTOR);
+                    }catch(Exception e){}
                     this.timeChangeInProgress = true;
                     this.desiredTimeChange = desiredTimeChange - 1;
                     this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
+                    this.goBackFlag=true;
                     agileKey = true;
                     break;
                 case '2':
@@ -399,9 +401,13 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     agileKey = true;
                     break;
                 case '3':
+                    try{
+                        this.baseTimeForChange = (int)(MediaServices.getMediaServices().getPosition()/MediaServices.TIME_FACTOR);
+                    }catch(Exception e){}
                     this.timeChangeInProgress = true;
                     this.desiredTimeChange = desiredTimeChange + 1;
                     this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
+                    this.goForwardFlag=true;
                     agileKey = true;
                     break;
                 default:

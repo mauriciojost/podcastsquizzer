@@ -15,6 +15,7 @@ public class Word{
     private char last_char;
     private String word;
     private int mode;
+    private int color=0xFFFFFF;
     
     public static void setBaseFont(Font font){
         baseFont = font;
@@ -58,6 +59,16 @@ public class Word{
         try{
             if (w.charAt(0)=='*') {
                 mode = BOLD;
+                color = 0x8888FF;
+                word = w.substring(1,w.length());
+            }else if (w.charAt(0)=='#') {
+                color = 0x8888FF;
+                word = w.substring(1,w.length());
+            }else if (w.charAt(0)=='_') {
+                color = 0xFF8888;
+                word = w.substring(1,w.length());
+            }else if (w.charAt(0)=='/') {
+                color = 0x88FF88;
                 word = w.substring(1,w.length());
             } else {
                 mode = NORMAL;
@@ -81,4 +92,11 @@ public class Word{
         return this.last_char;
     }
     
+    public void setColor(int color){
+        this.color = color;
+    }
+    
+    public int getColor(){
+        return this.color;
+    }
 }

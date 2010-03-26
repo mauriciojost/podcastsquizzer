@@ -103,6 +103,13 @@ public class MediaServices implements Runnable{
         this.player.setMediaTime(a+ b);
     }
     
+    public void setPosition(int seconds_time) throws MediaException{
+        long b;
+        b = (seconds_time*TIME_FACTOR);
+        this.player.setMediaTime(b);
+    
+    }
+    
     public void goBack() {
         try {
             this.player.setMediaTime(this.player.getMediaTime() - ((this.length/1000)*step));

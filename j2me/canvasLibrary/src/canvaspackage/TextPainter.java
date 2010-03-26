@@ -48,6 +48,9 @@ public class TextPainter {
         
         int line_number = 0;
         
+        int currentColor;
+        currentColor = g.getColor();
+        
         while(iterator.hasMoreElements()){
             line = (Vector)iterator.nextElement();
             if (line_number>=this.baseLine) {
@@ -59,6 +62,8 @@ public class TextPainter {
                 break;
             }
         }
+        
+        g.setColor(currentColor);
         
        
     }
@@ -126,15 +131,19 @@ public class TextPainter {
         int basex = 0, max_height=0;
         Word word;
         
+        
         Enumeration iterator = line.elements();
         while (iterator.hasMoreElements()){
             word = (Word)iterator.nextElement();
             g.setFont(word.getFont());
+            g.setColor(word.getColor());
             max_height = Math.max(max_height, word.getFont().getHeight());
             
             g.drawString(word.getWord(), bounds.getX()+basex, bounds.getY() + row, Graphics.TOP|Graphics.LEFT);
             basex += word.getWidth();
         }
+        
+        
         return max_height;
     }
 }
