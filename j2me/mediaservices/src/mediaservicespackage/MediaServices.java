@@ -100,8 +100,11 @@ public class MediaServices implements Runnable{
 
     }
     
-    public void setPosition(int seconds_change) throws MediaException{
-        this.player.setMediaTime(this.player.getMediaTime() + (seconds_change*TIME_FACTOR));
+    public void movePosition(int seconds_change) throws MediaException{
+        long a, b;
+        a = this.player.getMediaTime();
+        b = (seconds_change*TIME_FACTOR);
+        this.player.setMediaTime(a+ b);
     }
     
     public void goBack() {

@@ -13,13 +13,18 @@ import javax.microedition.lcdui.Graphics;
 
 public class TextPainter {
 
-    private Rectangle bounds; /* Bounds of the painting area. */
-    private Font font; /* Font used to paint the text. */
+    private Rectangle bounds;   /* Bounds of the painting area. */
+    private Font font;          /* Font used to paint the text. */
+    private int baseLine = 0;   /* Line that's going to be printed first. */
     
     public TextPainter(Font font, Rectangle bounds){
         this.font = font;
         this.bounds = bounds;
         Word.setBaseFont(font);
+    }
+    
+    public void setTranslation(int yline){
+        this.baseLine = yline;
     }
     
     public void paintTextComplex(Graphics g, String cText){
@@ -41,10 +46,15 @@ public class TextPainter {
         g.drawRect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeigth());
         g.setColor(currentColor);*/
         
+        int line_number = 0;
+        
         while(iterator.hasMoreElements()){
             line = (Vector)iterator.nextElement();
-            aux = paintLine(g,line,row);
-            row += aux+2;
+            if (line_number>=this.baseLine) {
+                aux = paintLine(g,line,row);
+                row += aux+2;
+            }
+            line_number++;
         }
         
        

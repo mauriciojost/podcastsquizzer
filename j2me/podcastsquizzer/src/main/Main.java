@@ -368,12 +368,11 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             if (path != null){
                 try {
                     text = FileServices.readTXTFile(path);
-                    this.glossaryItem.setText("OK: TXT file successfully loaded ('"+path+"').");
+                    this.glossaryItem.setText("OK: TXT file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
                 } catch (Exception ex) {
-                    this.glossaryItem.setText("CANNOT load TXT file ('"+path+"'). " + ex.getMessage());
+                    this.glossaryItem.setText("CANNOT load TXT file ('"+FileServices.getStandardPath(path)+"'). " + ex.getMessage());
                 }
                 vector = this.parser.txt2vector(text);
-                //this.ts.setIterator(new SequentialIterator(vector));
                 this.playerForm.setGlossaryVectorSequentially(vector);
             }
         }
@@ -383,14 +382,14 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                     String txtPath = "";
                     String traPath = "";
                     MediaServices.getMediaServices().load(path);
-                    this.listeningItem.setText("OK: MP3 file successfully loaded ("+path+").");
+                    this.listeningItem.setText("OK: MP3 file successfully loaded ("+FileServices.getStandardPath(path)+").");
                     this.lastfilepath = path;
                     txtPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + ".txt";
                     traPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + "_.txt";
                     this.browserReady("Glossary", txtPath);
                     this.browserReady("Transcript", traPath);
                 }catch(Exception e){
-                    this.listeningItem.setText("CANNOT load MP3 file ('" + path + "'). "+ e.getMessage());
+                    this.listeningItem.setText("CANNOT load MP3 file ('" + FileServices.getStandardPath(path) + "'). "+ e.getMessage());
                 }
             }
         }
@@ -401,9 +400,9 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             if (path != null){
                 try {
                     text = FileServices.readTXTFile(path);
-                    this.otherItem.setText("OK: Transcript file successfully loaded ('"+path+"').");
+                    this.otherItem.setText("OK: Transcript file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
                 } catch (Exception ex) {
-                    this.otherItem.setText("CANNOT load transcript file ('" + path + "'). "+ ex.getMessage());
+                    this.otherItem.setText("CANNOT load transcript file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage());
                 }
                 vector = this.parser.txt2vector(text);
                 this.playerForm.setTranscript(vector);
