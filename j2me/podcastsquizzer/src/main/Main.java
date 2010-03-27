@@ -289,7 +289,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public Command getBrowseSongCommand() {
         if (browseSongCommand == null) {//GEN-END:|27-getter|0|27-preInit
             // write pre-init user code here
-            browseSongCommand = new Command("Browse Listening", Command.ITEM, -1);//GEN-LINE:|27-getter|1|27-postInit
+            browseSongCommand = new Command("Browse Listening", Command.ITEM, 0);//GEN-LINE:|27-getter|1|27-postInit
             // write post-init user code here
         }//GEN-BEGIN:|27-getter|2|
         return browseSongCommand;
@@ -351,7 +351,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public Command getBrowseTranscriptCommand() {
         if (browseTranscriptCommand == null) {//GEN-END:|32-getter|0|32-preInit
             // write pre-init user code here
-            browseTranscriptCommand = new Command("Item", Command.ITEM, 0);//GEN-LINE:|32-getter|1|32-postInit
+            browseTranscriptCommand = new Command("Browse Transcript", Command.ITEM, 0);//GEN-LINE:|32-getter|1|32-postInit
             // write post-init user code here
         }//GEN-BEGIN:|32-getter|2|
         return browseTranscriptCommand;
@@ -366,7 +366,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public Command getLoadLastListenginCommand() {
         if (loadLastListenginCommand == null) {//GEN-END:|34-getter|0|34-preInit
             // write pre-init user code here
-            loadLastListenginCommand = new Command("Item", Command.ITEM, 0);//GEN-LINE:|34-getter|1|34-postInit
+            loadLastListenginCommand = new Command("Load Last Listening", Command.ITEM, -1);//GEN-LINE:|34-getter|1|34-postInit
             // write post-init user code here
         }//GEN-BEGIN:|34-getter|2|
         return loadLastListenginCommand;

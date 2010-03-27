@@ -110,7 +110,7 @@ public class MarksManager implements FileActionListener{
             }
             return (Tuple)marksVector.elementAt(this.currentTupleIndex);
         }
-        return new Tuple("","");
+        throw new Exception("Empty vector.");
     }
     
     public void applyTimeToCurrentMark(long sec) throws Exception{

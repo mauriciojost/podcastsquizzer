@@ -13,13 +13,15 @@ import mediaservicespackage.*;
 import persistencepackage.*;
 import tuplesshowerpackage.*;
 import canvaspackage.*;
+import textboxpackage.TextBoxForm;
+import textboxpackage.TextBoxFormReadyListener;
 
 
 /**
  * This class is intended to provide the user with an environment where to play
  * the listening, add and look for the marks.
  */
-public class PlayerForm extends Canvas implements CommandListener, PlayerListener, TuplesShowerInterface {
+public class PlayerForm extends Canvas implements CommandListener, PlayerListener, TuplesShowerInterface, TextBoxFormReadyListener {
     //<editor-fold defaultstate="collapsed" desc=" About Modes ">                      
     private static final int MODE_TUPLES = 0;
     private static final int MODE_MARKS = 1;
@@ -39,6 +41,7 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
     private Iterator iterator;
     private Parser parser;
     private TextPainter textPainter;
+    private TextBoxForm textBoxForm;
     
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc=" Auxiliar elements ">                      
@@ -71,7 +74,9 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
     //list = new List("list", Choice.IMPLICIT);
     //list.setCommandListener(this);
     
-    public PlayerForm (Display display, Displayable previous, Parser parser) {
+    
+    
+    public PlayerForm (Display display, Displayable previous, Parser parser)  {
         //<editor-fold defaultstate="collapsed" desc=" General Initialization ">
         int border = 10;
         
@@ -91,6 +96,8 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
         this.addCommand(playPauseCommand);
         this.setCommandListener(this);
         //this.setFullScreenMode(true);
+        
+        this.textBoxForm = new TextBoxForm(display, this, this);
         
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc=" Visual Thread (100ms) ">
@@ -268,6 +275,8 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
     private void modeTuplesKeyPressed(int keyCode) {
         
         switch(keyCode){
+            case '1':
+                
             case '4':
                 this.putTitle("PREVIOUS RECORD", 1);
                 if (iterator!=null)
@@ -309,7 +318,17 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
                 }
                 break;
             case '5':
-                this.putTitle("TO COMMENT...", 1);
+                //this.putTitle("COMMENT", 1);
+                 
+                this.textBoxForm.setTitle("Comment");
+                try {
+                    this.textBoxForm.setText(marksManager.getCurrent().getValue());
+                } catch (Exception ex) {
+                    this.textBoxForm.setText("");
+                    ex.printStackTrace();
+                }
+                display.setCurrent(this.textBoxForm.getDisplayable());
+                
                 break;
 
             case '6': 
@@ -319,7 +338,7 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
                     agileKey = true;
                     this.putTitle("MARKS SAVED", 2);
                 }catch(Exception e){
-                    this.putTitle("MARKS NOT SAVED", 10);
+                    this.putTitle("MARKS STILL NOT SAVED", 10);
                 }
                 break;
 
@@ -412,11 +431,11 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
             switch(this.getGameAction(keyCode)){
                 case PlayerForm.DOWN:
                     this.putTitle("DOWN LINE", 1);
-                    yTranslation +=1;
+                    yTranslation +=3;
                     break;
                 case PlayerForm.UP:
                     this.putTitle("UP LINE", 1);
-                    yTranslation = Math.max(yTranslation - 1,0);
+                    yTranslation = Math.max(yTranslation - 3,0);
                     break;
                     
                 case PlayerForm.RIGHT:
@@ -528,6 +547,21 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
                     
             }
         }
+    }
+
+    public void textBoxReady(String title, String text) {
+        if (title.compareTo("Comment")==0){
+            if (text!=null){
+                try {
+                    marksManager.getCurrent().setValue(text);
+                    this.putTitle("COMMENT DONE", 1);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                
+            }
+        }
+        this.repaint();
     }
 }
 
