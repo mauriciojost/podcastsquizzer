@@ -340,6 +340,9 @@
         <ant target="jar" inheritall="false" antfile="${project.persistLibrary}/build.xml">
             <property name="config.active" value=""/>
         </ant>
+        <ant target="jar" inheritall="false" antfile="${project.textBoxLibrary}/build.xml">
+            <property name="config.active" value=""/>
+        </ant>
         <ant target="jar" inheritall="false" antfile="${project.tuplesshower}/build.xml">
             <property name="config.active" value=""/>
         </ant>

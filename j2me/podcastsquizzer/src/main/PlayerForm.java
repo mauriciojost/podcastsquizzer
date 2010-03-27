@@ -19,7 +19,7 @@ import canvaspackage.*;
  * This class is intended to provide the user with an environment where to play
  * the listening, add and look for the marks.
  */
-public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerInterface {
+public class PlayerForm extends Canvas implements CommandListener, PlayerListener, TuplesShowerInterface {
     //<editor-fold defaultstate="collapsed" desc=" About Modes ">                      
     private static final int MODE_TUPLES = 0;
     private static final int MODE_MARKS = 1;
@@ -65,7 +65,11 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     private boolean goBackFlag = false; /* Idem con la tecla de retroceso. */
     private boolean stateBeforeMoving = false;
     
+    private Command playPauseCommand;
     //</editor-fold>
+    
+    //list = new List("list", Choice.IMPLICIT);
+    //list.setCommandListener(this);
     
     public PlayerForm (Display display, Displayable previous, Parser parser) {
         //<editor-fold defaultstate="collapsed" desc=" General Initialization ">
@@ -82,6 +86,12 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         this.parser = parser;
         this.marksManager = new MarksManager(parser);
         this.changeMode(true);
+        
+        this.playPauseCommand = new Command("Play", Command.ITEM, 0);
+        this.addCommand(playPauseCommand);
+        this.setCommandListener(this);
+        //this.setFullScreenMode(true);
+        
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc=" Visual Thread (100ms) ">
         new Thread(
@@ -391,43 +401,9 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     String mn = this.changeMode(false);
                     this.putTitle("MODE " + mn, 1);
                     break;
-                case '1':
-                    try{
-                        this.stateBeforeMoving = MediaServices.getMediaServices().isItPlaying();
-                        MediaServices.getMediaServices().pause();
-                        this.baseTimeForChange = (int)(MediaServices.getMediaServices().getPosition()/MediaServices.TIME_FACTOR);
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-                    this.timeChangeInProgress = true;
-                    this.desiredTimeChange = desiredTimeChange - 1;
-                    this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
-                    this.goBackFlag=true;
-                    agileKey = true;
-                    break;
-                case '2':
-                    this.putTitle("PLAY/PAUSE", 1);
-                    try{
-                        MediaServices.getMediaServices().playPause(); 
-                    }catch(Exception e){
-                        this.putTitle("ERROR PLAY/PAUSE", 1);
-                    }
-                    agileKey = true;
-                    break;
-                case '3':
-                    try{
-                        this.stateBeforeMoving = MediaServices.getMediaServices().isItPlaying();
-                        MediaServices.getMediaServices().pause();
-                        this.baseTimeForChange = (int)(MediaServices.getMediaServices().getPosition()/MediaServices.TIME_FACTOR);
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-                    this.timeChangeInProgress = true;
-                    this.desiredTimeChange = desiredTimeChange + 1;
-                    this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
-                    this.goForwardFlag=true;
-                    agileKey = true;
-                    break;
+                    
+                
+                
                 default:
                     this.putTitle("NOT USED", 1);
                     break;
@@ -444,12 +420,36 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     break;
                     
                 case PlayerForm.RIGHT:
-                    this.putTitle("DOWN PAGE", 1);
-                    yTranslation +=5;
+                    try{
+                        if (this.timeChangeInProgress==false){
+                            this.stateBeforeMoving = MediaServices.getMediaServices().isItPlaying();
+                        }
+                        MediaServices.getMediaServices().pause();
+                        this.baseTimeForChange = (int)(MediaServices.getMediaServices().getPosition()/MediaServices.TIME_FACTOR);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                    this.timeChangeInProgress = true;
+                    this.desiredTimeChange = desiredTimeChange + 1;
+                    this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
+                    this.goForwardFlag=true;
+                    agileKey = true;
                     break;
                 case PlayerForm.LEFT:
-                    this.putTitle("UP PAGE", 1);
-                    yTranslation = Math.max(yTranslation - 5,0);
+                    try{
+                        if (this.timeChangeInProgress==false){
+                            this.stateBeforeMoving = MediaServices.getMediaServices().isItPlaying();
+                        }
+                        MediaServices.getMediaServices().pause();
+                        this.baseTimeForChange = (int)(MediaServices.getMediaServices().getPosition()/MediaServices.TIME_FACTOR);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                    this.timeChangeInProgress = true;
+                    this.desiredTimeChange = desiredTimeChange - 1;
+                    this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
+                    this.goBackFlag=true;
+                    agileKey = true;
                     break;
                 default:
                     this.putTitle("NOT USED", 1);
@@ -512,6 +512,22 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         this.messageTitle = title;
         this.titleTimeCounter = (int)(seconds*10);
     }
+
     //</editor-fold>
+    
+    public void commandAction(Command command, Displayable disp) {
+        if (disp==this){
+            if(command==this.playPauseCommand){
+                this.putTitle("PLAY/PAUSE", 1);
+                try{
+                    MediaServices.getMediaServices().playPause(); 
+                }catch(Exception e){
+                    this.putTitle("ERROR PLAY/PAUSE", 1);
+                }
+                //agileKey = true;
+                    
+            }
+        }
+    }
 }
 

@@ -52,6 +52,17 @@
                 </properties>
             </reference>
             <reference>
+                <foreign-project>textBoxLibrary</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>${project.textBoxLibrary}/build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+                <properties>
+                    <property name="config.active"/>
+                </properties>
+            </reference>
+            <reference>
                 <foreign-project>tuplesshower</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>${project.tuplesshower}/build.xml</script>

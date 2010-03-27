@@ -39,6 +39,8 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     private Command playerCommand;
     private Command tuplesShowerCommand;
     private Command browseSongCommand;
+    private Command browseTranscriptCommand;
+    private Command loadLastListenginCommand;
     private Form form;
     private StringItem glossaryItem;
     private StringItem listeningItem;
@@ -66,7 +68,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             ex.printStackTrace();
         }
         
-        this.loadLastListeningFile();       /* Load the last used Listening File. */
+        
         
     }
 
@@ -151,21 +153,34 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 this.browser.setExtension("mp3");   /* Show only mp3 files. */
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.browser.getDisplayable());
-            } else if (command == exitCommand) {//GEN-LINE:|7-commandAction|5|19-preAction
+            } else if (command == browseTranscriptCommand) {//GEN-LINE:|7-commandAction|5|33-preAction
                 // write pre-action user code here
-                exitMIDlet();//GEN-LINE:|7-commandAction|6|19-postAction
+//GEN-LINE:|7-commandAction|6|33-postAction
                 // write post-action user code here
-            } else if (command == playerCommand) {//GEN-LINE:|7-commandAction|7|24-preAction
+                this.browser.setTitle("Transcript");
+                this.browser.setExtension("txt");   /* Show only txt files. */
+                this.switchDisplayable(null,        /* Switching the form. */
+                        this.browser.getDisplayable());
+            } else if (command == exitCommand) {//GEN-LINE:|7-commandAction|7|19-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|8|24-postAction
+                exitMIDlet();//GEN-LINE:|7-commandAction|8|19-postAction
+                // write post-action user code here
+            } else if (command == loadLastListenginCommand) {//GEN-LINE:|7-commandAction|9|35-preAction
+                // write pre-action user code here
+//GEN-LINE:|7-commandAction|10|35-postAction
+                // write post-action user code here
+                this.loadLastListeningFile();       /* Load the last used Listening File. */
+            } else if (command == playerCommand) {//GEN-LINE:|7-commandAction|11|24-preAction
+                // write pre-action user code here
+//GEN-LINE:|7-commandAction|12|24-postAction
                 // write post-action user code here
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.playerForm);
-            }//GEN-BEGIN:|7-commandAction|9|7-postCommandAction
-        }//GEN-END:|7-commandAction|9|7-postCommandAction
+            }//GEN-BEGIN:|7-commandAction|13|7-postCommandAction
+        }//GEN-END:|7-commandAction|13|7-postCommandAction
         // write post-action user code here
-    }//GEN-BEGIN:|7-commandAction|10|
-    //</editor-fold>//GEN-END:|7-commandAction|10|
+    }//GEN-BEGIN:|7-commandAction|14|
+    //</editor-fold>//GEN-END:|7-commandAction|14|
 
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: exitCommand ">//GEN-BEGIN:|18-getter|0|18-preInit
@@ -176,7 +191,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public Command getExitCommand() {
         if (exitCommand == null) {//GEN-END:|18-getter|0|18-preInit
             // write pre-init user code here
-            exitCommand = new Command("Exit", Command.EXIT, 0);//GEN-LINE:|18-getter|1|18-postInit
+            exitCommand = new Command("Exit", Command.ITEM, 0);//GEN-LINE:|18-getter|1|18-postInit
             // write post-init user code here
         }//GEN-BEGIN:|18-getter|2|
         return exitCommand;
@@ -196,6 +211,8 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             form.addCommand(getBrowseGlossaryCommand());
             form.addCommand(getPlayerCommand());
             form.addCommand(getBrowseSongCommand());
+            form.addCommand(getBrowseTranscriptCommand());
+            form.addCommand(getLoadLastListenginCommand());
             form.setCommandListener(this);//GEN-END:|14-getter|1|14-postInit
             // write post-init user code here
         }//GEN-BEGIN:|14-getter|2|
@@ -325,6 +342,36 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         return smallFont;
     }
     //</editor-fold>//GEN-END:|31-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: browseTranscriptCommand ">//GEN-BEGIN:|32-getter|0|32-preInit
+    /**
+     * Returns an initiliazed instance of browseTranscriptCommand component.
+     * @return the initialized component instance
+     */
+    public Command getBrowseTranscriptCommand() {
+        if (browseTranscriptCommand == null) {//GEN-END:|32-getter|0|32-preInit
+            // write pre-init user code here
+            browseTranscriptCommand = new Command("Item", Command.ITEM, 0);//GEN-LINE:|32-getter|1|32-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|32-getter|2|
+        return browseTranscriptCommand;
+    }
+    //</editor-fold>//GEN-END:|32-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: loadLastListenginCommand ">//GEN-BEGIN:|34-getter|0|34-preInit
+    /**
+     * Returns an initiliazed instance of loadLastListenginCommand component.
+     * @return the initialized component instance
+     */
+    public Command getLoadLastListenginCommand() {
+        if (loadLastListenginCommand == null) {//GEN-END:|34-getter|0|34-preInit
+            // write pre-init user code here
+            loadLastListenginCommand = new Command("Item", Command.ITEM, 0);//GEN-LINE:|34-getter|1|34-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|34-getter|2|
+        return loadLastListenginCommand;
+    }
+    //</editor-fold>//GEN-END:|34-getter|2|
 
     public Display getDisplay () {
         return Display.getDisplay(this);
