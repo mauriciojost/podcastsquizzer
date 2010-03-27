@@ -28,10 +28,14 @@ public class TupleRevelator {
         this.nextRevelation();
     }
     public void setMode(int mode) {
-        this.mode = mode;
+        this.stage = 0;
+        this.mode = Math.abs(mode) % TupleRevelator.AMOUNT_OF_MODES;
+        this.update(false);
     }    
     public void nextMode() {
+        this.stage = 0;
         this.mode = (this.mode + 1) % TupleRevelator.AMOUNT_OF_MODES;
+        this.update(false);
     }
     public void update(boolean next){
         Tuple tuple;

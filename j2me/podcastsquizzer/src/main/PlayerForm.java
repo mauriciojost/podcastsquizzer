@@ -21,11 +21,11 @@ import textboxpackage.TextBoxFormReadyListener;
  * This class is intended to provide the user with an environment where to play
  * the listening, add and look for the marks.
  */
-public class PlayerForm extends Canvas implements CommandListener, PlayerListener, TuplesShowerInterface, TextBoxFormReadyListener {
+public class PlayerForm extends Canvas implements CommandListener, PlayerListener, TuplesShowerInterface, TextBoxFormReadyListener, FileActionListener {
     //<editor-fold defaultstate="collapsed" desc=" About Modes ">                      
     private static final int MODE_TUPLES = 0;
-    private static final int MODE_MARKS = 1;
-    private static final int MODE_ANIMATED = 2;
+    private static final int MODE_MARKS = 2;
+    private static final int MODE_ANIMATED = 1;
     private static final int MODE_HELP = 3;
     private static final int MODES_NUMBER = 4;
     private static final String[] modeName = {"QUIZ","MARK","ANIMATION", "HELP"};
@@ -95,9 +95,9 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
         this.marksManager = new MarksManager(parser);
         this.changeMode(true);
         
-        this.playPauseCommand = new Command("Play", Command.ITEM, -2);
+        this.playPauseCommand = new Command("Play", Command.OK, 0);
         this.changeModeCommand = new Command("Mode", Command.ITEM, -1);
-        this.backCommand = new Command("Back", Command.ITEM, 0);
+        this.backCommand = new Command("Back", Command.BACK, 0);
         this.addCommand(playPauseCommand);
         this.addCommand(changeModeCommand);
         this.addCommand(backCommand);
@@ -388,11 +388,10 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
             case '0': 
                 try{
                     this.putTitle("SAVING MARKS...", 2);
-                    marksManager.saveMarks();
+                    marksManager.saveMarks(this, "saveMarks");
                     agileKey = true;
-                    this.putTitle("MARKS SAVED", 2);
                 }catch(Exception e){
-                    this.putTitle("MARKS STILL NOT SAVED", 10);
+                    this.putTitle("MARKS NOT SAVED", 10);
                 }
                 break;
 
@@ -590,6 +589,9 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
             }else if(command==this.changeModeCommand){
                 String mn = this.changeMode(false);
                 this.putTitle("MODE " + mn, 1);
+                this.buildTitle();
+                this.repaint();
+                
             }else if(command==this.backCommand){
                 goPreviousForm();
             }
@@ -620,6 +622,14 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
         }
         
         this.repaint();
+    }
+    
+    public void writeOperationReady(String id, String path, boolean operation_successfully) {
+        if(operation_successfully && (id.compareTo("saveMarks")==0)) {
+            this.putTitle("MARKS SAVED", 2);
+        }else{
+            this.putTitle("MARKS NOT SAVED", 2);
+        }
     }
 }
 

@@ -13,7 +13,7 @@ import persistencepackage.*;
  *
  * @author Mauricio
  */
-public class MarksManager implements FileActionListener{
+public class MarksManager{
     private Parser parser;
     private Vector marksVector;
     private TupleFinder tupleFinder;
@@ -32,7 +32,7 @@ public class MarksManager implements FileActionListener{
         this.tupleFinder = new TupleFinder(marksVector);
     }
             
-    public void saveMarks() throws Exception{
+    public void saveMarks(FileActionListener fal, String id) throws Exception{
         String text;
         
         marksVector.trimToSize();
@@ -40,13 +40,7 @@ public class MarksManager implements FileActionListener{
             text = parser.vector2txt(marksVector);
             String currentPath = MediaServices.getMediaServices().getCurrentPath();        
             String newFilePath = FileServices.getDirectory(currentPath) + FileServices.getFilenameWExtensionFromPath(currentPath) + "_.txt";
-            FileServices.writeTXTFile(newFilePath, text.getBytes(), this, "saveMarks");
-            
-            Thread.sleep(2000);
-            if (this.successfullySaved==false){
-                throw new Exception("Marks not saved yet...");
-            }
-            
+            FileServices.writeTXTFile(newFilePath, text.getBytes(), fal, id);
         }
     
     }
@@ -120,7 +114,5 @@ public class MarksManager implements FileActionListener{
         t.setExtra(Parser.sec2hours(sec));
     }
 
-    public void writeOperationReady(String id, String path, boolean operation_successfully) {
-        this.successfullySaved = operation_successfully;
-    }
+    
 }

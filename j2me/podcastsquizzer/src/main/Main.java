@@ -41,8 +41,8 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     private Command browseSongCommand;
     private Command loadLastListeningCommand;
     private Command browseTranscriptCommand;
-    private Command browseAllCommand;
     private Command saveLastListeningCommand;
+    private Command browseAllCommand;
     private Form form;
     private StringItem glossaryItem;
     private StringItem listeningItem;
@@ -206,7 +206,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public Command getExitCommand() {
         if (exitCommand == null) {//GEN-END:|18-getter|0|18-preInit
             // write pre-init user code here
-            exitCommand = new Command("Exit", Command.ITEM, 0);//GEN-LINE:|18-getter|1|18-postInit
+            exitCommand = new Command("Exit", Command.EXIT, 0);//GEN-LINE:|18-getter|1|18-postInit
             // write post-init user code here
         }//GEN-BEGIN:|18-getter|2|
         return exitCommand;
@@ -276,7 +276,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public Command getPlayerCommand() {
         if (playerCommand == null) {//GEN-END:|23-getter|0|23-preInit
             // write pre-init user code here
-            playerCommand = new Command("Player", Command.ITEM, -1);//GEN-LINE:|23-getter|1|23-postInit
+            playerCommand = new Command("Player", Command.OK, 0);//GEN-LINE:|23-getter|1|23-postInit
             // write post-init user code here
         }//GEN-BEGIN:|23-getter|2|
         return playerCommand;
