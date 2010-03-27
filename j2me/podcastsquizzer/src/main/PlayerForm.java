@@ -57,12 +57,13 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     private int baseTimeForChange=0;
     
     private boolean stopThread = false;
-    private boolean showMessageTitle = false;        
+    //private boolean showMessageTitle = false;        
     private boolean timeChangeInProgress = false;
     private int desiredTimeChange = 0;
     private boolean agileKey = false;
     private boolean goForwardFlag = false; /* Bandera para saber si la tecla de adelantamiento de audio está presionada. */
     private boolean goBackFlag = false; /* Idem con la tecla de retroceso. */
+    private boolean stateBeforeMoving = false;
     
     //</editor-fold>
     
@@ -92,27 +93,6 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
-                    if (titleTimeCounter>=0){
-                        
-                        titleTimeCounter--;
-                        showMessageTitle = true;
-                        
-                        
-                        if (titleTimeCounter==0){
-                            if (timeChangeInProgress){
-                                timeChangeInProgress = false;
-                                try{
-                                    //MediaServices.getMediaServices().movePosition(desiredTimeChange);
-                                    MediaServices.getMediaServices().setPosition(baseTimeForChange + desiredTimeChange);
-                                }catch(Exception e){}
-                                desiredTimeChange = 0;
-                            }
-                        }
-                        
-                    }else{
-                        showMessageTitle = false;
-                    }
-                    
                     
                     if (goForwardFlag){
                         desiredTimeChange+=2;
@@ -122,6 +102,38 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                         desiredTimeChange-=2;
                         putTitle("MOVE "+ desiredTimeChange + " sec.", (float)0.5);
                     }
+                    
+                    
+                    
+                    if (titleTimeCounter>0){   /* Un resumen de mensaje tiene que ser mostrado. */
+                        
+                        titleTimeCounter--;     /* Se consume el tiempo durante el cual se muestra. */
+                        //showMessageTitle = true;
+                        
+                        
+                        if (titleTimeCounter==1){ /* Cuando se está a punto de dejar de mostrar el mensaje... */
+                            if (timeChangeInProgress){
+                                timeChangeInProgress = false;
+                                try{
+                                    //MediaServices.getMediaServices().movePosition(desiredTimeChange);
+                                    MediaServices.getMediaServices().setPosition(baseTimeForChange + desiredTimeChange);
+                                    
+                                    if(stateBeforeMoving==true){
+                                        MediaServices.getMediaServices().play();
+                                    }
+                                    
+                                }catch(Exception e){
+                                    e.printStackTrace();
+                                }
+                                desiredTimeChange = 0;
+                            }
+                        }
+                        
+                    }else{
+                        //showMessageTitle = false;
+                    }
+                    
+                    
                     
                     
                     buildTitle();
@@ -172,7 +184,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     private void buildTitle(){
         String title;
         
-        if (showMessageTitle) {
+        if (titleTimeCounter>0) { /* El mensaje debe ser mostrado aún. */
             title = ">" + this.messageTitle;
         } else {
             title = PlayerForm.modeName[this.mode]+" " + this.timeText;
@@ -243,8 +255,6 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         
     }
 
-    
-    
     private void modeTuplesKeyPressed(int keyCode) {
         
         switch(keyCode){
@@ -383,8 +393,12 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     break;
                 case '1':
                     try{
+                        this.stateBeforeMoving = MediaServices.getMediaServices().isItPlaying();
+                        MediaServices.getMediaServices().pause();
                         this.baseTimeForChange = (int)(MediaServices.getMediaServices().getPosition()/MediaServices.TIME_FACTOR);
-                    }catch(Exception e){}
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                     this.timeChangeInProgress = true;
                     this.desiredTimeChange = desiredTimeChange - 1;
                     this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
@@ -402,8 +416,12 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                     break;
                 case '3':
                     try{
+                        this.stateBeforeMoving = MediaServices.getMediaServices().isItPlaying();
+                        MediaServices.getMediaServices().pause();
                         this.baseTimeForChange = (int)(MediaServices.getMediaServices().getPosition()/MediaServices.TIME_FACTOR);
-                    }catch(Exception e){}
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                     this.timeChangeInProgress = true;
                     this.desiredTimeChange = desiredTimeChange + 1;
                     this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
@@ -455,6 +473,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                 this.setValues(t);
                 this.repaint();
             }catch(Exception e){
+                e.printStackTrace();
             }
         }
         
@@ -490,8 +509,8 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     }
     
     private void putTitle(String title, float seconds){
-        this.titleTimeCounter = (int)(seconds*10);
         this.messageTitle = title;
+        this.titleTimeCounter = (int)(seconds*10);
     }
     //</editor-fold>
 }

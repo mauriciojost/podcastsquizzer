@@ -20,7 +20,6 @@ public class MediaServices implements Runnable{
     private static MediaServices mediaServicesInstance = null;
     private Player player;
     private long length = 0;
-    private boolean playing = false;
     private int step = 10;
     private PlayerListener playerListener;
     public static final int TIME_FACTOR = 1000000;
@@ -40,7 +39,7 @@ public class MediaServices implements Runnable{
     
     public void load(String path1) throws Exception {
         VolumeControl vc;
-        playing = false;
+        
         
         this.path = path1;
         String path2 = path1;
@@ -87,15 +86,7 @@ public class MediaServices implements Runnable{
         player.prefetch();
     }
         
-    public void play(String path) throws Exception{
-        
-        this.load(path);
-        
-        player.start();
-        playing = true;
-
-    }
-    
+  
     public void movePosition(int seconds_change) throws MediaException{
         long a, b;
         a = this.player.getMediaTime();
@@ -136,17 +127,37 @@ public class MediaServices implements Runnable{
     }
     
     public void playPause() throws Exception {
-        if (playing == true) {
+        
+        if (this.player.getState()==player.STARTED) {
             this.player.stop();
-            playing = false;
         } else {
             this.player.start();
-            playing = true;
         }
     }
     
+    
+    
+    public void play() throws Exception {
+        
+        if (this.player.getState()!=player.STARTED) {
+            this.player.start();
+        }
+    }
+    
+    
+    public void pause() throws Exception {
+        
+        if (this.player.getState()==player.STARTED) {
+            this.player.stop();
+        }
+    }
+    
+    
+    
+    
+    
     public boolean isItPlaying(){
-        return playing;
+        return (this.player.getState()==player.STARTED);
     }
     
     public long getDuration() {

@@ -24,8 +24,17 @@ public class Tuple {
     }
     
     private void reeplaceChars(String str, String newc, String oldc){
-        str.replace(oldc.charAt(0), newc.charAt(0));
+        if (str!=null)
+            str.replace(oldc.charAt(0), newc.charAt(0));
+        
         /* En el caso de utilizar separadores de más de un caracter traería problemas... */
+    }
+    
+    private boolean hasNoData(String a){
+        if (a==null) 
+            return true;
+        else
+            return (a.compareTo("")==0);
     }
     
     public void setExtra(String a){
@@ -43,13 +52,15 @@ public class Tuple {
     public String getString(String vseparator, String lseparator){
         String vseparator2 = " " + vseparator + " ";
         
+        
+        
         reeplaceChars(extra, vseparator, lseparator);
         reeplaceChars(key, vseparator, lseparator);
         reeplaceChars(value, vseparator, lseparator);
         
-        if (extra.compareTo("")==0) {
-            if (value.compareTo("")==0) {
-                if (key.compareTo("")==0){
+        if (hasNoData(extra)) {
+            if (hasNoData(value)) {
+                if (hasNoData(key)){
                     return "" + lseparator;
                 }else{
                     return key + lseparator;
@@ -60,9 +71,6 @@ public class Tuple {
         } else { 
             return key + vseparator2 + value + vseparator2 + extra + lseparator;
         }
-
-            
-       
     }
     
     public void copy(Tuple t){
