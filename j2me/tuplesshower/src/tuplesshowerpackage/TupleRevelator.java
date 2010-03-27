@@ -33,7 +33,7 @@ public class TupleRevelator {
     public void nextMode() {
         this.mode = (this.mode + 1) % TupleRevelator.AMOUNT_OF_MODES;
     }
-    public void nextRevelation(){
+    public void update(boolean next){
         Tuple tuple;
         
         if (this.currentTuple==null) {
@@ -69,7 +69,12 @@ public class TupleRevelator {
         }
         
         this.tuplesshower.setValues(tuple);     
-        this.stage++;
+        if (next==true){
+            this.stage++;
+        }
+    }
+    public void nextRevelation(){
+        update(true);
     }
     
 }

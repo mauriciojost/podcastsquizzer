@@ -69,6 +69,9 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
     private boolean stateBeforeMoving = false;
     
     private Command playPauseCommand;
+    private Command changeModeCommand;
+    private Command backCommand;
+    
     //</editor-fold>
     
     //list = new List("list", Choice.IMPLICIT);
@@ -92,8 +95,13 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
         this.marksManager = new MarksManager(parser);
         this.changeMode(true);
         
-        this.playPauseCommand = new Command("Play", Command.ITEM, 0);
+        this.playPauseCommand = new Command("Play", Command.ITEM, -2);
+        this.changeModeCommand = new Command("Mode", Command.ITEM, -1);
+        this.backCommand = new Command("Back", Command.ITEM, 0);
         this.addCommand(playPauseCommand);
+        this.addCommand(changeModeCommand);
+        this.addCommand(backCommand);
+        
         this.setCommandListener(this);
         //this.setFullScreenMode(true);
         
@@ -185,6 +193,7 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
         if (mode==MODE_HELP){
             mainText = Help.getIntructionsHelp();
         }else{
+            this.tupleRevelator.update(false);
             mainText =  
                 "*" + namesTuple.getKey() + "\n" + 
                 valuesTuple.getKey() + "\n" + 
@@ -265,7 +274,7 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
             default:
                 break;
         }
-        this.valuesTuple = new Tuple("","","");
+        this.tupleRevelator.setTuple(new Tuple("","",""));
         this.yTranslation = 0;
         
         return PlayerForm.modeName[this.mode];
@@ -308,40 +317,7 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
         
         switch(keyCode){
 
-            case '4':
-                try{
-                    String mark = marksManager.addMarkNow(MediaServices.getMediaServices().getPositionSeconds());
-                    agileKey = true;
-                    this.putTitle("MARK: " + mark, 1);
-                }catch(Exception e){
-                    this.putTitle("ERROR ADDING MARK...",1);
-                }
-                break;
-            case '5':
-                //this.putTitle("COMMENT", 1);
-                 
-                this.textBoxForm.setTitle("Comment");
-                try {
-                    this.textBoxForm.setText(marksManager.getCurrent().getValue());
-                } catch (Exception ex) {
-                    this.textBoxForm.setText("");
-                    ex.printStackTrace();
-                }
-                display.setCurrent(this.textBoxForm.getDisplayable());
-                
-                break;
-
-            case '6': 
-                try{
-                    this.putTitle("SAVING MARKS...", 2);
-                    marksManager.saveMarks();
-                    agileKey = true;
-                    this.putTitle("MARKS SAVED", 2);
-                }catch(Exception e){
-                    this.putTitle("MARKS STILL NOT SAVED", 10);
-                }
-                break;
-
+            
             case '7':
                 try {
                     this.putTitle("PREVIOUS MARK", 1);
@@ -398,6 +374,85 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
     private void modeAnimatedKeyPressed(int keyCode){
         
         switch(keyCode){
+            case '6':
+                try{
+                    String mark = marksManager.addMarkNow(MediaServices.getMediaServices().getPositionSeconds());
+                    agileKey = true;
+                    this.putTitle("NEW MARK: " + mark, 1);
+                }catch(Exception e){
+                    this.putTitle("ERROR ADDING MARK...",1);
+                }
+                break;
+            
+
+            case '0': 
+                try{
+                    this.putTitle("SAVING MARKS...", 2);
+                    marksManager.saveMarks();
+                    agileKey = true;
+                    this.putTitle("MARKS SAVED", 2);
+                }catch(Exception e){
+                    this.putTitle("MARKS STILL NOT SAVED", 10);
+                }
+                break;
+
+                
+            case '5':
+                if (MediaServices.getMediaServices().isItPlaying()==false){
+                    this.textBoxForm.setTitle("ValueComment");
+                    try {
+                        this.textBoxForm.setText(marksManager.getCurrent().getValue());
+                    } catch (Exception ex) {
+                        this.textBoxForm.setText("");
+                        ex.printStackTrace();
+                    }
+                    display.setCurrent(this.textBoxForm.getDisplayable());
+                }else{
+                    this.putTitle("PLAYING...", 1);
+                }
+                break;
+                
+            case '4':
+                if (MediaServices.getMediaServices().isItPlaying()==false){
+                    this.textBoxForm.setTitle("KeyComment");
+                    try {
+                        this.textBoxForm.setText(marksManager.getCurrent().getKey());
+                    } catch (Exception ex) {
+                        this.textBoxForm.setText("");
+                        ex.printStackTrace();
+                    }
+                    display.setCurrent(this.textBoxForm.getDisplayable());
+                }else{
+                    this.putTitle("PLAYING...", 1);
+                }
+                break;
+                
+            case '7':
+                try {
+                    if (MediaServices.getMediaServices().isItPlaying()==false){
+                        this.putTitle("PREVIOUS MARK", 1);
+                        this.tupleRevelator.setTuple(marksManager.getPrevious(true));
+                    }else{
+                        this.putTitle("PLAYING...", 1);
+                    }
+                } catch (Exception ex) {
+                    this.putTitle("MARK ERROR", 1);
+                }
+                break;
+            
+            case '9':
+                try {
+                    if (MediaServices.getMediaServices().isItPlaying()==false){
+                        this.putTitle("NEXT MARK", 1);                    
+                        this.tupleRevelator.setTuple(marksManager.getNext(true));
+                    }else{
+                        this.putTitle("PLAYING...", 1);
+                    }
+                } catch (Exception ex) {
+                    this.putTitle("MARK ERROR", 1);
+                }
+                break;
+                
             case '8':
                 this.putTitle("REVELATION MODE", 1);
                 this.tupleRevelator.nextMode();
@@ -412,17 +467,6 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
     private void modeDefaultKeyPressed(int keyCode){
         if (keyCode>0){
             switch(keyCode){
-                
-                case '*':
-                    goPreviousForm();
-                    break;
-                case '#':
-                    String mn = this.changeMode(false);
-                    this.putTitle("MODE " + mn, 1);
-                    break;
-                    
-                
-                
                 default:
                     this.putTitle("NOT USED", 1);
                     break;
@@ -485,11 +529,11 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
         current = (pl.getMediaTime()/MediaServices.TIME_FACTOR); 
         this.setTimeText(current, pl.getDuration()/MediaServices.TIME_FACTOR);    
         
-        if (this.mode == PlayerForm.MODE_ANIMATED){
+        if ((this.mode == PlayerForm.MODE_ANIMATED)&&(MediaServices.getMediaServices().isItPlaying())){
             try{
                 t = this.marksManager.getMark(current);
                 this.yTranslation = 0;
-                this.setValues(t);
+                this.tupleRevelator.setTuple(t);
                 this.repaint();
             }catch(Exception e){
                 e.printStackTrace();
@@ -542,25 +586,39 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
                     MediaServices.getMediaServices().playPause(); 
                 }catch(Exception e){
                     this.putTitle("ERROR PLAY/PAUSE", 1);
-                }
-                //agileKey = true;
-                    
+                }    
+            }else if(command==this.changeModeCommand){
+                String mn = this.changeMode(false);
+                this.putTitle("MODE " + mn, 1);
+            }else if(command==this.backCommand){
+                goPreviousForm();
             }
         }
     }
 
     public void textBoxReady(String title, String text) {
-        if (title.compareTo("Comment")==0){
+        if (title.compareTo("ValueComment")==0){
             if (text!=null){
                 try {
                     marksManager.getCurrent().setValue(text);
-                    this.putTitle("COMMENT DONE", 1);
+                    this.putTitle("VALUE CHANGED", 1);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                
+            }
+        } else if (title.compareTo("KeyComment")==0){
+            if (text!=null){
+                try {
+                    marksManager.getCurrent().setKey(text);
+                    this.putTitle("KEY CHANGED", 1);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
                 
             }
         }
+        
         this.repaint();
     }
 }

@@ -64,6 +64,7 @@ public class MarksManager implements FileActionListener{
         Tuple tuple;
         text =  Parser.sec2hours(seg);
         tuple = this.tupleFinder.lookFor(new Tuple(null,null,text));
+        currentTupleIndex = this.tupleFinder.getLastIndex();
         return tuple;
     }
     

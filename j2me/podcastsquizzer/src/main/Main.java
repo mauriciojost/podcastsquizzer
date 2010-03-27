@@ -39,8 +39,10 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     private Command playerCommand;
     private Command tuplesShowerCommand;
     private Command browseSongCommand;
+    private Command loadLastListeningCommand;
     private Command browseTranscriptCommand;
-    private Command loadLastListenginCommand;
+    private Command browseAllCommand;
+    private Command saveLastListeningCommand;
     private Form form;
     private StringItem glossaryItem;
     private StringItem listeningItem;
@@ -135,52 +137,65 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
      */
     public void commandAction(Command command, Displayable displayable) {//GEN-END:|7-commandAction|0|7-preCommandAction
         // write pre-action user code here
-        if (displayable == form) {//GEN-BEGIN:|7-commandAction|1|22-preAction
-            if (command == browseGlossaryCommand) {//GEN-END:|7-commandAction|1|22-preAction
+        if (displayable == form) {//GEN-BEGIN:|7-commandAction|1|37-preAction
+            if (command == browseAllCommand) {//GEN-END:|7-commandAction|1|37-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|2|22-postAction
+//GEN-LINE:|7-commandAction|2|37-postAction
+                // write post-action user code here
+                this.browser.setTitle("All");
+                this.browser.setExtension("mp3");   /* Show only mp3 files. */
+                this.switchDisplayable(null,        /* Switching the form. */
+                        this.browser.getDisplayable());
+            } else if (command == browseGlossaryCommand) {//GEN-LINE:|7-commandAction|3|22-preAction
+                // write pre-action user code here
+//GEN-LINE:|7-commandAction|4|22-postAction
                 // write post-action user code here
                 this.browser.setTitle("Glossary"); 
                 this.browser.setExtension("txt");   /* Show only txt files. */
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.browser.getDisplayable());
                 
-            } else if (command == browseSongCommand) {//GEN-LINE:|7-commandAction|3|28-preAction
+            } else if (command == browseSongCommand) {//GEN-LINE:|7-commandAction|5|28-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|4|28-postAction
+//GEN-LINE:|7-commandAction|6|28-postAction
                 // write post-action user code here
                 this.browser.setTitle("Listening");
                 this.browser.setExtension("mp3");   /* Show only mp3 files. */
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.browser.getDisplayable());
-            } else if (command == browseTranscriptCommand) {//GEN-LINE:|7-commandAction|5|33-preAction
+            } else if (command == browseTranscriptCommand) {//GEN-LINE:|7-commandAction|7|33-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|6|33-postAction
+//GEN-LINE:|7-commandAction|8|33-postAction
                 // write post-action user code here
                 this.browser.setTitle("Transcript");
                 this.browser.setExtension("txt");   /* Show only txt files. */
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.browser.getDisplayable());
-            } else if (command == exitCommand) {//GEN-LINE:|7-commandAction|7|19-preAction
+            } else if (command == exitCommand) {//GEN-LINE:|7-commandAction|9|19-preAction
                 // write pre-action user code here
-                exitMIDlet();//GEN-LINE:|7-commandAction|8|19-postAction
+                exitMIDlet();//GEN-LINE:|7-commandAction|10|19-postAction
                 // write post-action user code here
-            } else if (command == loadLastListenginCommand) {//GEN-LINE:|7-commandAction|9|35-preAction
+            } else if (command == loadLastListeningCommand) {//GEN-LINE:|7-commandAction|11|35-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|10|35-postAction
+//GEN-LINE:|7-commandAction|12|35-postAction
                 // write post-action user code here
                 this.loadLastListeningFile();       /* Load the last used Listening File. */
-            } else if (command == playerCommand) {//GEN-LINE:|7-commandAction|11|24-preAction
+            } else if (command == playerCommand) {//GEN-LINE:|7-commandAction|13|24-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|12|24-postAction
+//GEN-LINE:|7-commandAction|14|24-postAction
                 // write post-action user code here
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.playerForm);
-            }//GEN-BEGIN:|7-commandAction|13|7-postCommandAction
-        }//GEN-END:|7-commandAction|13|7-postCommandAction
+            } else if (command == saveLastListeningCommand) {//GEN-LINE:|7-commandAction|15|39-preAction
+                // write pre-action user code here
+//GEN-LINE:|7-commandAction|16|39-postAction
+                // write post-action user code here
+                this.saveLastListeningFile();
+            }//GEN-BEGIN:|7-commandAction|17|7-postCommandAction
+        }//GEN-END:|7-commandAction|17|7-postCommandAction
         // write post-action user code here
-    }//GEN-BEGIN:|7-commandAction|14|
-    //</editor-fold>//GEN-END:|7-commandAction|14|
+    }//GEN-BEGIN:|7-commandAction|18|
+    //</editor-fold>//GEN-END:|7-commandAction|18|
 
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: exitCommand ">//GEN-BEGIN:|18-getter|0|18-preInit
@@ -212,7 +227,9 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             form.addCommand(getPlayerCommand());
             form.addCommand(getBrowseSongCommand());
             form.addCommand(getBrowseTranscriptCommand());
-            form.addCommand(getLoadLastListenginCommand());
+            form.addCommand(getLoadLastListeningCommand());
+            form.addCommand(getBrowseAllCommand());
+            form.addCommand(getSaveLastListeningCommand());
             form.setCommandListener(this);//GEN-END:|14-getter|1|14-postInit
             // write post-init user code here
         }//GEN-BEGIN:|14-getter|2|
@@ -358,27 +375,57 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     }
     //</editor-fold>//GEN-END:|32-getter|2|
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: loadLastListenginCommand ">//GEN-BEGIN:|34-getter|0|34-preInit
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: loadLastListeningCommand ">//GEN-BEGIN:|34-getter|0|34-preInit
     /**
-     * Returns an initiliazed instance of loadLastListenginCommand component.
+     * Returns an initiliazed instance of loadLastListeningCommand component.
      * @return the initialized component instance
      */
-    public Command getLoadLastListenginCommand() {
-        if (loadLastListenginCommand == null) {//GEN-END:|34-getter|0|34-preInit
+    public Command getLoadLastListeningCommand() {
+        if (loadLastListeningCommand == null) {//GEN-END:|34-getter|0|34-preInit
             // write pre-init user code here
-            loadLastListenginCommand = new Command("Load Last Listening", Command.ITEM, -1);//GEN-LINE:|34-getter|1|34-postInit
+            loadLastListeningCommand = new Command("Load Last Listening", Command.ITEM, -1);//GEN-LINE:|34-getter|1|34-postInit
             // write post-init user code here
         }//GEN-BEGIN:|34-getter|2|
-        return loadLastListenginCommand;
+        return loadLastListeningCommand;
     }
     //</editor-fold>//GEN-END:|34-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: browseAllCommand ">//GEN-BEGIN:|36-getter|0|36-preInit
+    /**
+     * Returns an initiliazed instance of browseAllCommand component.
+     * @return the initialized component instance
+     */
+    public Command getBrowseAllCommand() {
+        if (browseAllCommand == null) {//GEN-END:|36-getter|0|36-preInit
+            // write pre-init user code here
+            browseAllCommand = new Command("Browse All", Command.ITEM, 0);//GEN-LINE:|36-getter|1|36-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|36-getter|2|
+        return browseAllCommand;
+    }
+    //</editor-fold>//GEN-END:|36-getter|2|
+
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: saveLastListeningCommand ">//GEN-BEGIN:|38-getter|0|38-preInit
+    /**
+     * Returns an initiliazed instance of saveLastListeningCommand component.
+     * @return the initialized component instance
+     */
+    public Command getSaveLastListeningCommand() {
+        if (saveLastListeningCommand == null) {//GEN-END:|38-getter|0|38-preInit
+            // write pre-init user code here
+            saveLastListeningCommand = new Command("Save as Last Listening", Command.ITEM, 0);//GEN-LINE:|38-getter|1|38-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|38-getter|2|
+        return saveLastListeningCommand;
+    }
+    //</editor-fold>//GEN-END:|38-getter|2|
 
     public Display getDisplay () {
         return Display.getDisplay(this);
     }
     
     public void exitMIDlet() {    
-        this.saveLastListeningFile();
+        
         switchDisplayable (null, null);
         destroyApp(true);
         notifyDestroyed();
@@ -422,26 +469,31 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 vector = this.parser.txt2vector(text);
                 this.playerForm.setGlossaryVectorSequentially(vector);
             }
-        }
-        if (title.compareTo("Listening")==0) {
+        } else if (title.compareTo("All")==0) {
+            if (path != null){
+                String txtPath = "";
+                String traPath = "";
+                String lisPath;
+
+                lisPath = path;
+                txtPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + ".txt";
+                traPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + "_.txt";
+
+                this.browserReady("Listening", lisPath);
+                this.browserReady("Glossary", txtPath);
+                this.browserReady("Transcript", traPath);
+            }
+        } else if (title.compareTo("Listening")==0) {
             if (path != null){
                 try{
-                    String txtPath = "";
-                    String traPath = "";
                     MediaServices.getMediaServices().load(path);
-                    this.listeningItem.setText("OK: MP3 file successfully loaded ("+FileServices.getStandardPath(path)+").");
+                    this.listeningItem.setText("OK: MP3 file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
                     this.lastfilepath = path;
-                    txtPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + ".txt";
-                    traPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + "_.txt";
-                    this.browserReady("Glossary", txtPath);
-                    this.browserReady("Transcript", traPath);
                 }catch(Exception e){
                     this.listeningItem.setText("CANNOT load MP3 file ('" + FileServices.getStandardPath(path) + "'). "+ e.getMessage());
                 }
             }
-        }
-        
-        if (title.compareTo("Transcript")==0) {
+        } else if (title.compareTo("Transcript")==0) {
             String text = "";
             Vector vector;
             if (path != null){
@@ -469,7 +521,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         lfile = this.rmsTuple.getTupleByKey(LAST_LISTENING_FILE_KEY);
         if (lfile!=null){
             this.lastfilepath = lfile.getValue();
-            this.browserReady("Listening", lastfilepath);
+            this.browserReady("All", lastfilepath);
         }
     }
     
