@@ -25,24 +25,35 @@ public class TupleRevelator {
     public void setTuple(Tuple tuple) {
         this.currentTuple = tuple;
         this.stage = 0;
-        this.nextRevelation();
+        update(false);
     }
     public void setMode(int mode) {
         this.stage = 0;
         this.mode = Math.abs(mode) % TupleRevelator.AMOUNT_OF_MODES;
         this.update(false);
     }    
-    public void nextMode() {
+    
+    public int nextMode() {
         this.stage = 0;
         this.mode = (this.mode + 1) % TupleRevelator.AMOUNT_OF_MODES;
         this.update(false);
+        return this.mode;
     }
+    
+    /**
+     * Updates the output.
+     * @param next if true, the update is performed with the next revelation.
+     */
     public void update(boolean next){
         Tuple tuple;
         
         if (this.currentTuple==null) {
             tuple = new Tuple("","","");
         }else{
+            
+            if (next==true){
+                this.stage++;
+            }   
             
             switch (mode) {
                 case TupleRevelator.MODE_123:
@@ -73,10 +84,9 @@ public class TupleRevelator {
         }
         
         this.tuplesshower.setValues(tuple);     
-        if (next==true){
-            this.stage++;
-        }
+        
     }
+    
     public void nextRevelation(){
         update(true);
     }

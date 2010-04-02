@@ -24,8 +24,8 @@ import textboxpackage.TextBoxFormReadyListener;
 public class PlayerForm extends Canvas implements CommandListener, PlayerListener, TuplesShowerInterface, TextBoxFormReadyListener, FileActionListener {
     //<editor-fold defaultstate="collapsed" desc=" About Modes ">                      
     private static final int MODE_TUPLES = 0;
-    private static final int MODE_MARKS = 2;
-    private static final int MODE_ANIMATED = 1;
+    private static final int MODE_MARKS = 1;
+    private static final int MODE_ANIMATED = 2;
     private static final int MODE_HELP = 3;
     private static final int MODES_NUMBER = 4;
     private static final String[] modeName = {"QUIZ","MARK","ANIMATION", "HELP"};
@@ -85,6 +85,7 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
         
         this.display = display;
         this.previousDisplayable = previous;
+        
         
         this.textPainter = new TextPainter(font, new Rectangle(border,border,this.getWidth()-(border*2), this.getHeight()-(border*2)));
         MediaServices.getMediaServices().setPlayerListener(this);
@@ -284,8 +285,6 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
     private void modeTuplesKeyPressed(int keyCode) {
         
         switch(keyCode){
-            case '1':
-                
             case '4':
                 this.putTitle("PREVIOUS RECORD", 1);
                 if (iterator!=null)
@@ -301,8 +300,8 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
                     this.tupleRevelator.setTuple(this.iterator.getNext());
                 break;
             case '8':
-                this.putTitle("REVELATION MODE", 1);
-                this.tupleRevelator.nextMode();
+                int rmod = this.tupleRevelator.nextMode();
+                this.putTitle("REVELATION MODE ("+rmod+")", 1);
                 break;
             default:
                 modeDefaultKeyPressed(keyCode);
@@ -453,8 +452,8 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
                 break;
                 
             case '8':
-                this.putTitle("REVELATION MODE", 1);
-                this.tupleRevelator.nextMode();
+                int rmod = this.tupleRevelator.nextMode();
+                this.putTitle("REVELATION MODE ("+rmod+")", 1);
                 break;
             default:
                 modeDefaultKeyPressed(keyCode);
