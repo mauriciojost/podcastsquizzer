@@ -78,12 +78,12 @@
                 <Component componentID="14" typeID="Cjavax.microedition.lcdui.Form">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="Vform"/>
                     <Property name="commands" typeID="1C#CommandEventSource" value="A8:3_R193_R223_R243_R283_R333_R353_R373_R39"/>
-                    <Property name="title" typeID="Pjava.lang.String" value="VPodcastsQuizzer by M. Jost"/>
+                    <Property name="title" typeID="Pjava.lang.String" value="VPodcastsQuizzer"/>
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
                     <Property name="items" typeID="1Cjavax.microedition.lcdui.Item" value="A3:3_R293_R163_R30"/>
                     <Component componentID="16" typeID="Cjavax.microedition.lcdui.StringItem">
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VglossaryItem"/>
-                        <Property name="label" typeID="Pjava.lang.String" value="VGlossary File"/>
+                        <Property name="label" typeID="Pjava.lang.String" value="VGlossary File "/>
                         <Property name="itemCommandListener" typeID="C#ItemCommandListener" value="R17"/>
                         <Property name="text" typeID="Pjava.lang.String" value="V"/>
                         <Property name="font" typeID="Cjavax.microedition.lcdui.Font" value="R31"/>
@@ -107,7 +107,7 @@
                     </Component>
                     <Component componentID="29" typeID="Cjavax.microedition.lcdui.StringItem">
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VlisteningItem"/>
-                        <Property name="label" typeID="Pjava.lang.String" value="VListening File"/>
+                        <Property name="label" typeID="Pjava.lang.String" value="VListening File "/>
                         <Property name="itemCommandListener" typeID="C#ItemCommandListener" value="R17"/>
                         <Property name="text" typeID="Pjava.lang.String" value="V"/>
                         <Property name="font" typeID="Cjavax.microedition.lcdui.Font" value="R31"/>
@@ -118,7 +118,7 @@
                     </Component>
                     <Component componentID="30" typeID="Cjavax.microedition.lcdui.StringItem">
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VotherItem"/>
-                        <Property name="label" typeID="Pjava.lang.String" value="VTranscript File"/>
+                        <Property name="label" typeID="Pjava.lang.String" value="VTranscript File "/>
                         <Property name="itemCommandListener" typeID="C#ItemCommandListener" value="R17"/>
                         <Property name="text" typeID="Pjava.lang.String" value="V"/>
                         <Property name="font" typeID="Cjavax.microedition.lcdui.Font" value="R31"/>

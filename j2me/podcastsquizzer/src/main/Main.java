@@ -226,7 +226,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public Form getForm() {
         if (form == null) {//GEN-END:|14-getter|0|14-preInit
             // write pre-init user code here
-            form = new Form("PodcastsQuizzer by M. Jost", new Item[] { getListeningItem(), getGlossaryItem(), getOtherItem() });//GEN-BEGIN:|14-getter|1|14-postInit
+            form = new Form("PodcastsQuizzer", new Item[] { getListeningItem(), getGlossaryItem(), getOtherItem() });//GEN-BEGIN:|14-getter|1|14-postInit
             form.addCommand(getExitCommand());
             form.addCommand(getBrowseGlossaryCommand());
             form.addCommand(getPlayerCommand());
@@ -250,7 +250,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public StringItem getGlossaryItem() {
         if (glossaryItem == null) {//GEN-END:|16-getter|0|16-preInit
             // write pre-init user code here
-            glossaryItem = new StringItem("Glossary File", "");//GEN-BEGIN:|16-getter|1|16-postInit
+            glossaryItem = new StringItem("Glossary File ", "");//GEN-BEGIN:|16-getter|1|16-postInit
             glossaryItem.setFont(getSmallFont());//GEN-END:|16-getter|1|16-postInit
             // write post-init user code here
         }//GEN-BEGIN:|16-getter|2|
@@ -326,7 +326,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public StringItem getListeningItem() {
         if (listeningItem == null) {//GEN-END:|29-getter|0|29-preInit
             // write pre-init user code here
-            listeningItem = new StringItem("Listening File", "");//GEN-BEGIN:|29-getter|1|29-postInit
+            listeningItem = new StringItem("Listening File ", "");//GEN-BEGIN:|29-getter|1|29-postInit
             listeningItem.setFont(getSmallFont());//GEN-END:|29-getter|1|29-postInit
             // write post-init user code here
         }//GEN-BEGIN:|29-getter|2|
@@ -342,7 +342,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public StringItem getOtherItem() {
         if (otherItem == null) {//GEN-END:|30-getter|0|30-preInit
             // write pre-init user code here
-            otherItem = new StringItem("Transcript File", "");//GEN-BEGIN:|30-getter|1|30-postInit
+            otherItem = new StringItem("Transcript File ", "");//GEN-BEGIN:|30-getter|1|30-postInit
             otherItem.setFont(getSmallFont());//GEN-END:|30-getter|1|30-postInit
             // write post-init user code here
         }//GEN-BEGIN:|30-getter|2|

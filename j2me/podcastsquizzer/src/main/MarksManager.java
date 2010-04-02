@@ -19,7 +19,6 @@ public class MarksManager{
     private TupleFinder tupleFinder;
     private int counter=0;
     private int currentTupleIndex=-1;
-    private boolean successfullySaved = false;
     
     public MarksManager(Parser parser){
         this.parser = parser;

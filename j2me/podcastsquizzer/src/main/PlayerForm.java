@@ -21,7 +21,7 @@ import textboxpackage.TextBoxFormReadyListener;
  * This class is intended to provide the user with an environment where to play
  * the listening, add and look for the marks.
  */
-public class PlayerForm extends Canvas implements CommandListener, PlayerListener, TuplesShowerInterface, TextBoxFormReadyListener, FileActionListener {
+public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerInterface, TextBoxFormReadyListener, FileActionListener {
     //<editor-fold defaultstate="collapsed" desc=" About Modes ">                      
     private static final int MODE_TUPLES = 0;
     private static final int MODE_MARKS = 1;
@@ -81,13 +81,14 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
     
     public PlayerForm (Display display, Displayable previous, Parser parser)  {
         //<editor-fold defaultstate="collapsed" desc=" General Initialization ">
-        int border = 10;
+        int vborder = 10;
+        int hborder = 10;
         
         this.display = display;
         this.previousDisplayable = previous;
         
         
-        this.textPainter = new TextPainter(font, new Rectangle(border,border,this.getWidth()-(border*2), this.getHeight()-(border*2)));
+        this.textPainter = new TextPainter(font, new Rectangle(hborder,vborder,this.getWidth()-(hborder*2), this.getHeight()-(vborder*2)-20));
         MediaServices.getMediaServices().setPlayerListener(this);
         //this.iterator = new SequentialIterator(txtpath);
         this.tupleRevelator = new TupleRevelator(this);
@@ -96,15 +97,15 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
         this.marksManager = new MarksManager(parser);
         this.changeMode(true);
         
-        this.playPauseCommand = new Command("Play", Command.OK, 0);
-        this.changeModeCommand = new Command("Mode", Command.ITEM, -1);
-        this.backCommand = new Command("Back", Command.BACK, 0);
-        this.addCommand(playPauseCommand);
-        this.addCommand(changeModeCommand);
-        this.addCommand(backCommand);
+        //this.playPauseCommand = new Command("Play", Command.OK, 0);
+        //this.changeModeCommand = new Command("Mode", Command.ITEM, -1);
+        //this.backCommand = new Command("Back", Command.BACK, 0);
+        //this.addCommand(playPauseCommand);
+        //this.addCommand(changeModeCommand);
+        //this.addCommand(backCommand);
         
-        this.setCommandListener(this);
-        //this.setFullScreenMode(true);
+        this.setCommandListener(null);
+        this.setFullScreenMode(true);
         
         this.textBoxForm = new TextBoxForm(display, this, this);
         
@@ -129,14 +130,9 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
                         putTitle("MOVE "+ desiredTimeChange + " sec.", (float)0.5);
                     }
                     
-                    
-                    
                     if (titleTimeCounter>0){   /* Un resumen de mensaje tiene que ser mostrado. */
-                        
                         titleTimeCounter--;     /* Se consume el tiempo durante el cual se muestra. */
                         //showMessageTitle = true;
-                        
-                        
                         if (titleTimeCounter==1){ /* Cuando se está a punto de dejar de mostrar el mensaje... */
                             if (timeChangeInProgress){
                                 timeChangeInProgress = false;
@@ -146,22 +142,16 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
                                     
                                     if(stateBeforeMoving==true){
                                         MediaServices.getMediaServices().play();
-                                    }
-                                    
+                                    }           
                                 }catch(Exception e){
                                     e.printStackTrace();
                                 }
                                 desiredTimeChange = 0;
                             }
-                        }
-                        
+                        }   
                     }else{
                         //showMessageTitle = false;
                     }
-                    
-                    
-                    
-                    
                     buildTitle();
                 }
             }
@@ -465,6 +455,27 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
     private void modeDefaultKeyPressed(int keyCode){
         if (keyCode>0){
             switch(keyCode){
+                
+                case '2':
+                    this.putTitle("PLAY/PAUSE", 1);
+                    try{
+                        MediaServices.getMediaServices().playPause(); 
+                    }catch(Exception e){
+                        this.putTitle("ERROR PLAY/PAUSE", 1);
+                    }    
+                    break;
+                
+                case '#':
+                    String mn = this.changeMode(false);
+                    this.putTitle("MODE " + mn, 1);
+                    this.buildTitle();
+                    this.repaint();
+                    break;
+                
+                case '*':
+                    goPreviousForm();
+                    break;
+           
                 default:
                     this.putTitle("NOT USED", 1);
                     break;
@@ -576,26 +587,6 @@ public class PlayerForm extends Canvas implements CommandListener, PlayerListene
 
     //</editor-fold>
     
-    public void commandAction(Command command, Displayable disp) {
-        if (disp==this){
-            if(command==this.playPauseCommand){
-                this.putTitle("PLAY/PAUSE", 1);
-                try{
-                    MediaServices.getMediaServices().playPause(); 
-                }catch(Exception e){
-                    this.putTitle("ERROR PLAY/PAUSE", 1);
-                }    
-            }else if(command==this.changeModeCommand){
-                String mn = this.changeMode(false);
-                this.putTitle("MODE " + mn, 1);
-                this.buildTitle();
-                this.repaint();
-                
-            }else if(command==this.backCommand){
-                goPreviousForm();
-            }
-        }
-    }
 
     public void textBoxReady(String title, String text) {
         if (title.compareTo("ValueComment")==0){

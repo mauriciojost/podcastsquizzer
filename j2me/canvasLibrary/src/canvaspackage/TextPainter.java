@@ -29,8 +29,9 @@ public class TextPainter {
     
     public void paintTextComplex(Graphics g, String cText){
         int row = 0, aux;
-        //int currentColor;
+        int currentColor;
         Vector words, lines, line;
+        
         words = breakDownWords(cText);
         cText = null;
         
@@ -39,16 +40,15 @@ public class TextPainter {
         
         Enumeration iterator = lines.elements();
         
-        /*currentColor = g.getColor();
+        currentColor = g.getColor();
         g.setColor(0x333333);
-        g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeigth());
-        g.setColor(0x111111);
+        //g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeigth());
+        //g.setColor(0x111111);
         g.drawRect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeigth());
-        g.setColor(currentColor);*/
+        g.setColor(currentColor);
         
         int line_number = 0;
         
-        int currentColor;
         currentColor = g.getColor();
         
         while(iterator.hasMoreElements()){
