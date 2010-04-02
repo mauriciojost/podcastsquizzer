@@ -70,7 +70,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             ex.printStackTrace();
         }
         
-        
+        this.playerCommandStatus(false);
         
     }
 
@@ -142,6 +142,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 // write pre-action user code here
 //GEN-LINE:|7-commandAction|2|37-postAction
                 // write post-action user code here
+                
                 this.browser.setTitle("All");
                 this.browser.setExtension("mp3");   /* Show only mp3 files. */
                 this.switchDisplayable(null,        /* Switching the form. */
@@ -150,6 +151,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 // write pre-action user code here
 //GEN-LINE:|7-commandAction|4|22-postAction
                 // write post-action user code here
+                
                 this.browser.setTitle("Glossary"); 
                 this.browser.setExtension("txt");   /* Show only txt files. */
                 this.switchDisplayable(null,        /* Switching the form. */
@@ -159,6 +161,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 // write pre-action user code here
 //GEN-LINE:|7-commandAction|6|28-postAction
                 // write post-action user code here
+                
                 this.browser.setTitle("Listening");
                 this.browser.setExtension("mp3");   /* Show only mp3 files. */
                 this.switchDisplayable(null,        /* Switching the form. */
@@ -167,6 +170,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 // write pre-action user code here
 //GEN-LINE:|7-commandAction|8|33-postAction
                 // write post-action user code here
+                
                 this.browser.setTitle("Transcript");
                 this.browser.setExtension("txt");   /* Show only txt files. */
                 this.switchDisplayable(null,        /* Switching the form. */
@@ -179,6 +183,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 // write pre-action user code here
 //GEN-LINE:|7-commandAction|12|35-postAction
                 // write post-action user code here
+                
                 this.loadLastListeningFile();       /* Load the last used Listening File. */
             } else if (command == playerCommand) {//GEN-LINE:|7-commandAction|13|24-preAction
                 // write pre-action user code here
@@ -457,18 +462,14 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
      */
     public void browserReady(String title, String path) {
         if (title.compareTo("Glossary")==0) {
-            String text = "";
-            Vector vector;
-            if (path != null){
-                try {
-                    text = FileServices.readTXTFile(path);
-                    this.glossaryItem.setText("OK: TXT file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
-                } catch (Exception ex) {
-                    this.glossaryItem.setText("CANNOT load TXT file ('"+FileServices.getStandardPath(path)+"'). " + ex.getMessage());
-                }
-                vector = this.parser.txt2vector(text);
-                this.playerForm.setGlossaryVectorSequentially(vector);
-            }
+            this.loadGlossary(path);   
+            this.playerCommandStatus(true);
+        } else if (title.compareTo("Listening")==0) {
+            this.loadListening(path);
+            this.playerCommandStatus(true);
+        } else if (title.compareTo("Transcript")==0) {
+            this.loadTranscript(path);
+            this.playerCommandStatus(true);
         } else if (title.compareTo("All")==0) {
             if (path != null){
                 String txtPath = "";
@@ -479,37 +480,57 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 txtPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + ".txt";
                 traPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + "_.txt";
 
-                this.browserReady("Listening", lisPath);
-                this.browserReady("Glossary", txtPath);
-                this.browserReady("Transcript", traPath);
+                this.loadListening(lisPath);
+                this.loadTranscript(traPath);
+                this.loadGlossary(txtPath);
+                this.playerCommandStatus(true);
             }
-        } else if (title.compareTo("Listening")==0) {
-            if (path != null){
-                try{
-                    MediaServices.getMediaServices().load(path);
-                    this.listeningItem.setText("OK: MP3 file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
-                    this.lastfilepath = path;
-                }catch(Exception e){
-                    this.listeningItem.setText("CANNOT load MP3 file ('" + FileServices.getStandardPath(path) + "'). "+ e.getMessage());
-                }
-            }
-        } else if (title.compareTo("Transcript")==0) {
-            String text = "";
-            Vector vector;
-            if (path != null){
-                try {
-                    text = FileServices.readTXTFile(path);
-                    this.otherItem.setText("OK: Transcript file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
-                } catch (Exception ex) {
-                    this.otherItem.setText("CANNOT load transcript file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage());
-                }
-                vector = this.parser.txt2vector(text);
-                this.playerForm.setTranscript(vector);
-            }
-        }
+        } 
             
     }
+
     
+    private void loadTranscript(String path){
+        String text = "";
+        Vector vector;
+        if (path != null){
+            try {
+                text = FileServices.readTXTFile(path);
+                vector = this.parser.txt2vector(text);
+                this.playerForm.setTranscript(vector);
+                this.otherItem.setText("OK: Transcript file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
+            } catch (Exception ex) {
+                this.otherItem.setText("CANNOT load transcript file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage());
+            }
+
+        }
+    }
+    private void loadGlossary(String path){
+        String text = "";
+        Vector vector;
+        if (path != null){
+            try {
+                text = FileServices.readTXTFile(path);
+                this.glossaryItem.setText("OK: TXT file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
+                vector = this.parser.txt2vector(text);
+                this.playerForm.setGlossaryVectorSequentially(vector);
+            } catch (Exception ex) {
+                this.glossaryItem.setText("CANNOT load TXT file ('"+FileServices.getStandardPath(path)+"'). " + ex.getMessage());
+            }
+        }
+    }
+    
+    private void loadListening(String path){
+        if (path != null){
+            try{
+                MediaServices.getMediaServices().load(path);
+                this.lastfilepath = path;
+                this.listeningItem.setText("OK: MP3 file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
+            }catch(Exception e){
+                this.listeningItem.setText("CANNOT load MP3 file ('" + FileServices.getStandardPath(path) + "'). "+ e.getMessage());
+            }
+        }
+    }
     
     /** 
      * It loads the last listening file choosen in the previous session. 
@@ -538,4 +559,11 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     }
     
    
+    void playerCommandStatus(boolean status){
+        if (status==true){
+            this.getForm().addCommand(this.playerCommand);
+        }else{
+            this.getForm().removeCommand(this.playerCommand);
+        }
+    }
 }
