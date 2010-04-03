@@ -41,10 +41,10 @@ public class TextPainter {
         Enumeration iterator = lines.elements();
         
         currentColor = g.getColor();
-        g.setColor(0x333333);
-        //g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeigth());
-        //g.setColor(0x111111);
-        g.drawRect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeigth());
+        g.setColor(0x101010);
+        g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth()-1, bounds.getHeigth()-1);
+        g.setColor(0x555555);
+        g.drawRect(bounds.getX(), bounds.getY(), bounds.getWidth()-1, bounds.getHeigth()-1);
         g.setColor(currentColor);
         
         int line_number = 0;
@@ -53,19 +53,21 @@ public class TextPainter {
         
         while(iterator.hasMoreElements()){
             line = (Vector)iterator.nextElement();
+            
+            if ((row+this.getLineHeight(line))>bounds.getHeigth()){
+                break;
+            }
+            
             if (line_number>=this.baseLine) {
                 aux = paintLine(g,line,row);
                 row += aux+2;
             }
             line_number++;
-            if (row>bounds.getHeigth()){
-                break;
-            }
+            
         }
         
         g.setColor(currentColor);
         
-       
     }
     
     public Vector breakDownLines(Vector words, int max_width){
@@ -146,5 +148,18 @@ public class TextPainter {
         
         return max_height;
     }
+    
+    public int getLineHeight(Vector line){
+        int max_height=0;
+        Word word;
+        Enumeration iterator = line.elements();
+        while (iterator.hasMoreElements()){
+            word = (Word)iterator.nextElement();
+            max_height = Math.max(max_height, word.getFont().getHeight());
+        }
+        
+        return max_height;
+    }
+    
 }
 

@@ -40,7 +40,9 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     private TupleRevelator tupleRevelator;
     private Iterator iterator;
     private Parser parser;
-    private TextPainter textPainter;
+    private TextPainter mainTextPainter;
+    private TextPainter helpTextPainter;
+    private TextPainter titleTextPainter;
     private TextBoxForm textBoxForm;
     
     //</editor-fold>
@@ -53,6 +55,11 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     private String currentListeningPath;
     private String timeText = "0:00/0:00";
     private String messageTitle = "";
+    private String mainText = "mainText";
+    private String helpText = "helpText";
+    private String titleText = "titleText";
+    
+    
     
     private int yTranslation = 0;
     private int titleTimeCounter = -1;
@@ -68,10 +75,6 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     private boolean goBackFlag = false; /* Idem con la tecla de retroceso. */
     private boolean stateBeforeMoving = false;
     
-    private Command playPauseCommand;
-    private Command changeModeCommand;
-    private Command backCommand;
-    
     //</editor-fold>
     
     //list = new List("list", Choice.IMPLICIT);
@@ -81,14 +84,20 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     
     public PlayerForm (Display display, Displayable previous, Parser parser)  {
         //<editor-fold defaultstate="collapsed" desc=" General Initialization ">
-        int vborder = 10;
-        int hborder = 10;
+        int vborder;
+        int hborder = 2;
         
+        vborder = font.getHeight()*3;
         this.display = display;
         this.previousDisplayable = previous;
         
+        this.setFullScreenMode(true);
         
-        this.textPainter = new TextPainter(font, new Rectangle(hborder,vborder,this.getWidth()-(hborder*2), this.getHeight()-(vborder*2)-20));
+        Rectangle rec = new Rectangle(hborder,vborder,this.getWidth()-(hborder*2), this.getHeight()-(vborder*2));
+        this.mainTextPainter = new TextPainter(font, rec);
+        this.titleTextPainter = new TextPainter(font, new Rectangle(0,0,rec.getWidth(), vborder));
+        this.helpTextPainter = new TextPainter(font, new Rectangle(rec.getX(), rec.getY()+rec.getHeigth(), rec.getWidth(), this.getHeight() - rec.getHeigth()));
+        
         MediaServices.getMediaServices().setPlayerListener(this);
         //this.iterator = new SequentialIterator(txtpath);
         this.tupleRevelator = new TupleRevelator(this);
@@ -97,15 +106,8 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         this.marksManager = new MarksManager(parser);
         this.changeMode(true);
         
-        //this.playPauseCommand = new Command("Play", Command.OK, 0);
-        //this.changeModeCommand = new Command("Mode", Command.ITEM, -1);
-        //this.backCommand = new Command("Back", Command.BACK, 0);
-        //this.addCommand(playPauseCommand);
-        //this.addCommand(changeModeCommand);
-        //this.addCommand(backCommand);
-        
         this.setCommandListener(null);
-        this.setFullScreenMode(true);
+        
         
         this.textBoxForm = new TextBoxForm(display, this, this);
         
@@ -158,6 +160,24 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         }
         ).start();
         //</editor-fold>
+        
+        
+        //<editor-fold defaultstate="collapsed" desc=" Help Thread (1000ms) ">
+        new Thread(
+        new Runnable() {
+            public void run() {
+                while(stopThread==false){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                    buildHelpText();
+                }
+            }
+        }
+        ).start();
+        //</editor-fold>
     }
     
     public void setGlossaryVectorSequentially(Vector gv){
@@ -177,14 +197,15 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         this.marksManager.setMarks(gv);
     }
     
+    public void buildHelpText(){
+        helpText = Help.getKeysMeaningNext(mode);
+        this.repaint();
+    }
     
-    public String buildMainText(){
-        String mainText;
-        
+    public void buildMainText(){
         if (mode==MODE_HELP){
             mainText = Help.getIntructionsHelp();
         }else{
-            this.tupleRevelator.update(false);
             mainText =  
                 "*" + namesTuple.getKey() + "\n" + 
                 valuesTuple.getKey() + "\n" + 
@@ -195,30 +216,29 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                 "*" + namesTuple.getExtra() + "\n" + 
                 valuesTuple.getExtra() + "\n";
         }
-        return mainText;
+        this.repaint();
     }
     
     private void buildTitle(){
-        String title;
         
         if (titleTimeCounter>0) { /* El mensaje debe ser mostrado aún. */
-            title = ">" + this.messageTitle;
+            titleText = ">" + this.messageTitle;
         } else {
-            title = PlayerForm.modeName[this.mode]+" " + this.timeText;
+            titleText = PlayerForm.modeName[this.mode]+" " + this.timeText;
         }
         
-        this.setTitle(title);
-        
+        this.repaint();
     }
     
     public void paint(Graphics g) {
         g.setFont(font);
-        
         g.setColor(0x000000);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
         g.setColor(0xFFFFFF);
-        textPainter.setTranslation(yTranslation);
-        textPainter.paintTextComplex(g, buildMainText());        
+        mainTextPainter.setTranslation(yTranslation);
+        helpTextPainter.paintTextComplex(g, this.helpText);
+        mainTextPainter.paintTextComplex(g, this.mainText);
+        titleTextPainter.paintTextComplex(g, this.titleText);
     }
     
     protected void keyReleased(int keyCode) {
@@ -257,11 +277,12 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         }else{
             this.mode = (mode+1)%MODES_NUMBER;
         }
+        
         switch(mode){
-            case MODE_TUPLES:   this.namesTuple = new Tuple("Expression","Explanation","Examples"); break;
-            case MODE_ANIMATED: this.namesTuple = new Tuple("Text","Comment","Time"); break;
-            case MODE_MARKS:    this.namesTuple = new Tuple("Current","Coming",""); break;
-            case MODE_HELP:     this.namesTuple = new Tuple("","",""); break;
+            case MODE_TUPLES:   this.setNames(new Tuple("Expression","Explanation","Examples")); break;
+            case MODE_ANIMATED: this.setNames(new Tuple("Text","Comment","Time")); break;
+            case MODE_MARKS:    this.setNames(new Tuple("Current","Coming","")); break;
+            case MODE_HELP:     this.setNames(new Tuple("","","")); break;
             default:
                 break;
         }
@@ -551,8 +572,6 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         
     }
     
-    
-    
     //<editor-fold defaultstate="collapsed" desc=" Simple methods ">
     /*public void setIterator(Iterator iterator) {
         this.iterator = iterator;
@@ -569,9 +588,11 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     }
     
     
-    /*public void setNames(Tuple names) {
+    public void setNames(Tuple names) {
         this.namesTuple = names;
-    }*/
+        buildMainText();
+    }
+    
     public void setValues(Tuple values) {
         this.valuesTuple = values;
     }
