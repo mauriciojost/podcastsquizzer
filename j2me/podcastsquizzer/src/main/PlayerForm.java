@@ -22,6 +22,8 @@ import textboxpackage.TextBoxFormReadyListener;
  * the listening, add and look for the marks.
  */
 public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerInterface, TextBoxFormReadyListener, FileActionListener {
+    private final static int KEY_MISC_LEFT = -7;
+    private final static int KEY_MISC_RIGHT = -6;
     //<editor-fold defaultstate="collapsed" desc=" About Modes ">                      
     private static final int MODE_TUPLES = 0;
     private static final int MODE_MARKS = 1;
@@ -95,7 +97,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         
         Rectangle rec = new Rectangle(hborder,vborder,this.getWidth()-(hborder*2), this.getHeight()-(vborder*2));
         this.mainTextPainter = new TextPainter(font, rec);
-        this.titleTextPainter = new TextPainter(font, new Rectangle(0,0,rec.getWidth(), vborder));
+        this.titleTextPainter = new TextPainter(font, new Rectangle(hborder,0,rec.getWidth(), vborder));
         this.helpTextPainter = new TextPainter(font, new Rectangle(rec.getX(), rec.getY()+rec.getHeigth(), rec.getWidth(), this.getHeight() - rec.getHeigth()));
         
         MediaServices.getMediaServices().setPlayerListener(this);
@@ -158,7 +160,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                 }
             }
         }
-        ).start();
+        ,"Visual Thread").start();
         //</editor-fold>
         
         
@@ -176,7 +178,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                 }
             }
         }
-        ).start();
+        ,"Help Thread").start();
         //</editor-fold>
     }
     
@@ -318,7 +320,6 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                 modeDefaultKeyPressed(keyCode);
                 break;
         }
-        
         
     }
       
@@ -474,81 +475,76 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     }
     
     private void modeDefaultKeyPressed(int keyCode){
-        if (keyCode>0){
-            switch(keyCode){
+
+        switch(keyCode){
+
+            case PlayerForm.KEY_MISC_LEFT:
+                String mn = this.changeMode(false);
+                this.putTitle("MODE " + mn, 1);
+                this.buildTitle();
+                this.repaint();
+                break;
+            case PlayerForm.KEY_MISC_RIGHT:
+                goPreviousForm();
+                break;
+            default:
                 
-                case '2':
-                    this.putTitle("PLAY/PAUSE", 1);
-                    try{
-                        MediaServices.getMediaServices().playPause(); 
-                    }catch(Exception e){
-                        this.putTitle("ERROR PLAY/PAUSE", 1);
-                    }    
-                    break;
-                
-                case '#':
-                    String mn = this.changeMode(false);
-                    this.putTitle("MODE " + mn, 1);
-                    this.buildTitle();
-                    this.repaint();
-                    break;
-                
-                case '*':
-                    goPreviousForm();
-                    break;
-           
-                default:
-                    this.putTitle("NOT USED", 1);
-                    break;
-            }
-        }else{
-            switch(this.getGameAction(keyCode)){
-                case PlayerForm.DOWN:
-                    this.putTitle("DOWN LINE", 1);
-                    yTranslation +=3;
-                    break;
-                case PlayerForm.UP:
-                    this.putTitle("UP LINE", 1);
-                    yTranslation = Math.max(yTranslation - 3,0);
-                    break;
-                    
-                case PlayerForm.RIGHT:
-                    try{
-                        if (this.timeChangeInProgress==false){
-                            this.stateBeforeMoving = MediaServices.getMediaServices().isItPlaying();
+                switch(this.getGameAction(keyCode)){
+                    case PlayerForm.FIRE:
+                        this.putTitle("PLAY/PAUSE", 1);
+                        try{
+                            MediaServices.getMediaServices().playPause(); 
+                        }catch(Exception e){
+                            this.putTitle("ERROR PLAY/PAUSE", 1);
+                        }    
+                        break;
+                    case PlayerForm.DOWN:
+                        this.putTitle("DOWN LINE", 1);
+                        yTranslation +=3;
+                        break;
+                    case PlayerForm.UP:
+                        this.putTitle("UP LINE", 1);
+                        yTranslation = Math.max(yTranslation - 3,0);
+                        break;
+
+                    case PlayerForm.RIGHT:
+                        try{
+                            if (this.timeChangeInProgress==false){
+                                this.stateBeforeMoving = MediaServices.getMediaServices().isItPlaying();
+                            }
+                            MediaServices.getMediaServices().pause();
+                            this.baseTimeForChange = (int)(MediaServices.getMediaServices().getPosition()/MediaServices.TIME_FACTOR);
+                        }catch(Exception e){
+                            e.printStackTrace();
                         }
-                        MediaServices.getMediaServices().pause();
-                        this.baseTimeForChange = (int)(MediaServices.getMediaServices().getPosition()/MediaServices.TIME_FACTOR);
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-                    this.timeChangeInProgress = true;
-                    this.desiredTimeChange = desiredTimeChange + 1;
-                    this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
-                    this.goForwardFlag=true;
-                    agileKey = true;
-                    break;
-                case PlayerForm.LEFT:
-                    try{
-                        if (this.timeChangeInProgress==false){
-                            this.stateBeforeMoving = MediaServices.getMediaServices().isItPlaying();
+                        this.timeChangeInProgress = true;
+                        this.desiredTimeChange = desiredTimeChange + 1;
+                        this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
+                        this.goForwardFlag=true;
+                        agileKey = true;
+                        break;
+                    case PlayerForm.LEFT:
+                        try{
+                            if (this.timeChangeInProgress==false){
+                                this.stateBeforeMoving = MediaServices.getMediaServices().isItPlaying();
+                            }
+                            MediaServices.getMediaServices().pause();
+                            this.baseTimeForChange = (int)(MediaServices.getMediaServices().getPosition()/MediaServices.TIME_FACTOR);
+                        }catch(Exception e){
+                            e.printStackTrace();
                         }
-                        MediaServices.getMediaServices().pause();
-                        this.baseTimeForChange = (int)(MediaServices.getMediaServices().getPosition()/MediaServices.TIME_FACTOR);
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-                    this.timeChangeInProgress = true;
-                    this.desiredTimeChange = desiredTimeChange - 1;
-                    this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
-                    this.goBackFlag=true;
-                    agileKey = true;
-                    break;
-                default:
-                    this.putTitle("NOT USED", 1);
-                    break;
-            }
+                        this.timeChangeInProgress = true;
+                        this.desiredTimeChange = desiredTimeChange - 1;
+                        this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
+                        this.goBackFlag=true;
+                        agileKey = true;
+                        break;
+                    default:
+                        this.putTitle("NOT USED (" + keyCode + ", " + this.getGameAction(keyCode)+ ")", 1);
+                        break;
+                }
         }
+
     }
     
     
@@ -595,6 +591,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     
     public void setValues(Tuple values) {
         this.valuesTuple = values;
+        buildMainText();
     }
     
     private void goPreviousForm(){
