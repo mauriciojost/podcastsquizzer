@@ -14,13 +14,30 @@ import javax.microedition.lcdui.Graphics;
 public class TextPainter {
 
     private Rectangle bounds;   /* Bounds of the painting area. */
+    private Font smallestFont = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL);
     private Font font;          /* Font used to paint the text. */
     private int baseLine = 0;   /* Line that's going to be printed first. */
+    private int backgroundColor = 0x101010;
+    private int borderColor = 0x777777;
+    private int fontColor = 0xFFFFFF;
+    private int linesPerPage=0;
     
     public TextPainter(Font font, Rectangle bounds){
         this.font = font;
         this.bounds = bounds;
         Word.setBaseFont(font);
+        linesPerPage = bounds.getHeigth()/smallestFont.getHeight();
+    }
+    
+    public void setBackgroundColor(int color){
+        this.backgroundColor = color;
+    }
+    
+    public void setBorderColor(int color){
+        this.borderColor = color;
+    }
+    public void setFontColor(int color){
+        this.fontColor = color;
     }
     
     public void setTranslation(int yline){
@@ -32,46 +49,44 @@ public class TextPainter {
         int currentColor;
         Vector words, lines, line;
         
-        words = breakDownWords(cText);
-        cText = null;
+        words = breakDownWords(cText); cText = null;
         
-        lines = breakDownLines(words, bounds.getWidth());
-        words = null;
+        lines = breakDownLines(words, bounds.getWidth()); words = null;
         
         Enumeration iterator = lines.elements();
         
         currentColor = g.getColor();
-        g.setColor(0x101010);
-        g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth()-1, bounds.getHeigth()-1);
-        g.setColor(0x555555);
-        g.drawRect(bounds.getX(), bounds.getY(), bounds.getWidth()-1, bounds.getHeigth()-1);
-        g.setColor(currentColor);
+        g.setColor(backgroundColor);
+        g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth()/*-1*/, bounds.getHeigth()/*-1*/);
         
         int line_number = 0;
-        
-        currentColor = g.getColor();
         
         while(iterator.hasMoreElements()){
             line = (Vector)iterator.nextElement();
             
+            //if (line_number>this.linesPerPage){
+            //    break;
+            //}
             if ((row+this.getLineHeight(line))>bounds.getHeigth()){
                 break;
             }
             
-            if (line_number>=this.baseLine) {
+            //if (line_number>=this.baseLine) {
                 aux = paintLine(g,line,row);
                 row += aux+2;
-            }
+            //}
             line_number++;
-            
         }
         
+        g.setColor(borderColor);
+        //g.drawRect(bounds.getX(), bounds.getY(), bounds.getWidth()-1, bounds.getHeigth()-1);
         g.setColor(currentColor);
         
     }
     
     public Vector breakDownLines(Vector words, int max_width){
         int width_counter=0, width_max;
+        int current_line=0;
         Word word;
         Vector lines = new Vector();
         Vector line = new Vector();
@@ -92,6 +107,12 @@ public class TextPainter {
                 line.removeElement(word);
                 line.trimToSize();
                 
+                
+                if (current_line<this.baseLine){ line.removeAllElements(); lines.removeElement(line);}
+                current_line++;
+                if (current_line>this.baseLine+this.linesPerPage){break;}
+                
+                
                 line = new Vector();    
                 lines.addElement(line);
                 line.addElement(word);
@@ -99,6 +120,11 @@ public class TextPainter {
             }
             if(word.getLastChar()=='\n'){
                 line.trimToSize();
+                
+                if (current_line<this.baseLine){ line.removeAllElements(); lines.removeElement(line);}
+                current_line++;
+                if (current_line>this.baseLine+this.linesPerPage){break;}
+                
                 line = new Vector();
                 lines.addElement(line);
                 width_counter = 0;
