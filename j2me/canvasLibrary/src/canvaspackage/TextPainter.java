@@ -79,9 +79,6 @@ public class TextPainter {
             if (line_number>=this.linesPerPage){
                 break;
             }
-            //if ((row+this.getLineHeight(line))>bounds.getHeigth()){
-            //    break;
-            //}
             
             if (line_number>=this.baseLine) {
                 aux = paintLine(g,line,row);
@@ -98,7 +95,6 @@ public class TextPainter {
     
     public Vector breakDownLines(Vector words, int max_width){
         int width_counter=0, width_max;
-        int current_line=0;
         Word word;
         lines = new Vector();
         Vector line = new Vector();
@@ -119,12 +115,6 @@ public class TextPainter {
                 line.removeElement(word);
                 line.trimToSize();
                 
-                
-                //if (current_line<this.baseLine){ line.removeAllElements(); lines.removeElement(line);}
-                //current_line++;
-                //if (current_line>this.baseLine+this.linesPerPage){break;}
-                
-                
                 line = new Vector();    
                 lines.addElement(line);
                 line.addElement(word);
@@ -132,10 +122,6 @@ public class TextPainter {
             }
             if(word.getLastChar()=='\n'){
                 line.trimToSize();
-                
-                //if (current_line<this.baseLine){ line.removeAllElements(); lines.removeElement(line);}
-                //current_line++;
-                //if (current_line>this.baseLine+this.linesPerPage){break;}
                 
                 line = new Vector();
                 lines.addElement(line);
@@ -171,15 +157,13 @@ public class TextPainter {
         int basex = 0, max_height=0;
         Word word;
         
-        
+        g.setColor(Word.baseColor);
         Enumeration iterator = line.elements();
         while (iterator.hasMoreElements()){
             word = (Word)iterator.nextElement();
-            g.setFont(word.getFont());
-            g.setColor(word.getColor());
             max_height = Math.max(max_height, word.getFont().getHeight());
+            word.paintWord(g, bounds.getX()+basex, bounds.getY()+row);
             
-            g.drawString(word.getWord(), bounds.getX()+basex, bounds.getY() + row, Graphics.TOP|Graphics.LEFT);
             basex += word.getWidth();
         }
         

@@ -8,8 +8,8 @@ package canvaspackage;
 import javax.microedition.lcdui.*;
 
 
-public class MCanvas extends Canvas {
-    private String mainText = "<>";
+public class MCanvas /*extends Canvas */{
+/*    private String mainText = "<>";
     private String commentText = "";
     private Font font = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL);
     private Displayable previousDisplayable;
@@ -52,7 +52,7 @@ public class MCanvas extends Canvas {
             this.repaint();
         }    
     }
-
+*/
 }
 
 
