@@ -49,4 +49,32 @@ public class Rectangle {
         return this.height;
     }
     
+    
+    public Rectangle newMoveX(int a){
+        return new Rectangle(x+a,y,width,height);
+    }
+    public Rectangle newMoveY(int a){
+        return new Rectangle(x,y+a,width,height);
+    }
+    public Rectangle newMoveWidth(int a){
+        return new Rectangle(x,y,width+a,height);
+    }
+    public Rectangle newMoveHeight(int a){
+        return new Rectangle(x,y,width,height+a);
+    }
+    
+    
+    public Rectangle newSetX(int a){
+        return new Rectangle(a,y,width,height);
+    }
+    public Rectangle newSetY(int a){
+        return new Rectangle(x,a,width,height);
+    }
+    public Rectangle newSetWidth(int a){
+        return new Rectangle(x,y,a,height);
+    }
+    public Rectangle newSetHeight(int a){
+        return new Rectangle(x,y,width,a);
+    }
+    
 }

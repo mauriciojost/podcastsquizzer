@@ -281,7 +281,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public Command getPlayerCommand() {
         if (playerCommand == null) {//GEN-END:|23-getter|0|23-preInit
             // write pre-init user code here
-            playerCommand = new Command("Player", Command.OK, 0);//GEN-LINE:|23-getter|1|23-postInit
+            playerCommand = new Command("Player", Command.OK, -1);//GEN-LINE:|23-getter|1|23-postInit
             // write post-init user code here
         }//GEN-BEGIN:|23-getter|2|
         return playerCommand;
