@@ -169,14 +169,13 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
         ,"Visual Thread").start();
         //</editor-fold>
         
-        
-        //<editor-fold defaultstate="collapsed" desc=" Help Thread (1000ms) ">
+        //<editor-fold defaultstate="collapsed" desc=" Help Thread (2000ms) ">
         new Thread(
         new Runnable() {
             public void run() {
                 while(stopThread==false){
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
@@ -224,6 +223,7 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
                 "*" + namesTuple.getExtra() + "\n" + 
                 valuesTuple.getExtra() + "\n";
         }
+        this.mainTextPainter.setText(this.mainText);
         this.repaint();
     }
     
@@ -240,10 +240,11 @@ public class PlayerForm extends Canvas implements PlayerListener, TuplesShowerIn
     public void paint(Graphics g) {
         g.setColor(backgroundColor);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        
+        helpTextPainter.paintText(g, this.helpText);
         mainTextPainter.setTranslation(yTranslation);
-        helpTextPainter.paintTextComplex(g, this.helpText);
-        mainTextPainter.paintTextComplex(g, this.mainText);
-        titleTextPainter.paintTextComplex(g, this.titleText);
+        mainTextPainter.paintTextComplex(g);
+        titleTextPainter.paintText(g, this.titleText);
     }
     
     protected void keyReleased(int keyCode) {

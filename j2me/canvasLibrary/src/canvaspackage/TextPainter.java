@@ -21,6 +21,7 @@ public class TextPainter {
     private int borderColor = 0x777777;
     private int fontColor = 0xFFFFFF;
     private int linesPerPage=0;
+    private Vector lines;
     
     public TextPainter(Font font, Rectangle bounds){
         this.font = font;
@@ -44,14 +45,25 @@ public class TextPainter {
         this.baseLine = yline;
     }
     
-    public void paintTextComplex(Graphics g, String cText){
+    public void paintText(Graphics g, String text){
+        g.setColor(backgroundColor);
+        g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth()/*-1*/, bounds.getHeigth()/*-1*/);
+        g.setFont(this.font);
+        g.setColor(this.fontColor);
+        g.drawString(text, bounds.getX(), bounds.getY(), Graphics.TOP|Graphics.LEFT);
+    }
+    
+    public void setText(String cText){
+        Vector words;
+        words = breakDownWords(cText); cText = null;
+        lines = breakDownLines(words, bounds.getWidth()); words = null;
+        
+    }
+    
+    public void paintTextComplex(Graphics g){       
         int row = 0, aux;
         int currentColor;
-        Vector words, lines, line;
-        
-        words = breakDownWords(cText); cText = null;
-        
-        lines = breakDownLines(words, bounds.getWidth()); words = null;
+        Vector line;
         
         Enumeration iterator = lines.elements();
         
@@ -64,17 +76,17 @@ public class TextPainter {
         while(iterator.hasMoreElements()){
             line = (Vector)iterator.nextElement();
             
-            //if (line_number>this.linesPerPage){
-            //    break;
-            //}
-            if ((row+this.getLineHeight(line))>bounds.getHeigth()){
+            if (line_number>=this.linesPerPage){
                 break;
             }
+            //if ((row+this.getLineHeight(line))>bounds.getHeigth()){
+            //    break;
+            //}
             
-            //if (line_number>=this.baseLine) {
+            if (line_number>=this.baseLine) {
                 aux = paintLine(g,line,row);
                 row += aux+2;
-            //}
+            }
             line_number++;
         }
         
@@ -88,7 +100,7 @@ public class TextPainter {
         int width_counter=0, width_max;
         int current_line=0;
         Word word;
-        Vector lines = new Vector();
+        lines = new Vector();
         Vector line = new Vector();
         
         lines.addElement(line);
@@ -108,9 +120,9 @@ public class TextPainter {
                 line.trimToSize();
                 
                 
-                if (current_line<this.baseLine){ line.removeAllElements(); lines.removeElement(line);}
-                current_line++;
-                if (current_line>this.baseLine+this.linesPerPage){break;}
+                //if (current_line<this.baseLine){ line.removeAllElements(); lines.removeElement(line);}
+                //current_line++;
+                //if (current_line>this.baseLine+this.linesPerPage){break;}
                 
                 
                 line = new Vector();    
@@ -121,9 +133,9 @@ public class TextPainter {
             if(word.getLastChar()=='\n'){
                 line.trimToSize();
                 
-                if (current_line<this.baseLine){ line.removeAllElements(); lines.removeElement(line);}
-                current_line++;
-                if (current_line>this.baseLine+this.linesPerPage){break;}
+                //if (current_line<this.baseLine){ line.removeAllElements(); lines.removeElement(line);}
+                //current_line++;
+                //if (current_line>this.baseLine+this.linesPerPage){break;}
                 
                 line = new Vector();
                 lines.addElement(line);
@@ -171,21 +183,9 @@ public class TextPainter {
             basex += word.getWidth();
         }
         
-        
         return max_height;
     }
     
-    public int getLineHeight(Vector line){
-        int max_height=0;
-        Word word;
-        Enumeration iterator = line.elements();
-        while (iterator.hasMoreElements()){
-            word = (Word)iterator.nextElement();
-            max_height = Math.max(max_height, word.getFont().getHeight());
-        }
-        
-        return max_height;
-    }
     
 }
 
