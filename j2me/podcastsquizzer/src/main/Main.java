@@ -43,6 +43,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     private Command browseTranscriptCommand;
     private Command saveLastListeningCommand;
     private Command browseAllCommand;
+    private Command browseHybridCommand;
     private Form form;
     private StringItem glossaryItem;
     private StringItem listeningItem;
@@ -71,7 +72,6 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         }
         
         this.playerCommandStatus(false);
-        
     }
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Methods ">//GEN-BEGIN:|methods|0|
@@ -144,7 +144,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 // write post-action user code here
                 
                 this.browser.setTitle("All");
-                this.browser.setExtension("mp3");   /* Show only mp3 files. */
+                //this.browser.setExtension("mp3");   /* Show only mp3 files. */
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.browser.getDisplayable());
             } else if (command == browseGlossaryCommand) {//GEN-LINE:|7-commandAction|3|22-preAction
@@ -153,54 +153,62 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 // write post-action user code here
                 
                 this.browser.setTitle("Glossary"); 
-                this.browser.setExtension("txt");   /* Show only txt files. */
+                //this.browser.setExtension("txt");   /* Show only txt files. */
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.browser.getDisplayable());
                 
-            } else if (command == browseSongCommand) {//GEN-LINE:|7-commandAction|5|28-preAction
+            } else if (command == browseHybridCommand) {//GEN-LINE:|7-commandAction|5|43-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|6|28-postAction
+//GEN-LINE:|7-commandAction|6|43-postAction
+                // write post-action user code here
+                this.browser.setTitle("Hybrid");
+                //this.browser.setExtension("txt");   /* Show only txt files. */
+                this.switchDisplayable(null,        /* Switching the form. */
+                        this.browser.getDisplayable());
+            } else if (command == browseSongCommand) {//GEN-LINE:|7-commandAction|7|28-preAction
+                // write pre-action user code here
+//GEN-LINE:|7-commandAction|8|28-postAction
                 // write post-action user code here
                 
                 this.browser.setTitle("Listening");
-                this.browser.setExtension("mp3");   /* Show only mp3 files. */
+                //this.browser.setExtension("mp3");   /* Show only mp3 files. */
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.browser.getDisplayable());
-            } else if (command == browseTranscriptCommand) {//GEN-LINE:|7-commandAction|7|33-preAction
+            } else if (command == browseTranscriptCommand) {//GEN-LINE:|7-commandAction|9|33-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|8|33-postAction
+//GEN-LINE:|7-commandAction|10|33-postAction
                 // write post-action user code here
                 
                 this.browser.setTitle("Transcript");
-                this.browser.setExtension("txt");   /* Show only txt files. */
+                //this.browser.setExtension("txt");   /* Show only txt files. */
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.browser.getDisplayable());
-            } else if (command == exitCommand) {//GEN-LINE:|7-commandAction|9|19-preAction
+            } else if (command == exitCommand) {//GEN-LINE:|7-commandAction|11|19-preAction
                 // write pre-action user code here
-                exitMIDlet();//GEN-LINE:|7-commandAction|10|19-postAction
+                exitMIDlet();//GEN-LINE:|7-commandAction|12|19-postAction
                 // write post-action user code here
-            } else if (command == loadLastListeningCommand) {//GEN-LINE:|7-commandAction|11|35-preAction
+            } else if (command == loadLastListeningCommand) {//GEN-LINE:|7-commandAction|13|35-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|12|35-postAction
+//GEN-LINE:|7-commandAction|14|35-postAction
                 // write post-action user code here
                 
                 this.loadLastListeningFile();       /* Load the last used Listening File. */
-            } else if (command == playerCommand) {//GEN-LINE:|7-commandAction|13|24-preAction
+            } else if (command == playerCommand) {//GEN-LINE:|7-commandAction|15|24-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|14|24-postAction
+//GEN-LINE:|7-commandAction|16|24-postAction
                 // write post-action user code here
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.playerForm);
-            } else if (command == saveLastListeningCommand) {//GEN-LINE:|7-commandAction|15|39-preAction
+            } else if (command == saveLastListeningCommand) {//GEN-LINE:|7-commandAction|17|39-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|16|39-postAction
+//GEN-LINE:|7-commandAction|18|39-postAction
                 // write post-action user code here
                 this.saveLastListeningFile();
-            }//GEN-BEGIN:|7-commandAction|17|7-postCommandAction
-        }//GEN-END:|7-commandAction|17|7-postCommandAction
+            }//GEN-BEGIN:|7-commandAction|19|7-postCommandAction
+        }//GEN-END:|7-commandAction|19|7-postCommandAction
         // write post-action user code here
-    }//GEN-BEGIN:|7-commandAction|18|
-    //</editor-fold>//GEN-END:|7-commandAction|18|
+    }//GEN-BEGIN:|7-commandAction|20|
+    //</editor-fold>//GEN-END:|7-commandAction|20|
 
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: exitCommand ">//GEN-BEGIN:|18-getter|0|18-preInit
@@ -235,6 +243,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             form.addCommand(getLoadLastListeningCommand());
             form.addCommand(getBrowseAllCommand());
             form.addCommand(getSaveLastListeningCommand());
+            form.addCommand(getBrowseHybridCommand());
             form.setCommandListener(this);//GEN-END:|14-getter|1|14-postInit
             // write post-init user code here
         }//GEN-BEGIN:|14-getter|2|
@@ -425,6 +434,21 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     }
     //</editor-fold>//GEN-END:|38-getter|2|
 
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: browseHybridCommand ">//GEN-BEGIN:|42-getter|0|42-preInit
+    /**
+     * Returns an initiliazed instance of browseHybridCommand component.
+     * @return the initialized component instance
+     */
+    public Command getBrowseHybridCommand() {
+        if (browseHybridCommand == null) {//GEN-END:|42-getter|0|42-preInit
+            // write pre-init user code here
+            browseHybridCommand = new Command("Browse Hybrid File", Command.ITEM, 0);//GEN-LINE:|42-getter|1|42-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|42-getter|2|
+        return browseHybridCommand;
+    }
+    //</editor-fold>//GEN-END:|42-getter|2|
+
     public Display getDisplay () {
         return Display.getDisplay(this);
     }
@@ -470,6 +494,9 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         } else if (title.compareTo("Transcript")==0) {
             this.loadTranscript(path);
             this.playerCommandStatus(true);
+        }else if (title.compareTo("Hybrid")==0){
+            this.loadHybridText(path);
+            this.playerCommandStatus(true);
         } else if (title.compareTo("All")==0) {
             if (path != null){
                 String txtPath = "";
@@ -489,12 +516,40 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             
     }
 
-    
+    private void loadHybridText(String path){
+        String text = "";
+        String extension;
+        Vector vector;
+        Vector glossary, transcript;
+        if (path != null){
+            try {
+                extension = FileServices.getExtensionFromPath(path);
+                if (extension.toUpperCase().compareTo("TXT")!=0)
+                    throw new Exception("Invalid hybrid file (must be TXT and is "+ extension +").");
+                text = FileServices.readTXTFile(path);
+                vector = this.parser.txt2vector(text);
+                glossary = new Vector(); transcript = new Vector();
+                this.parser.divideVectors(vector, glossary, transcript, "*");
+                vector = null; 
+                this.playerForm.setTranscript(transcript);
+                this.playerForm.setGlossaryVectorSequentially(glossary);
+                this.otherItem.setText("OK: Hybrid fil successfully loaded ('"+FileServices.getStandardPath(path)+"').");
+            } catch (Exception ex) {
+                this.otherItem.setText("CANNOT load hybrid file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage());
+            }
+
+        }
+    }
+        
     private void loadTranscript(String path){
         String text = "";
+        String extension;
         Vector vector;
         if (path != null){
             try {
+                extension = FileServices.getExtensionFromPath(path);
+                if (extension.toUpperCase().compareTo("TXT")!=0)
+                    throw new Exception("Invalid file for transcript (must be TXT).");
                 text = FileServices.readTXTFile(path);
                 vector = this.parser.txt2vector(text);
                 this.playerForm.setTranscript(vector);
@@ -507,9 +562,13 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     }
     private void loadGlossary(String path){
         String text = "";
+        String extension;
         Vector vector;
         if (path != null){
             try {
+                extension = FileServices.getExtensionFromPath(path);
+                if (extension.toUpperCase().compareTo("TXT")!=0)
+                    throw new Exception("Invalid file for glosary (must be TXT).");
                 text = FileServices.readTXTFile(path);
                 this.glossaryItem.setText("OK: TXT file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
                 vector = this.parser.txt2vector(text);
@@ -521,8 +580,12 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     }
     
     private void loadListening(String path){
+        String extension;
         if (path != null){
             try{
+                extension = FileServices.getExtensionFromPath(path);
+                if (extension.toUpperCase().compareTo("MP3")!=0)
+                    throw new Exception("Invalid file for listening (must be MP3).");
                 MediaServices.getMediaServices().load(path);
                 this.lastfilepath = path;
                 this.listeningItem.setText("OK: MP3 file successfully loaded ('"+FileServices.getStandardPath(path)+"').");

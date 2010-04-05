@@ -44,6 +44,27 @@ public class Parser {
         return tabla;
     }
     
+    /*
+     * This method is used to create two Vectors, putting tuples in
+     * each one according to the beginning of each tuple.
+     */
+    public void divideVectors(Vector source, Vector apply, Vector dontapply, String init){
+        Enumeration iterator;
+        Tuple tuple;
+        
+        source.trimToSize();
+        iterator = source.elements();
+        
+        while(iterator.hasMoreElements()){
+            tuple = (Tuple)iterator.nextElement();
+            if (tuple.getKey().startsWith(init)){
+                apply.addElement(tuple);
+            }else{
+                dontapply.addElement(tuple);
+            }
+        }
+    }
+    
     public String vector2txt(Vector vector) {
         String text="";
         Enumeration iterator;

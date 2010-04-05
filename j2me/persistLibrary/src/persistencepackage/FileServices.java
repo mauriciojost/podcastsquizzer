@@ -221,7 +221,16 @@ public class FileServices {
         }
     }
     
-    
+    public static String getExtensionFromPath(String path){
+        int last_sep;
+        last_sep = path.lastIndexOf('.');
+        
+        if (last_sep!=-1){    
+            return path.substring(Math.min(last_sep+1,path.length()));
+        }else{
+            return null;
+        }
+    }
     
     public static String getFilenameWExtensionFromPath(String path){
         return FileServices.getFileNameWExtensionFromName(FileServices.getFileName(path));

@@ -40,7 +40,7 @@ public class Browser implements CommandListener{
         this.fbrowser.setCommandListener(this);
         this.fbrowser.addCommand(FileBrowser.SELECT_FILE_COMMAND);
         this.fbrowser.addCommand(backCommand);
-        this.fbrowser.setFilter("*.*");
+        //this.fbrowser.setFilter("*.*");
     }
     
     public void commandAction(Command command, Displayable displayable) {
@@ -79,7 +79,7 @@ public class Browser implements CommandListener{
         return (Displayable)this.fbrowser;
     }
     
-    public void setExtension(String extension){
-        this.fbrowser.setFilter(extension);
-    }
+    //public void setExtension(String extension){
+    //    this.fbrowser.setFilter(extension);
+    //}
 }
