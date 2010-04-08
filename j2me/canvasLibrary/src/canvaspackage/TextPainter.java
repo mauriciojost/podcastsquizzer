@@ -28,6 +28,7 @@ public class TextPainter {
         this.bounds = bounds;
         Word.setBaseFont(font);
         linesPerPage = bounds.getHeigth()/smallestFont.getHeight();
+        this.setText(" \n ");
     }
     
     public void setBackgroundColor(int color){

@@ -2,6 +2,8 @@
 package mediaservicespackage;
 
 import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.Vector;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.media.Manager;
@@ -21,11 +23,13 @@ public class MediaServices implements Runnable{
     private Player player;
     private long length = 0;
     private int step = 10;
-    private PlayerListener playerListener;
+    //private PlayerListener playerListener;
+    private Vector vectorPlayerListeners;
     public static final int TIME_FACTOR = 1000000;
     private String path;
     
     private MediaServices(){
+        vectorPlayerListeners = new Vector();
         (new Thread(this)).start();
     }
     
@@ -186,8 +190,8 @@ public class MediaServices implements Runnable{
     public long getPositionSeconds() throws Exception{
         return (this.getPosition()/MediaServices.TIME_FACTOR);
     }
-    public void setPlayerListener(PlayerListener pl){
-        this.playerListener = pl;
+    public void addPlayerListener(PlayerListener pl){
+        this.vectorPlayerListeners.addElement(pl);
     }
     
     public String getCurrentPath(){
@@ -198,8 +202,12 @@ public class MediaServices implements Runnable{
         while (true){
             try { Thread.sleep(200); } catch (InterruptedException ex) { ex.printStackTrace(); }
             
-            if ((this.playerListener!=null) && (this.player!=null)){
-                this.playerListener.playerUpdate(this.player, "", null);
+            Enumeration iterator = this.vectorPlayerListeners.elements();
+            while(iterator.hasMoreElements()){
+                PlayerListener playerListener = (PlayerListener)iterator.nextElement();
+                if ((playerListener!=null) && (this.player!=null)){
+                    playerListener.playerUpdate(this.player, "", null);
+                }
             }
         }   
     }

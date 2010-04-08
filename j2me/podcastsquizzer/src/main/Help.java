@@ -57,7 +57,7 @@ public class Help {
         stage = (stage + 1) % ROWS_OF_KEYS;
         
         switch (mode){
-            case PlayerForm.MODE_TUPLES:
+            case PlayerForm.MODE_GLOSSARY:
                 switch (stage){
                     case 0:
                         ret = "(1)   (2)   (3)"; break;
@@ -73,7 +73,7 @@ public class Help {
                         ret = "<help>"; break;
                 }
                 break;
-            case PlayerForm.MODE_MARKS:
+            case PlayerForm.MODE_ESSAY_MARKS:
                 switch (stage){
                     case 0:
                         ret = "(1)   (2)   (3)"; break;

@@ -25,7 +25,7 @@ public class MarksManager{
         this.marksVector = new Vector();
         this.tupleFinder = new TupleFinder(marksVector);
     }
-
+    
     public void setMarks(Vector gv){
         this.marksVector = gv;
         this.tupleFinder = new TupleFinder(marksVector);

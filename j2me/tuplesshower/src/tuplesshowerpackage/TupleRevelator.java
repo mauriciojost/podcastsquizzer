@@ -18,6 +18,7 @@ public class TupleRevelator {
     private Tuple currentTuple;
     private int mode = TupleRevelator.MODE_123;
     private int stage = 0; 
+    private Tuple lastTuple = new Tuple("","","");
     
     public TupleRevelator(TuplesShowerInterface ts){
         this.tuplesshower = ts;
@@ -83,7 +84,9 @@ public class TupleRevelator {
             }
         }
         
+        this.lastTuple = tuple;
         this.tuplesshower.setValues(tuple);     
+        
         
     }
     
@@ -91,4 +94,7 @@ public class TupleRevelator {
         update(true);
     }
     
+    public Tuple getLastTuple(){
+        return this.lastTuple;
+    }
 }

@@ -505,7 +505,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 this.parser.divideVectors(vector, glossary, transcript, "*");
                 vector = null; 
                 this.playerForm.setTranscript(transcript);
-                this.playerForm.setGlossaryVectorSequentially(glossary);
+                this.playerForm.setGlossary(glossary);
                 this.glossaryItem.setText("OK: Hybrid fil successfully loaded ('"+FileServices.getStandardPath(path)+"').");
             } catch (Exception ex) {
                 this.glossaryItem.setText("CANNOT load hybrid file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage());
