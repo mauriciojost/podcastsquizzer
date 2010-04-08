@@ -13,6 +13,7 @@ import javax.microedition.lcdui.Displayable;
  */
 public interface Playerable {
     public void putTitle(String title, double seconds);
+    public void setText(String text);
     public void repaint();
     public Displayable getDisplayable();
     public void resetTranslation();

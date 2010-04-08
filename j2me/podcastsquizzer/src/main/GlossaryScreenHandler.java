@@ -62,7 +62,11 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
     }
 
     public void setValues(Tuple tuple) {
-        
+        String text;
+        text =  "*Word:\n"+tuple.getKey()+"\n"+
+                "*Explanation:\n"+tuple.getValue()+"\n"+
+                "*Examples:\n"+tuple.getExtra()+"\n";
+        player.setText(text);
     }
 
     public void playerUpdate(Player pl, String str, Object obj) {
