@@ -11,9 +11,7 @@ import java.util.Vector;
 
 import mediaservicespackage.*;
 import persistencepackage.*;
-import tuplesshowerpackage.*;
 import canvaspackage.*;
-import textboxpackage.TextBoxFormReadyListener;
 
 
 /**
@@ -38,7 +36,6 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     
     private ScreenHandler glossaryScreenHandler;
     private ScreenHandler listeningScreenHandler;
-    private MarksManager marksManager;
     
     //private Iterator iterator;
     private Parser parser;
@@ -52,13 +49,9 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     private Font fontSmall = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL);
     private Font fontMedium = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_MEDIUM);
     
-    //private Tuple namesTuple = new Tuple ("","","");
-    //private Tuple valuesTuple = new Tuple ("","","");
-    
     private String currentListeningPath;
     private String timeText = "0:00/0:00";
     private String messageTitle = "";
-    //private String mainText = "mainText";
     private String helpText = "helpText";
     private String titleText = "titleText";
     
@@ -87,9 +80,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     
     public PlayerForm (Display display, Displayable previous, Parser parser)  {
         //<editor-fold defaultstate="collapsed" desc=" General Initialization ">
-        int vspace;
-        int vborder = 1;
-        int hborder = 1;
+        int vspace, vborder = 1, hborder = 1;
         
         vspace = fontMedium.getHeight()*1;
         this.display = display;
@@ -107,22 +98,14 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         this.helpTextPainter.setBackgroundColor(backgroundColor);
         
         MediaServices.getMediaServices().addPlayerListener(this);
-        //this.iterator = new SequentialIterator(txtpath);
-        //this.tupleRevelator = new TupleRevelator(this);
         
         this.parser = parser;
-        this.marksManager = new MarksManager(parser);
         this.changeMode(true);
         
         this.setCommandListener(null);
         
-        
-        //this.textBoxForm = new TextBoxForm(display, this, this);
-        
-        
         glossaryScreenHandler = new GlossaryScreenHandler(display, this);
         listeningScreenHandler = new ListeningScreenHandler(display, this);
-        
         
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc=" Visual Thread (100ms) ">
@@ -197,42 +180,19 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         glossaryScreenHandler.setMainElement(gv);
     }
     
-    //public void setGlossaryVectorRandomly(Vector gv){
-    //    this.iterator = new RandomIterator(gv);
-    //}
-    
     public void setListening(String currentListeningPath) throws Exception{
         this.currentListeningPath = currentListeningPath;
         MediaServices.getMediaServices().load(currentListeningPath);
     }
     
     public void setTranscript(Vector gv){
-        this.marksManager.setMarks(gv);
+        this.listeningScreenHandler.setMainElement(gv);
     }
     
     public void buildHelpText(){
         helpText = Help.getKeysMeaningNext(mode);
         this.repaint();
     }
-    
-    /*
-    public void buildMainText(){
-        if (mode==MODE_HELP){
-            mainText = Help.getIntructionsHelp();
-        }else{
-            mainText =  
-                "*" + namesTuple.getKey() + "\n" + 
-                valuesTuple.getKey() + "\n" + 
-                
-                "*" + namesTuple.getValue() + "\n" + 
-                valuesTuple.getValue() + "\n" + 
-                
-                "*" + namesTuple.getExtra() + "\n" + 
-                valuesTuple.getExtra() + "\n";
-        }
-        this.mainTextPainter.setText(this.mainText);
-        this.repaint();
-    }*/
     
     private void buildTitle(){
         
@@ -255,15 +215,8 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     
     protected void keyReleased(int keyCode) {
-        //switch (keyCode){
-       //     case '1':
-                this.goBackFlag=false;
-       //         break;
-       //     case '3':
-                this.goForwardFlag=false;
-       //         break;
-        //}
-        
+        this.goBackFlag=false;
+        this.goForwardFlag=false;
     }
     
     protected void keyPressed(int keyCode) {
@@ -271,12 +224,9 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         boolean catched=false;
         if (this.mode==MODE_GLOSSARY) {
             catched = this.glossaryScreenHandler.keyPressed(keyCode);
-            //this.modeGlossaryKeyPressed(keyCode);
         } else if (this.mode==MODE_ESSAY_MARKS) {
-            //this.modeEssayMarksKeyPressed(keyCode);
             catched = this.listeningScreenHandler.keyPressed(keyCode);
         } else if (this.mode==MODE_ANIMATED) {
-            //this.modeAnimatedKeyPressed(keyCode);
             catched = this.listeningScreenHandler.keyPressed(keyCode);
         }
         
@@ -296,25 +246,10 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         }else{
             this.mode = (mode+1)%MODES_NUMBER;
         }
-        
-        switch(mode){
-            //case MODE_GLOSSARY:   this.setNames(new Tuple("Expression","Explanation","Examples")); break;
-            //case MODE_ANIMATED: this.setNames(new Tuple("Text","Comment","Time")); break;
-            //case MODE_ESSAY_MARKS:    this.setNames(new Tuple("Current","Coming","")); break;
-            //case MODE_HELP:     this.setNames(new Tuple("","","")); break;
-            default:
-                break;
-        }
-        //this.tupleRevelator.setTuple(new Tuple("","",""));
         this.yTranslation = 0;
-        
         return PlayerForm.modeName[this.mode];
-        
     }
 
-    
-    
-    
     public void modeDefaultKeyPressed(int keyCode){
 
         switch(keyCode){
@@ -400,11 +335,6 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         
     }
     
-    public void initialize() {
-        //if (iterator!=null) 
-        //    iterator.reinitialize();
-    }
-    
     public void setTimeText(long time, long duration){
         this.timeText = Parser.sec2hoursShort(time) + "/" + Parser.sec2hoursShort(duration);
         buildTitle();
@@ -431,7 +361,6 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     public void resetTranslation(){
         this.yTranslation = 0;
     }
-
     
 }
 

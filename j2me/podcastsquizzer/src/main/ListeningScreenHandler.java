@@ -1,17 +1,13 @@
 
 package main;
 
+import java.util.Vector;
 import javax.microedition.lcdui.Display;
 import javax.microedition.media.Player;
-import mediaservicespackage.MediaServices;
-import persistencepackage.FileActionListener;
-import persistencepackage.Parser;
-import persistencepackage.Tuple;
-import textboxpackage.TextBoxForm;
-import textboxpackage.TextBoxFormReadyListener;
-import tuplesshowerpackage.TupleRevelator;
-import tuplesshowerpackage.TuplesShowerInterface;
-
+import mediaservicespackage.*;
+import persistencepackage.*;
+import textboxpackage.*;
+import tuplesshowerpackage.*;
 
 public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterface, FileActionListener, TextBoxFormReadyListener {
     private Playerable player;
@@ -26,6 +22,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
         this.player = player;
         this.marksManager = new MarksManager(new Parser("="));
         this.textBoxForm = new TextBoxForm(display, player.getDisplayable(), this);
+        this.tupleRevelator = new TupleRevelator(this);
         //public TextBoxForm(Display display, Displayable previous, TextBoxFormReadyListener listener){
     }
     
@@ -173,7 +170,15 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
     }
 
     public void setValues(Tuple tuple) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String str;
+        str =   "*Key \n" + 
+                tuple.getKey() + 
+                "\n*Value \n" + 
+                tuple.getValue() +
+                "\n*Extra \n" + 
+                tuple.getExtra();
+        
+        this.player.setText(str);
     }
 
 
@@ -213,7 +218,6 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
         player.repaint();
     }
 
-    
     public void playerUpdate(Player pl, String str, Object obj){
         
         long current;
@@ -234,7 +238,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
         }   
     }
 
-    public void setMainElement(Object me) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setMainElement(Object vector) {
+        this.marksManager.setMarks((Vector)vector);
     }
 }

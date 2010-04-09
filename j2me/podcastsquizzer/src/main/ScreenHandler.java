@@ -13,6 +13,6 @@ import javax.microedition.media.PlayerListener;
  */
 public interface ScreenHandler extends PlayerListener{
     public boolean keyPressed(int keyCode);
-    public void setMainElement(Object me);
+    public void setMainElement(Object main_element);
             
 }

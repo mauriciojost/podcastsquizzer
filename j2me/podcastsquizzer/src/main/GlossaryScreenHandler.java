@@ -35,6 +35,16 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
     public boolean keyPressed(int keyCode) {
         boolean catched=true;
         switch(keyCode){
+            case '0':
+                int rmod = tupleRevelator.nextMode();
+                player.putTitle("REVELATION MODE ("+rmod+")", 1);
+                break;
+            case '1': break;
+            case '2': break;
+            case '3': break;
+            case '4': break;
+            case '5': break;
+            case '6': break;
             case '7':
                 player.putTitle("PREVIOUS RECORD", 1);
                 if (iterator!=null)
@@ -49,12 +59,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                 if (iterator!=null)
                     tupleRevelator.setTuple(iterator.getNext());
                 break;
-            case '0':
-                int rmod = tupleRevelator.nextMode();
-                player.putTitle("REVELATION MODE ("+rmod+")", 1);
-                break;
             default:
-                
                 catched = false;
                 break;
         }   
@@ -63,9 +68,9 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
 
     public void setValues(Tuple tuple) {
         String text;
-        text =  "*Word:\n"+tuple.getKey()+"\n"+
-                "*Explanation:\n"+tuple.getValue()+"\n"+
-                "*Examples:\n"+tuple.getExtra()+"\n";
+        text =  "*Word: \n"+tuple.getKey()+" \n"+
+                "*Explanation: \n"+tuple.getValue()+" \n"+
+                "*Examples: \n"+tuple.getExtra()+" \n";
         player.setText(text);
     }
 
