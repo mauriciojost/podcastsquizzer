@@ -6,7 +6,6 @@
 package main;
 
 import java.util.Vector;
-import mediaservicespackage.MediaServices;
 import persistencepackage.*;
 
 /**
@@ -32,14 +31,12 @@ public class MarksManager{
     }
             
     public void saveMarks(FileActionListener fal, String id) throws Exception{
-        String text;
         
         marksVector.trimToSize();
         if (marksVector.size()!=0) {
-            text = parser.vector2txt(marksVector);
-            String currentPath = MediaServices.getMediaServices().getCurrentPath();        
-            String newFilePath = FileServices.getDirectory(currentPath) + FileServices.getFilenameWExtensionFromPath(currentPath) + "_.txt";
-            FileServices.writeTXTFile(newFilePath, text.getBytes(), fal, id);
+            HybridFile.setMarksVector(marksVector, this.parser);
+            HybridFile.saveFile(fal, id);
+            
         }
     
     }
@@ -48,8 +45,16 @@ public class MarksManager{
         
         String text;
         text =  Parser.sec2hours(seg);
-        marksVector.addElement(new Tuple("Mark ("+ this.counter++ + ")","<comment, or explanation>",text));
-        return text;
+        
+        try{
+            getMark(seg);
+            return "EXISTENT";
+        }catch(Exception e){
+            counter++;
+            marksVector.addElement(new Tuple( "Mark ("+ counter + ")","Comment or explanation." ,text));
+            return text;
+        }
+        
     }
     
     public Tuple getMark(long seg) throws Exception{

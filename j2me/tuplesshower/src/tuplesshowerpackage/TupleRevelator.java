@@ -12,6 +12,7 @@ public class TupleRevelator {
     public static final int MODE_123 = 0;
     public static final int MODE_213 = 1;
     public static final int MODE_ALL = 2;
+    public static final String[] MODE_NAME = {"A.AB.ABC","B.AB.ABC", "ABC.ABC.ABC"};
     public static final int AMOUNT_OF_MODES = 3;
     
     private TuplesShowerInterface tuplesshower;
@@ -33,6 +34,14 @@ public class TupleRevelator {
         this.mode = Math.abs(mode) % TupleRevelator.AMOUNT_OF_MODES;
         this.update(false);
     }    
+    
+    
+    public int getCurrentMode(){
+        return this.mode;
+    }
+    public String getCurrentModeName(){
+        return MODE_NAME[this.mode];
+    }
     
     public int nextMode() {
         this.stage = 0;

@@ -14,7 +14,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
     private TupleRevelator tupleRevelator;
     private TextBoxForm textBoxForm;
     private Display display;
-    private Tuple lastTuple;
+    private Tuple lastTuple = new Tuple("","","");;
     
     private MarksManager marksManager;
     
@@ -34,6 +34,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             case '0': 
                 try{
                     player.putTitleNms("SAVING MARKS...", 2000);
+                    
                     marksManager.saveMarks(this, "saveMarks");
                     //agileKey = true;
                 }catch(Exception e){
@@ -145,8 +146,8 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 }
                 break;
             case '8':
-                int rmod = this.tupleRevelator.nextMode();
-                player.putTitleNms("REVELATION MODE ("+rmod+")", 1000);
+                this.tupleRevelator.nextMode();
+                player.putTitleNms("REVELATION MODE ("+this.tupleRevelator.getCurrentModeName()+")", 1000);
                 break;
             case '9':
                 try {
@@ -245,5 +246,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
 
     public void refreshScreen() {
         this.setValues(this.lastTuple);
+    }
+
+    public String getName() {
+        return "Listening";
     }
 }

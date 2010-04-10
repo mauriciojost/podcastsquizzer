@@ -46,12 +46,16 @@ public class TextPainter {
         this.baseLine = yline;
     }
     
-    public void paintText(Graphics g, String text){
+    public void paintText(Graphics g, String text, int color){
         g.setColor(backgroundColor);
         g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth()/*-1*/, bounds.getHeigth()/*-1*/);
         g.setFont(this.font);
-        g.setColor(this.fontColor);
+        g.setColor(color);
         g.drawString(text, bounds.getX(), bounds.getY(), Graphics.TOP|Graphics.LEFT);
+    }
+    
+    public void paintText(Graphics g, String text){
+        this.paintText(g, text, this.fontColor);
     }
     
     public void setText(String cText){

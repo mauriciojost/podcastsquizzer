@@ -12,6 +12,7 @@ import java.util.Vector;
 import mediaservicespackage.*;
 import persistencepackage.*;
 import canvaspackage.*;
+import java.util.Enumeration;
 
 
 /**
@@ -25,22 +26,19 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     public static final int MODE_GLOSSARY = 0;
     public static final int MODE_LISTENING = 1;
     public static final int MODE_HELP = 2;
-    public static final int MODES_NUMBER = 3;
-    public  static final String[] modeName = {"QUIZ","LISTENING", "HELP"};
+    
     private int mode = MODE_GLOSSARY;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc=" Useful objects ">                      
     private Displayable previousDisplayable;
     private Display display;
     
-    private ScreenHandler glossaryScreenHandler;
-    private ScreenHandler listeningScreenHandler;
-    
     //private Iterator iterator;
     private Parser parser;
     private TextPainter mainTextPainter;
     private TextPainter helpTextPainter;
     private TextPainter titleTextPainter;
+    private Vector screenHandlersVector;
     //private TextBoxForm textBoxForm;
     
     //</editor-fold>
@@ -54,7 +52,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     private String helpText = "helpText";
     private String titleText = "titleText";
     
-    private Vector glossaryVector;
+    //private Vector glossaryVector;
     
     private int yTranslation = 0;
     private int titleTimeCounter = -1;
@@ -95,16 +93,21 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         this.mainTextPainter.setBackgroundColor(backgroundColor);
         this.helpTextPainter = new TextPainter(fontSmall, rec.newSetHeight(vspace).newMoveY(mainRec.getHeigth()+vspace));
         this.helpTextPainter.setBackgroundColor(backgroundColor);
+        this.helpTextPainter.setFontColor(0x999999);
         
         MediaServices.getMediaServices().addPlayerListener(this);
         
         this.parser = parser;
-        this.changeMode(true);
         
         this.setCommandListener(null);
         
-        glossaryScreenHandler = new GlossaryScreenHandler(display, this);
-        listeningScreenHandler = new ListeningScreenHandler(display, this);
+        this.screenHandlersVector = new Vector();
+        this.screenHandlersVector.addElement(new GlossaryScreenHandler(display, this));     /* Element 0. */
+        this.screenHandlersVector.addElement(new ListeningScreenHandler(display, this));    /* Element 1. */
+        
+        this.screenHandlersVector.trimToSize();
+        
+        this.changeMode(true);
         
         //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc=" Visual Thread (100ms) ">
@@ -175,8 +178,18 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     
     public void setGlossary(Vector gv){
-        this.glossaryVector = gv;
-        glossaryScreenHandler.setMainElement(gv);
+        //this.glossaryVector = gv;
+        
+        Enumeration it = this.screenHandlersVector.elements();
+        ScreenHandler current;
+        while (it.hasMoreElements()){
+            current = (ScreenHandler)it.nextElement();
+            if (GlossaryScreenHandler.class.isInstance(current)){
+                current.setMainElement(gv);
+                break;
+            }
+                    
+        }
     }
     
     public void setListening(String currentListeningPath) throws Exception{
@@ -185,7 +198,18 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     
     public void setTranscript(Vector gv){
-        this.listeningScreenHandler.setMainElement(gv);
+        
+        Enumeration it = this.screenHandlersVector.elements();
+        ScreenHandler current;
+        while (it.hasMoreElements()){
+            current = (ScreenHandler)it.nextElement();
+            if (ListeningScreenHandler.class.isInstance(current)){
+                current.setMainElement(gv);
+                break;
+            }
+                    
+        }
+        
     }
     
     public void buildHelpText(){
@@ -198,7 +222,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         if (titleTimeCounter>0) { /* El mensaje debe ser mostrado aún. */
             titleText = ">" + this.messageTitle;
         } else {
-            titleText = PlayerForm.modeName[this.mode]+" " + this.timeText;
+            titleText = ((ScreenHandler)(this.screenHandlersVector.elementAt(this.mode))).getName()+ " " + this.timeText;
         }
         this.repaint();
     }
@@ -221,11 +245,8 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     protected void keyPressed(int keyCode) {
         agileKey = false;
         boolean catched=false;
-        if (this.mode==MODE_GLOSSARY) {
-            catched = this.glossaryScreenHandler.keyPressed(keyCode);
-        } else if (this.mode==MODE_LISTENING) {
-            catched = this.listeningScreenHandler.keyPressed(keyCode);
-        }
+        
+        catched = ((ScreenHandler)this.screenHandlersVector.elementAt(this.mode)).keyPressed(keyCode);
         
         if (catched==false){
             this.modeDefaultKeyPressed(keyCode);
@@ -238,24 +259,20 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
 
     private String changeMode(boolean initialize) {
-        if (initialize) {
-            this.mode = 0;
+        if (this.screenHandlersVector.size()>0){
+            if (initialize) {
+                this.mode = 0;
+            }else{
+                this.mode = (mode+1)%this.screenHandlersVector.size();
+            }
+        
+            this.resetTranslation();
+            ScreenHandler currentSH = ((ScreenHandler)this.screenHandlersVector.elementAt(this.mode));
+            currentSH.refreshScreen();
+            return currentSH.getName();
         }else{
-            this.mode = (mode+1)%MODES_NUMBER;
+            return "No screen handler.";
         }
-        
-        switch(this.mode){
-            case PlayerForm.MODE_LISTENING:
-                
-                break;
-            case PlayerForm.MODE_GLOSSARY:
-                break;
-            default: 
-                break;
-        }
-        
-        this.yTranslation = 0;
-        return PlayerForm.modeName[this.mode];
     }
 
     public void modeDefaultKeyPressed(int keyCode){
@@ -337,13 +354,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         current = (pl.getMediaTime()/MediaServices.TIME_FACTOR); 
         this.setTimeText(current, pl.getDuration()/MediaServices.TIME_FACTOR);    
     
-        switch (this.mode){
-            case PlayerForm.MODE_LISTENING:
-                this.listeningScreenHandler.playerUpdate(pl, str, obj);
-                break;
-            default:
-                break;
-        }
+        ((ScreenHandler)this.screenHandlersVector.elementAt(this.mode)).playerUpdate(pl, str, obj);
         
     }
     

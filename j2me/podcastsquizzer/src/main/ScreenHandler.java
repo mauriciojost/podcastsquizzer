@@ -12,6 +12,7 @@ import javax.microedition.media.PlayerListener;
  * @author Mauricio
  */
 public interface ScreenHandler extends PlayerListener{
+    public String getName();
     public boolean keyPressed(int keyCode);
     public void setMainElement(Object main_element);
     public void refreshScreen();

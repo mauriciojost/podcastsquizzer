@@ -21,7 +21,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
     private TupleRevelator tupleRevelator;
     private Iterator iterator;
     private Display display;
-    private Tuple lastTuple;
+    private Tuple lastTuple = new Tuple("","","");
     
     public GlossaryScreenHandler (Display display, Playerable player){
         this.display = display;
@@ -82,6 +82,10 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
 
     public void refreshScreen() {
         this.setValues(lastTuple);
+    }
+
+    public String getName() {
+        return "Glossary";
     }
     
 }
