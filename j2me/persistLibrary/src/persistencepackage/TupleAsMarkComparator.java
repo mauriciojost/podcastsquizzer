@@ -27,7 +27,7 @@ public class TupleAsMarkComparator implements Comparator {
             Xo = Parser.hours2sec(((Tuple) x).getElement(index));
             Yo = Parser.hours2sec(((Tuple)y).getElement(index));
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
         return Xo-Yo;
     }

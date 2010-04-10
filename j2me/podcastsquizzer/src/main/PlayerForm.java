@@ -231,9 +231,6 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     
     public void paint(Graphics g) {
-        //g.setColor(backgroundColor);
-        //g.fillRect(0, 0, this.getWidth(), this.getHeight());
-        
         helpTextPainter.paintText(g, this.helpText);
         mainTextPainter.setTranslation(yTranslation);
         mainTextPainter.paintTextComplex(g);

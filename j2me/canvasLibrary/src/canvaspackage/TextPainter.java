@@ -79,19 +79,20 @@ public class TextPainter {
     }
     
     public void paintTextComplex(Graphics g){       
-        int row = 0, aux;
+        int row, aux;
         int currentColor;
         Vector line;
+        Enumeration iterator;
         
         if (repaintRequired == true){
-        
-            paintBackground(g);
-            Enumeration iterator = lines.elements();
+            row = 0;
+            
+            iterator = lines.elements();
 
             currentColor = g.getColor();
-            g.setColor(backgroundColor);
-            g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth()/*-1*/, bounds.getHeigth()/*-1*/);
-
+            
+            paintBackground(g);
+            
             int line_number = 0, lines_painted=0;
 
             while(iterator.hasMoreElements()){

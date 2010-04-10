@@ -9,12 +9,12 @@ import javax.microedition.lcdui.Graphics;
 public class Word{
     
     public static final char NON_SPECIAL_CHAR='A';
-    public static final int NORMAL=0;
-    public static final int BOLD=1;
-    public static final int BOLD_BLUE=2;
-    public static final int NORMAL_BLUE=3;
-    public static final int NORMAL_RED=4;
-    public static final int NORMAL_GREEN=5;
+    public static final char NORMAL=0;
+    public static final char BOLD=1;
+    public static final char BOLD_BLUE=2;
+    public static final char NORMAL_BLUE=3;
+    public static final char NORMAL_RED=4;
+    public static final char NORMAL_GREEN=5;
     
     private static Font baseFont = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL);
     private static Font boldMediumFont = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_BOLD, Font.SIZE_MEDIUM);
@@ -22,7 +22,7 @@ public class Word{
     
     private char last_char;
     private String word;
-    private int mode = NORMAL;
+    private char mode = NORMAL;
     
     public static void setBaseFont(Font font){
         baseFont = font;

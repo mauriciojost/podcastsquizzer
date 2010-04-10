@@ -30,7 +30,7 @@ public class MediaServices implements Runnable{
     
     private MediaServices(){
         vectorPlayerListeners = new Vector();
-        (new Thread(this)).start();
+        (new Thread(this, "Thread Media")).start();
     }
     
     public static MediaServices getMediaServices(){

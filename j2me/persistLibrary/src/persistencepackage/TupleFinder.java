@@ -66,7 +66,7 @@ public class TupleFinder {
             try {
                 return Parser.hours2sec(tuple.getElement(index)) == sec;
             } catch (Exception ex) {
-                ex.printStackTrace();
+                //ex.printStackTrace();
             }
         }
         return false;
