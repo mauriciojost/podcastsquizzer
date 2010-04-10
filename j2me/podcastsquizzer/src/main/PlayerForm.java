@@ -26,20 +26,17 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     public static final int MODE_GLOSSARY = 0;
     public static final int MODE_LISTENING = 1;
     public static final int MODE_HELP = 2;
-    
     private int mode = MODE_GLOSSARY;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc=" Useful objects ">                      
     private Displayable previousDisplayable;
     private Display display;
     
-    //private Iterator iterator;
     private Parser parser;
     private TextPainter mainTextPainter;
     private TextPainter helpTextPainter;
     private TextPainter titleTextPainter;
     private Vector screenHandlersVector;
-    //private TextBoxForm textBoxForm;
     
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc=" Auxiliar elements ">                      
@@ -133,8 +130,8 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
                     
                     if (titleTimeCounter>0){   /* Un resumen de mensaje tiene que ser mostrado. */
                         titleTimeCounter--;     /* Se consume el tiempo durante el cual se muestra. */
-                        //showMessageTitle = true;
                         if (titleTimeCounter==1){ /* Cuando se está a punto de dejar de mostrar el mensaje... */
+                            
                             if (timeChangeInProgress){
                                 timeChangeInProgress = false;
                                 try{
@@ -149,9 +146,8 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
                                 }
                                 desiredTimeChange = 0;
                             }
+                            
                         }   
-                    }else{
-                        //showMessageTitle = false;
                     }
                     buildTitle();
                 }
@@ -169,7 +165,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {
-                        ex.printStackTrace();
+                        //ex.printStackTrace();
                     }
                     i=(i>10000)?0:i+1;
                     buildHelpText(i);
@@ -235,8 +231,8 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     
     public void paint(Graphics g) {
-        g.setColor(backgroundColor);
-        g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        //g.setColor(backgroundColor);
+        //g.fillRect(0, 0, this.getWidth(), this.getHeight());
         
         helpTextPainter.paintText(g, this.helpText);
         mainTextPainter.setTranslation(yTranslation);
@@ -361,7 +357,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         current = (pl.getMediaTime()/MediaServices.TIME_FACTOR); 
         this.setTimeText(current, pl.getDuration()/MediaServices.TIME_FACTOR);    
     
-        ((ScreenHandler)this.screenHandlersVector.elementAt(this.mode)).playerUpdate(pl, str, obj);
+        ((ScreenHandler)this.screenHandlersVector.elementAt(this.mode)).playerUpdate(pl, str, new Integer((int)current));
         
     }
     

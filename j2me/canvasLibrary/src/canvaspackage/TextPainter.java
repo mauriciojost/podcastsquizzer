@@ -22,6 +22,8 @@ public class TextPainter {
     private int fontColor = 0xFFFFFF;
     private int linesPerPage=0;
     private Vector lines;
+    private boolean repaintRequired = true;
+            
     
     public TextPainter(Font font, Rectangle bounds){
         this.font = font;
@@ -33,22 +35,32 @@ public class TextPainter {
     
     public void setBackgroundColor(int color){
         this.backgroundColor = color;
+        repaintRequired = true;
     }
     
     public void setBorderColor(int color){
         this.borderColor = color;
+        repaintRequired = true;
     }
     public void setFontColor(int color){
         this.fontColor = color;
+        repaintRequired = true;
     }
     
     public void setTranslation(int yline){
-        this.baseLine = yline;
+        if (yline!=baseLine){
+            this.baseLine = yline;
+            repaintRequired = true;
+        }
+    }
+    
+    private void paintBackground(Graphics g){
+        g.setColor(backgroundColor);
+        g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth()/*-1*/, bounds.getHeigth()/*-1*/);
     }
     
     public void paintText(Graphics g, String text, int color){
-        g.setColor(backgroundColor);
-        g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth()/*-1*/, bounds.getHeigth()/*-1*/);
+        paintBackground(g);
         g.setFont(this.font);
         g.setColor(color);
         g.drawString(text, bounds.getX(), bounds.getY(), Graphics.TOP|Graphics.LEFT);
@@ -62,6 +74,7 @@ public class TextPainter {
         Vector words;
         words = breakDownWords(cText); cText = null;
         lines = breakDownLines(words, bounds.getWidth()); words = null;
+        repaintRequired = true;
         
     }
     
@@ -70,33 +83,40 @@ public class TextPainter {
         int currentColor;
         Vector line;
         
-        Enumeration iterator = lines.elements();
+        if (repaintRequired == true){
         
-        currentColor = g.getColor();
-        g.setColor(backgroundColor);
-        g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth()/*-1*/, bounds.getHeigth()/*-1*/);
-        
-        int line_number = 0, lines_painted=0;
-        
-        while(iterator.hasMoreElements()){
-            line = (Vector)iterator.nextElement();
-            
-            if (lines_painted>=this.linesPerPage){
-                break;
+            paintBackground(g);
+            Enumeration iterator = lines.elements();
+
+            currentColor = g.getColor();
+            g.setColor(backgroundColor);
+            g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth()/*-1*/, bounds.getHeigth()/*-1*/);
+
+            int line_number = 0, lines_painted=0;
+
+            while(iterator.hasMoreElements()){
+                line = (Vector)iterator.nextElement();
+
+                if (lines_painted>=this.linesPerPage){
+                    break;
+                }
+
+                if (line_number>=this.baseLine) {
+                    aux = paintLine(g,line,row);
+                    row += aux+2;
+                    lines_painted++;
+                }
+                line_number++;
             }
+
+            g.setColor(borderColor);
+            //g.drawRect(bounds.getX(), bounds.getY(), bounds.getWidth()-1, bounds.getHeigth()-1);
+            g.setColor(currentColor);
             
-            if (line_number>=this.baseLine) {
-                aux = paintLine(g,line,row);
-                row += aux+2;
-                lines_painted++;
-            }
-            line_number++;
+            repaintRequired = false;
+        }else{
+            repaintRequired = false;
         }
-        
-        g.setColor(borderColor);
-        //g.drawRect(bounds.getX(), bounds.getY(), bounds.getWidth()-1, bounds.getHeigth()-1);
-        g.setColor(currentColor);
-        
     }
     
     public Vector breakDownLines(Vector words, int max_width){

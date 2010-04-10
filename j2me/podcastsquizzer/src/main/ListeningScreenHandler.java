@@ -14,7 +14,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
     private TupleRevelator tupleRevelator;
     private TextBoxForm textBoxForm;
     private Display display;
-    private Tuple lastTuple = new Tuple("","","");;
+    private Tuple lastTuple = new Tuple("","","");
     
     private MarksManager marksManager;
     
@@ -124,7 +124,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 try{
                     MediaServices.getMediaServices().pause();
                 }catch(Exception e){e.printStackTrace();}
-                this.textBoxForm.setTitle("KeyComment");
+                this.textBoxForm.setTitle("Transcript");
                 try {
                     this.textBoxForm.setText(marksManager.getCurrent().getKey());
                 } catch (Exception ex) {
@@ -141,7 +141,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 try {
                     MediaServices.getMediaServices().pause();
                 }catch(Exception e){e.printStackTrace();}
-                this.textBoxForm.setTitle("ValueComment");
+                this.textBoxForm.setTitle("Add comment");
                 try {
                     this.textBoxForm.setText(marksManager.getCurrent().getValue());
                 } catch (Exception ex) {
@@ -217,8 +217,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 catched = false;
                 break;
             //</editor-fold>
-            
-                
+  
         }
         
         return catched;
@@ -227,11 +226,11 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
     public void setValues(Tuple tuple) {
         String str;
         this.lastTuple = tuple;
-        str =   "*Key \n" + 
+        str =   "*Transcript \n" + 
                 tuple.getKey() + 
-                "\n*Value \n" + 
+                "\n*Comment \n" + 
                 tuple.getValue() +
-                "\n*Extra \n" + 
+                "\n*Time \n" + 
                 tuple.getExtra();
         
         this.player.setText(str);
@@ -247,7 +246,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
     }
     
     public void textBoxReady(String title, String text) {
-        if (title.compareTo("ValueComment")==0){
+        if (title.compareTo("Add comment")==0){
             if (text!=null){
                 try {
                     marksManager.getCurrent().setValue(text);
@@ -259,7 +258,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 }
                 
             }
-        } else if (title.compareTo("KeyComment")==0){
+        } else if (title.compareTo("Transcript")==0){
             if (text!=null){
                 try {
                     marksManager.getCurrent().setKey(text);
@@ -272,23 +271,19 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 
             }
         }
-        
     }
 
     public void playerUpdate(Player pl, String str, Object obj){
         int current;
         Tuple t;
-        
-        current = (int)(pl.getMediaTime()/MediaServices.TIME_FACTOR); 
+        current = ((Integer)obj).intValue();
         if (MediaServices.getMediaServices().isItPlaying()){
             try{
                 t = this.marksManager.getMark(current);
-                if (t!=this.tupleRevelator.getLastTuple()){
-                    this.player.resetTranslation();
-                    this.tupleRevelator.setTuple(t);
-                }
+                this.player.resetTranslation();
+                this.tupleRevelator.setTuple(t);
             }catch(Exception e){
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }   
     }

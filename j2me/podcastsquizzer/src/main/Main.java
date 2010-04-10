@@ -13,8 +13,6 @@ import javax.microedition.lcdui.*;
 import java.util.Vector;
 import mediaservicespackage.*;
 import browserpackage.*;
-import miscellaneouspackage.Comparator;
-import miscellaneouspackage.Sorter;
 import persistencepackage.*;
 
 

@@ -199,14 +199,15 @@ public class MediaServices implements Runnable{
     }
 
     public void run() {
+        PlayerListener playerListener;
+        Enumeration iterator;
         while (true){
-            try { Thread.sleep(200); } catch (InterruptedException ex) { ex.printStackTrace(); }
-            
-            Enumeration iterator = this.vectorPlayerListeners.elements();
+            try { Thread.sleep(333); } catch (InterruptedException ex) { ex.printStackTrace(); }
+            iterator = this.vectorPlayerListeners.elements();
             while(iterator.hasMoreElements()){
-                PlayerListener playerListener = (PlayerListener)iterator.nextElement();
+                playerListener = (PlayerListener)iterator.nextElement();
                 if ((playerListener!=null) && (this.player!=null)){
-                    playerListener.playerUpdate(this.player, "", null);
+                    playerListener.playerUpdate(this.player, null, null);
                 }
             }
         }   
