@@ -76,18 +76,19 @@ public class TextPainter {
         g.setColor(backgroundColor);
         g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth()/*-1*/, bounds.getHeigth()/*-1*/);
         
-        int line_number = 0;
+        int line_number = 0, lines_painted=0;
         
         while(iterator.hasMoreElements()){
             line = (Vector)iterator.nextElement();
             
-            if (line_number>=this.linesPerPage){
+            if (lines_painted>=this.linesPerPage){
                 break;
             }
             
             if (line_number>=this.baseLine) {
                 aux = paintLine(g,line,row);
                 row += aux+2;
+                lines_painted++;
             }
             line_number++;
         }
