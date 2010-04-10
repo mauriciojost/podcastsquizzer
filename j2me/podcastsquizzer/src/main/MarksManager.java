@@ -6,6 +6,7 @@
 package main;
 
 import java.util.Vector;
+import miscellaneouspackage.Sorter;
 import persistencepackage.*;
 
 /**
@@ -17,15 +18,18 @@ public class MarksManager{
     private TupleFinder tupleFinder;
     private int counter=0;
     private int currentTupleIndex=-1;
+    private Sorter sorter;
     
     public MarksManager(Parser parser){
         this.marksVector = new Vector();
         HybridFile.setMarksVector(marksVector);
         this.tupleFinder = new TupleFinder(marksVector);
+         sorter = new Sorter(new TupleAsMarkComparator(Tuple.INDEX_EXTRA));
     }
     
     public void setMarks(Vector gv){
         this.marksVector = gv;
+        sorter.sort(marksVector);
         HybridFile.setMarksVector(marksVector);
         this.tupleFinder = new TupleFinder(marksVector);
     }
@@ -33,12 +37,13 @@ public class MarksManager{
     public void saveMarks(FileActionListener fal, String id) throws Exception{
         
         marksVector.trimToSize();
+        sorter.sort(marksVector);
         if (marksVector.size()!=0) {
             HybridFile.saveFile(fal, id);   
         }
     }
     
-    public String addMarkNow(long seg) throws Exception{
+    public String addMarkNow(int seg) throws Exception{
         
         String text;
         text =  Parser.sec2hours(seg);
@@ -49,16 +54,17 @@ public class MarksManager{
         }catch(Exception e){
             counter++;
             marksVector.addElement(new Tuple( "Mark ("+ counter + ")","Comment or explanation." ,text));
+            sorter.sort(marksVector);
             e.printStackTrace();
             return text;
         }
         
     }
     
-    public Tuple getMark(long sec) throws Exception{
+    public Tuple getMark(int sec) throws Exception{
         Tuple tuple;
-        //tuple = this.tupleFinder.lookFor(new Tuple(null,null,text));
-        tuple = this.tupleFinder.lookForMoreAppropriate((int)sec);
+        tuple = this.tupleFinder.lookFor(sec);
+        //tuple = this.tupleFinder.lookForMoreAppropriate((int)sec);
         currentTupleIndex = this.tupleFinder.getLastIndex();
         return tuple;
     }
@@ -113,6 +119,7 @@ public class MarksManager{
         Tuple t;
         t = getCurrent();
         t.setExtra(Parser.sec2hours(sec));
+        sorter.sort(marksVector);
     }
 
     

@@ -156,7 +156,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             //<editor-fold defaultstate="collapsed" desc=" 6 NEWMARK ">
             case '6':
                 try{
-                    String mark = marksManager.addMarkNow(MediaServices.getMediaServices().getPositionSeconds());
+                    String mark = marksManager.addMarkNow((int)MediaServices.getMediaServices().getPositionSeconds());
                     //agileKey = true;
                     player.putTitleNms("NEW MARK: " + mark, 1000);
                 }catch(Exception e){
@@ -276,18 +276,17 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
     }
 
     public void playerUpdate(Player pl, String str, Object obj){
-        
-        long current;
+        int current;
         Tuple t;
         
-        current = (pl.getMediaTime()/MediaServices.TIME_FACTOR); 
-        
+        current = (int)(pl.getMediaTime()/MediaServices.TIME_FACTOR); 
         if (MediaServices.getMediaServices().isItPlaying()){
             try{
                 t = this.marksManager.getMark(current);
-                this.player.resetTranslation();
-                this.tupleRevelator.setTuple(t);
-                //player.repaint();
+                if (t!=this.tupleRevelator.getLastTuple()){
+                    this.player.resetTranslation();
+                    this.tupleRevelator.setTuple(t);
+                }
             }catch(Exception e){
                 e.printStackTrace();
             }

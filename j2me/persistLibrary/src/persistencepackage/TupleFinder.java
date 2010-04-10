@@ -11,14 +11,14 @@ import java.util.Vector;
 public class TupleFinder {
     private Vector vector;
     private int lastIndex=0;
-    private TupleComparator tupleComparator; 
+    private TupleAsMarkComparator tupleComparator; 
     public TupleFinder(Vector vector){
         this.vector = vector;
-        tupleComparator = new TupleComparator(Tuple.INDEX_EXTRA);
+        tupleComparator = new TupleAsMarkComparator(Tuple.INDEX_EXTRA);
     }
     
     
-    public Tuple lookFor(Tuple target) throws Exception{
+    public Tuple lookFor(int sec) throws Exception{
         Enumeration e;
         Tuple tuple;
         int index=0;
@@ -27,7 +27,7 @@ public class TupleFinder {
         
         while (e.hasMoreElements()){
             tuple = (Tuple)e.nextElement();
-            if (areTuplesEqual(tuple, target,2)==true){
+            if (areTimesEqual(tuple, sec,2)==true){
                 lastIndex = index;
                 return tuple;
             }
@@ -38,35 +38,22 @@ public class TupleFinder {
     
     
     public Tuple lookForMoreAppropriate(int sec_actual) throws Exception{
-        Tuple currentT=null, candidate=null;
+        Tuple currentT=null;
         int diff;
-        int index=-1;
-        int mindiff=-1;
-        int candidate_index=-1;
-                
+        
         vector.trimToSize();
-            
-        for(int i=0; i<vector.size();i++){
-            index = (lastIndex+i)%vector.size();
-            currentT = (Tuple)vector.elementAt(index);
+    
+        for(int i=vector.size()-1; i>=0;i--){
+            currentT = (Tuple)vector.elementAt(i);
             try {
                 diff = tupleComparator.compareTupleElementAsTimeMarks(sec_actual, currentT);
-                if (diff>=0){
-                    candidate = currentT;
-                    mindiff = diff;
-                    candidate_index = index;
-                }else{
-                    break;
+                if (diff<0){
+                    lastIndex = (i+1)%vector.size();
+                    return (Tuple)vector.elementAt(lastIndex);
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            } catch (Exception ex) { ex.printStackTrace();}
         }
-        if (candidate==null){
-            throw new Exception("Tuple not found.");
-        }
-        this.lastIndex = candidate_index;
-        return candidate;
+        throw new Exception("Tuple not found.");
         
     }
     
@@ -74,15 +61,13 @@ public class TupleFinder {
         return lastIndex;
     }
     
-    private boolean areTuplesEqual(Tuple tuple, Tuple target, int index) {
-        if ((target.getKey()!=null)&&(index==0)){
-            return (target.getKey().compareTo(tuple.getKey())==0);
-        }
-        if ((target.getValue()!=null)&&(index==1)){
-            return (target.getValue().compareTo(tuple.getValue())==0);
-        }
-        if ((target.getExtra()!=null)&&(index==2)){
-            return (target.getExtra().compareTo(tuple.getExtra())==0);
+    private boolean areTimesEqual(Tuple tuple, int sec, int index) {
+        if (tuple!=null){
+            try {
+                return Parser.hours2sec(tuple.getElement(index)) == sec;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return false;
     }

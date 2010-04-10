@@ -16,7 +16,7 @@ public class Sorter {
     
     public void sort(Vector vector){
         vector.trimToSize();
-        this.quickSort(vector, 0, vector.size());
+        this.quickSort(vector, 0, vector.size()-1);
     }
 
     private int partition(Vector arr, int left, int right){

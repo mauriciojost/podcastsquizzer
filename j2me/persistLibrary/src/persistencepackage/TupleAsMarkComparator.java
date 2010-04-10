@@ -3,11 +3,11 @@ package persistencepackage;
 import miscellaneouspackage.Comparator;
 
 
-public class TupleComparator implements Comparator {
+public class TupleAsMarkComparator implements Comparator {
     
     private int index;
     
-    public TupleComparator(int index_to_compare){
+    public TupleAsMarkComparator(int index_to_compare){
         this.index = index_to_compare;
     }
     

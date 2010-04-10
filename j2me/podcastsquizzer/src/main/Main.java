@@ -13,6 +13,8 @@ import javax.microedition.lcdui.*;
 import java.util.Vector;
 import mediaservicespackage.*;
 import browserpackage.*;
+import miscellaneouspackage.Comparator;
+import miscellaneouspackage.Sorter;
 import persistencepackage.*;
 
 
@@ -55,6 +57,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
      * The Main constructor.
      */
     public Main() {
+        
         browser = new Browser(
                 this.getDisplay(), 
                 this.getForm(), 
@@ -467,9 +470,11 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
      */
     public void browserReady(String title, String path) {
         if (title.compareTo("Listening")==0) {
+            this.listeningItem.setText("Loading..."); 
             this.loadListening(path);
             this.playerCommandStatus(true);
         }else if (title.compareTo("Hybrid")==0){
+            this.hybridItem.setText("Loading..."); 
             this.loadHybridText(path);
             this.playerCommandStatus(true);
         } else if (title.compareTo("All")==0) {
@@ -477,6 +482,9 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 String txtPath = "";
                 String lisPath;
 
+                this.listeningItem.setText("Loading..."); 
+                this.hybridItem.setText("Loading..."); 
+            
                 lisPath = path;
                 txtPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + ".txt";
 
@@ -496,7 +504,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         Vector glossary, transcript;
         if (path != null){
             try {
-                this.hybridItem.setText("Loading '"+FileServices.getStandardPath(path)+"'..."); Thread.sleep(1); this.getDisplay().vibrate(10);
+                this.hybridItem.setText("Loading '"+FileServices.getStandardPath(path)+"'..."); 
                 extension = FileServices.getExtensionFromPath(path).toUpperCase();
                 if (extension.compareTo("TXT")!=0)
                     throw new Exception("Invalid hybrid file (must be TXT and is "+ extension +").");
@@ -521,7 +529,6 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         String extension;
         if (path != null){
             try{
-                this.listeningItem.setText("Loading '"+FileServices.getStandardPath(path)+"'..."); Thread.sleep(1); this.getDisplay().vibrate(10);
                 extension = FileServices.getExtensionFromPath(path).toUpperCase();
                 if (extension.compareTo("MP3")!=0)
                     throw new Exception("Invalid file for listening (must be MP3 and is "+ extension +").");
