@@ -23,11 +23,10 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     private final static int KEY_MISC_RIGHT = -6;
     //<editor-fold defaultstate="collapsed" desc=" About Modes ">                      
     public static final int MODE_GLOSSARY = 0;
-    public static final int MODE_ESSAY_MARKS = 1;
-    public static final int MODE_ANIMATED = 2;
-    public static final int MODE_HELP = 3;
-    public static final int MODES_NUMBER = 4;
-    public  static final String[] modeName = {"QUIZ","MARK","ANIMATION", "HELP"};
+    public static final int MODE_LISTENING = 1;
+    public static final int MODE_HELP = 2;
+    public static final int MODES_NUMBER = 3;
+    public  static final String[] modeName = {"QUIZ","LISTENING", "HELP"};
     private int mode = MODE_GLOSSARY;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc=" Useful objects ">                      
@@ -121,11 +120,11 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
                     
                     if (goForwardFlag){
                         desiredTimeChange+=2;
-                        putTitle("MOVE "+ desiredTimeChange + " sec.", (float)0.5);
+                        putTitleNms("MOVE "+ desiredTimeChange + " sec.", 500);
                     }
                     if (goBackFlag){
                         desiredTimeChange-=2;
-                        putTitle("MOVE "+ desiredTimeChange + " sec.", (float)0.5);
+                        putTitleNms("MOVE "+ desiredTimeChange + " sec.", 500);
                     }
                     
                     if (titleTimeCounter>0){   /* Un resumen de mensaje tiene que ser mostrado. */
@@ -224,9 +223,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         boolean catched=false;
         if (this.mode==MODE_GLOSSARY) {
             catched = this.glossaryScreenHandler.keyPressed(keyCode);
-        } else if (this.mode==MODE_ESSAY_MARKS) {
-            catched = this.listeningScreenHandler.keyPressed(keyCode);
-        } else if (this.mode==MODE_ANIMATED) {
+        } else if (this.mode==MODE_LISTENING) {
             catched = this.listeningScreenHandler.keyPressed(keyCode);
         }
         
@@ -246,6 +243,17 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         }else{
             this.mode = (mode+1)%MODES_NUMBER;
         }
+        
+        switch(this.mode){
+            case PlayerForm.MODE_LISTENING:
+                
+                break;
+            case PlayerForm.MODE_GLOSSARY:
+                break;
+            default: 
+                break;
+        }
+        
         this.yTranslation = 0;
         return PlayerForm.modeName[this.mode];
     }
@@ -256,7 +264,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
 
             case PlayerForm.KEY_MISC_LEFT:
                 String mn = this.changeMode(false);
-                this.putTitle("MODE " + mn, 1);
+                this.putTitleNms("MODE " + mn, 1000);
                 this.buildTitle();
                 this.repaint();
                 break;
@@ -267,19 +275,19 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
                 
                 switch(this.getGameAction(keyCode)){
                     case PlayerForm.FIRE:
-                        this.putTitle("PLAY/PAUSE", 1);
+                        this.putTitleNms("PLAY/PAUSE", 1000);
                         try{
                             MediaServices.getMediaServices().playPause(); 
                         }catch(Exception e){
-                            this.putTitle("ERROR PLAY/PAUSE", 1);
+                            this.putTitleNms("ERROR PLAY/PAUSE", 1000);
                         }    
                         break;
                     case PlayerForm.DOWN:
-                        this.putTitle("DOWN LINE", 1);
+                        this.putTitleNms("DOWN LINE", 1000);
                         yTranslation +=3;
                         break;
                     case PlayerForm.UP:
-                        this.putTitle("UP LINE", 1);
+                        this.putTitleNms("UP LINE", 1000);
                         yTranslation = Math.max(yTranslation - 3,0);
                         break;
 
@@ -295,7 +303,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
                         }
                         this.timeChangeInProgress = true;
                         this.desiredTimeChange = desiredTimeChange + 1;
-                        this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
+                        this.putTitleNms("MOVE "+ this.desiredTimeChange + " sec.", 500);
                         this.goForwardFlag=true;
                         agileKey = true;
                         break;
@@ -311,12 +319,12 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
                         }
                         this.timeChangeInProgress = true;
                         this.desiredTimeChange = desiredTimeChange - 1;
-                        this.putTitle("MOVE "+ this.desiredTimeChange + " sec.", (float)0.5);
+                        this.putTitleNms("MOVE "+ this.desiredTimeChange + " sec.", 500);
                         this.goBackFlag=true;
                         agileKey = true;
                         break;
                     default:
-                        this.putTitle("NOT USED (" + keyCode + ", " + this.getGameAction(keyCode)+ ")", 1);
+                        this.putTitleNms("NOT USED (" + keyCode + ", " + this.getGameAction(keyCode)+ ")", 1);
                         break;
                 }
         }
@@ -329,8 +337,12 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         current = (pl.getMediaTime()/MediaServices.TIME_FACTOR); 
         this.setTimeText(current, pl.getDuration()/MediaServices.TIME_FACTOR);    
     
-        if (this.mode == PlayerForm.MODE_ANIMATED){
-            this.listeningScreenHandler.playerUpdate(pl, str, obj);
+        switch (this.mode){
+            case PlayerForm.MODE_LISTENING:
+                this.listeningScreenHandler.playerUpdate(pl, str, obj);
+                break;
+            default:
+                break;
         }
         
     }
@@ -349,9 +361,9 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         display.setCurrent(previousDisplayable); /* Return. */
     }
     
-    public void putTitle(String title, double seconds) {
+    public void putTitleNms(String title, int mseconds) {
         this.messageTitle = title;
-        this.titleTimeCounter = (int)(seconds*10);
+        this.titleTimeCounter = mseconds/100;
     }
     
     public Displayable getDisplayable(){

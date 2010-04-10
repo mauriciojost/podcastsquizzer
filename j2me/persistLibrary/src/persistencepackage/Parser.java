@@ -1,13 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package persistencepackage;
 
 import java.util.Enumeration;
 import java.util.Vector;
-
 
 public class Parser {
     private Vector tabla;
@@ -28,8 +23,7 @@ public class Parser {
         int lastnl = 0;
         
         String current_line = "";
-        
-        
+            
         tabla = new Vector();
         
         lastnl = text.indexOf(line_separator);
@@ -83,7 +77,6 @@ public class Parser {
     
     public Tuple parseLine(String line){
         int index;
-        //boolean nuevo;
         Tuple pareja;
         
         index = line.indexOf(this.values_separator);
@@ -98,27 +91,16 @@ public class Parser {
                 valu = value.substring(0, index).trim();
                 extra = value.substring(index+1,value.length()).trim();
                 pareja = new Tuple(key, valu, extra);
-                //tabla.addElement(pareja);
                 return pareja;
-                //nuevo = true;
             }else{
                 pareja = new Tuple(key, value);
-                //tabla.addElement(pareja);
                 return pareja;
-                //nuevo = true;
             }
         } else {
-            //nuevo = false;
             pareja = new Tuple(line, "");
             return pareja;
         }
-        
-        
-        
-        //return nuevo;
     }
-    
-    
     
     public static String sec2hoursShort(long sec){
         String ret;
@@ -155,16 +137,9 @@ public class Parser {
                 int segP = Integer.parseInt(text.substring(6,8));
                 ret = (long)horP * 3600 + (long)minP * 60 + (long)segP;
                 return ret;   
-            } else {
-                throw e;
             }
-            
-        }
-        
+        }    
         throw e;
-        
     }
-    
-    
     
 }

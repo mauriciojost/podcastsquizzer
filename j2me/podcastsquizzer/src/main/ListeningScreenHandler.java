@@ -14,6 +14,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
     private TupleRevelator tupleRevelator;
     private TextBoxForm textBoxForm;
     private Display display;
+    private Tuple lastTuple;
     
     private MarksManager marksManager;
     
@@ -32,17 +33,17 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             
             case '0': 
                 try{
-                    player.putTitle("SAVING MARKS...", 2);
+                    player.putTitleNms("SAVING MARKS...", 2000);
                     marksManager.saveMarks(this, "saveMarks");
                     //agileKey = true;
                 }catch(Exception e){
-                    player.putTitle("MARKS NOT SAVED", 10);
+                    player.putTitleNms("MARKS NOT SAVED", 10000);
                 }
                 break;
             
             case '1':
                 try {
-                    player.putTitle("PREVIOUS MARK", 1);
+                    player.putTitleNms("PREVIOUS MARK", 1000);
 
                     Tuple tupleScreen;
                     String curr = marksManager.getPrevious(true).getKey();  // Retroceder y obtener el nuevo actual.
@@ -52,13 +53,13 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
 
                     this.tupleRevelator.setTuple(tupleScreen);
                 } catch (Exception ex) {
-                    player.putTitle("MARK ERROR", 1);
+                    player.putTitleNms("MARK ERROR", 1000);
                 }
                 break;
             case '2':
                 try {
                     Tuple tupleScreen;
-                    player.putTitle("APPLIED MARK", 1);
+                    player.putTitleNms("APPLIED MARK", 1000);
 
                     String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
                     marksManager.applyTimeToCurrentMark(MediaServices.getMediaServices().getPositionSeconds());
@@ -68,12 +69,12 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     
                     this.tupleRevelator.setTuple(tupleScreen);
                 } catch (Exception ex) {
-                    player.putTitle("MARK ERROR", 1);
+                    player.putTitleNms("MARK ERROR", 1000);
                 }
                 break;
             case '3':
                 try {
-                    player.putTitle("NEXT MARK", 1);
+                    player.putTitleNms("NEXT MARK", 1000);
 
                     Tuple tupleScreen;
                     String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
@@ -83,7 +84,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
 
                     this.tupleRevelator.setTuple(tupleScreen);
                 } catch (Exception ex) {
-                    player.putTitle("MARK ERROR", 1);
+                    player.putTitleNms("MARK ERROR", 1000);
                 }
                 break;
                 
@@ -100,7 +101,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     }
                     display.setCurrent(this.textBoxForm.getDisplayable());
                 }else{
-                    player.putTitle("PLAYING...", 1);
+                    player.putTitleNms("PLAYING...", 1000);
                 }
                 break;
                 
@@ -115,7 +116,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     }
                     display.setCurrent(this.textBoxForm.getDisplayable());
                 }else{
-                    player.putTitle("PLAYING...", 1);
+                    player.putTitleNms("PLAYING...", 1000);
                 }
                 break;
             
@@ -123,9 +124,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 try{
                     String mark = marksManager.addMarkNow(MediaServices.getMediaServices().getPositionSeconds());
                     //agileKey = true;
-                    player.putTitle("NEW MARK: " + mark, 1);
+                    player.putTitleNms("NEW MARK: " + mark, 1000);
                 }catch(Exception e){
-                    player.putTitle("ERROR ADDING MARK...",1);
+                    player.putTitleNms("ERROR ADDING MARK...",1000);
                 }
                 break;
             
@@ -134,29 +135,29 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             case '7':
                 try {
                     if (MediaServices.getMediaServices().isItPlaying()==false){
-                        player.putTitle("PREVIOUS MARK", 1);
+                        player.putTitleNms("PREVIOUS MARK", 1000);
                         this.tupleRevelator.setTuple(marksManager.getPrevious(true));
                     }else{
-                        player.putTitle("PLAYING...", 1);
+                        player.putTitleNms("PLAYING...", 1000);
                     }
                 } catch (Exception ex) {
-                    player.putTitle("MARK ERROR", 1);
+                    player.putTitleNms("MARK ERROR", 1000);
                 }
                 break;
             case '8':
                 int rmod = this.tupleRevelator.nextMode();
-                player.putTitle("REVELATION MODE ("+rmod+")", 1);
+                player.putTitleNms("REVELATION MODE ("+rmod+")", 1000);
                 break;
             case '9':
                 try {
                     if (MediaServices.getMediaServices().isItPlaying()==false){
-                        player.putTitle("NEXT MARK", 1);                    
+                        player.putTitleNms("NEXT MARK", 1000);                    
                         this.tupleRevelator.setTuple(marksManager.getNext(true));
                     }else{
-                        player.putTitle("PLAYING...", 1);
+                        player.putTitleNms("PLAYING...", 1000);
                     }
                 } catch (Exception ex) {
-                    player.putTitle("MARK ERROR", 1);
+                    player.putTitleNms("MARK ERROR", 1000);
                 }
                 break;
                 
@@ -171,6 +172,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
 
     public void setValues(Tuple tuple) {
         String str;
+        this.lastTuple = tuple;
         str =   "*Key \n" + 
                 tuple.getKey() + 
                 "\n*Value \n" + 
@@ -184,9 +186,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
 
     public void writeOperationReady(String id, String path, boolean operation_successfully) {
         if(operation_successfully && (id.compareTo("saveMarks")==0)) {
-            player.putTitle("MARKS SAVED", 2);
+            player.putTitleNms("MARKS SAVED", 2000);
         }else{
-            player.putTitle("MARKS NOT SAVED", 2);
+            player.putTitleNms("MARKS NOT SAVED", 2000);
         }
     }
     
@@ -196,7 +198,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 try {
                     marksManager.getCurrent().setValue(text);
                     this.tupleRevelator.setTuple(marksManager.getCurrent());
-                    player.putTitle("VALUE CHANGED", 1);
+                    player.putTitleNms("VALUE CHANGED", 1000);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -207,7 +209,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 try {
                     marksManager.getCurrent().setKey(text);
                     this.tupleRevelator.setTuple(marksManager.getCurrent());
-                    player.putTitle("KEY CHANGED", 1);
+                    player.putTitleNms("KEY CHANGED", 1000);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -215,7 +217,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             }
         }
         
-        player.repaint();
+        //player.repaint();
     }
 
     public void playerUpdate(Player pl, String str, Object obj){
@@ -229,9 +231,8 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             try{
                 t = this.marksManager.getMark(current);
                 this.player.resetTranslation();
-                
                 this.tupleRevelator.setTuple(t);
-                player.repaint();
+                //player.repaint();
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -240,5 +241,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
 
     public void setMainElement(Object vector) {
         this.marksManager.setMarks((Vector)vector);
+    }
+
+    public void refreshScreen() {
+        this.setValues(this.lastTuple);
     }
 }

@@ -73,24 +73,8 @@ public class Help {
                         ret = "<help>"; break;
                 }
                 break;
-            case PlayerForm.MODE_ESSAY_MARKS:
-                switch (stage){
-                    case 0:
-                        ret = "(1)   (2)   (3)"; break;
-                    case 1:
-                        ret = "(4)   (5)   (6)"; break;
-                    case 2:
-                        ret = "(7).PREV (8).APPL (9).NEXT"; break;
-                    case 3:
-                        ret = "(*)   (0)   (#)"; break;
-                    case 4:
-                        ret = "(ARR).AUDIO (BT).MODE"; break;
-                    default:
-                        ret = "<help>"; break;
-                }
-                break;
-                
-            case PlayerForm.MODE_ANIMATED:
+            
+            case PlayerForm.MODE_LISTENING:
                 switch (stage){
                     case 0:
                         ret = "(1)   (2)   (3)"; break;

@@ -21,6 +21,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
     private TupleRevelator tupleRevelator;
     private Iterator iterator;
     private Display display;
+    private Tuple lastTuple;
     
     public GlossaryScreenHandler (Display display, Playerable player){
         this.display = display;
@@ -37,7 +38,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
         switch(keyCode){
             case '0':
                 int rmod = tupleRevelator.nextMode();
-                player.putTitle("REVELATION MODE ("+rmod+")", 1);
+                player.putTitleNms("REVELATION MODE ("+rmod+")", 1000);
                 break;
             case '1': break;
             case '2': break;
@@ -46,16 +47,16 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
             case '5': break;
             case '6': break;
             case '7':
-                player.putTitle("PREVIOUS RECORD", 1);
+                player.putTitleNms("PREVIOUS RECORD", 1000);
                 if (iterator!=null)
                     tupleRevelator.setTuple(iterator.getPrevious());
                 break;
             case '8': 
-                player.putTitle("REVEAL", 1);
+                player.putTitleNms("REVEAL", 1000);
                 tupleRevelator.nextRevelation();
                 break;
             case '9':
-                player.putTitle("NEXT RECORD", 1);
+                player.putTitleNms("NEXT RECORD", 1000);
                 if (iterator!=null)
                     tupleRevelator.setTuple(iterator.getNext());
                 break;
@@ -68,6 +69,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
 
     public void setValues(Tuple tuple) {
         String text;
+        this.lastTuple = tuple;
         text =  "*Word: \n"+tuple.getKey()+" \n"+
                 "*Explanation: \n"+tuple.getValue()+" \n"+
                 "*Examples: \n"+tuple.getExtra()+" \n";
@@ -76,6 +78,10 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
 
     public void playerUpdate(Player pl, String str, Object obj) {
         
+    }
+
+    public void refreshScreen() {
+        this.setValues(lastTuple);
     }
     
 }
