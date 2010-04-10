@@ -127,15 +127,15 @@ public class Parser {
         return ((hor>9)?""+hor:"0"+hor) + ":" + ((min>9)?""+min:"0"+min) + ":" + secStr; /* 00:02:33 */
     }
     
-    public static long hours2sec(String text) throws Exception{
-        long ret=0; 
+    public static int hours2sec(String text) throws Exception{
+        int ret=0; 
         Exception e = new Exception("Invalid time format: " + text);
         if (text.length()==8) {
             if ((text.charAt(2)==':')&&(text.charAt(5)==':')) {
                 int horP = Integer.parseInt(text.substring(0,2));
                 int minP = Integer.parseInt(text.substring(3,5));
                 int segP = Integer.parseInt(text.substring(6,8));
-                ret = (long)horP * 3600 + (long)minP * 60 + (long)segP;
+                ret = (int)horP * 3600 + (int)minP * 60 + (int)segP;
                 return ret;   
             }
         }    

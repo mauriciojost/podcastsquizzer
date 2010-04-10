@@ -73,7 +73,8 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         
         this.playerCommandStatus(false);
     }
-
+    
+    
     //<editor-fold defaultstate="collapsed" desc=" Generated Methods ">//GEN-BEGIN:|methods|0|
     //</editor-fold>//GEN-END:|methods|0|
 
@@ -495,7 +496,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         Vector glossary, transcript;
         if (path != null){
             try {
-                this.hybridItem.setText("Loading '"+FileServices.getStandardPath(path)+"'...");
+                this.hybridItem.setText("Loading '"+FileServices.getStandardPath(path)+"'..."); Thread.sleep(1); this.getDisplay().vibrate(10);
                 extension = FileServices.getExtensionFromPath(path).toUpperCase();
                 if (extension.compareTo("TXT")!=0)
                     throw new Exception("Invalid hybrid file (must be TXT and is "+ extension +").");
@@ -520,7 +521,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         String extension;
         if (path != null){
             try{
-                this.listeningItem.setText("Loading '"+FileServices.getStandardPath(path)+"'...");
+                this.listeningItem.setText("Loading '"+FileServices.getStandardPath(path)+"'..."); Thread.sleep(1); this.getDisplay().vibrate(10);
                 extension = FileServices.getExtensionFromPath(path).toUpperCase();
                 if (extension.compareTo("MP3")!=0)
                     throw new Exception("Invalid file for listening (must be MP3 and is "+ extension +").");

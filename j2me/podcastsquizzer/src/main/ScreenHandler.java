@@ -16,5 +16,6 @@ public interface ScreenHandler extends PlayerListener{
     public boolean keyPressed(int keyCode);
     public void setMainElement(Object main_element);
     public void refreshScreen();
-            
+    public String getHelp();
+    public String[] getKeysHelp();
 }

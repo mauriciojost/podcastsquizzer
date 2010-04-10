@@ -7,6 +7,9 @@ package persistencepackage;
 
 
 public class Tuple {
+    public static final int INDEX_KEY=0;
+    public static final int INDEX_VALUE=1;
+    public static final int INDEX_EXTRA=2;
     private String[] tuple;
     
     public Tuple (String key, String value){
@@ -15,9 +18,9 @@ public class Tuple {
     
     public Tuple (String key, String value, String extra){
         tuple = new String[3];
-        tuple[0] = key;
-        tuple[1] = value;
-        tuple[2] = extra;
+        tuple[INDEX_KEY]    = key;
+        tuple[INDEX_VALUE]  = value;
+        tuple[INDEX_EXTRA]  = extra;
     }
     
     private void reeplaceChars(String str, String newc, String oldc){
@@ -26,8 +29,6 @@ public class Tuple {
         
         /* En el caso de utilizar separadores de más de un caracter traería problemas... */
     }
-    
-    
     private boolean hasNoData(String a){
         if (a==null) 
             return true;
@@ -35,51 +36,45 @@ public class Tuple {
             return (a.compareTo("")==0);
     }
     
-    public void setExtra(String a){
-        tuple[2] = a;
-    }
-    public void setValue(String a){
-        tuple[1] = a;
-    }
-    public void setKey(String a){
-        tuple[0] = a;
-    }
-    public String getExtra(){return tuple[2];}
-    public String getValue(){return tuple[1];}
-    public String getKey(){return tuple[0];}
+    public void setKey(String a)    {tuple[INDEX_KEY]   = a;}
+    public void setValue(String a)  {tuple[INDEX_VALUE] = a;}
+    public void setExtra(String a)  {tuple[INDEX_EXTRA] = a;}
+    public void setElement(int i, String data){tuple[Math.abs(i)%tuple.length]=data;}
+    
+    public String getKey()  {return tuple[INDEX_KEY];}
+    public String getValue(){return tuple[INDEX_VALUE];}
+    public String getExtra(){return tuple[INDEX_EXTRA];}
+    public String getElement(int i){return tuple[Math.abs(i)%tuple.length];}
+    
     public String getString(String vseparator, String lseparator){
         String vseparator2 = " " + vseparator + " ";
         
-        
-        
-        reeplaceChars(tuple[2], vseparator, lseparator);
-        reeplaceChars(tuple[0], vseparator, lseparator);
-        reeplaceChars(tuple[1], vseparator, lseparator);
-        
-        if (hasNoData(tuple[2])) {
-            if (hasNoData(tuple[1])) {
-                if (hasNoData(tuple[0])){
+        reeplaceChars(tuple[INDEX_KEY]  , vseparator, lseparator);
+        reeplaceChars(tuple[INDEX_VALUE], vseparator, lseparator);
+        reeplaceChars(tuple[INDEX_EXTRA], vseparator, lseparator);
+           
+        if (hasNoData(tuple[INDEX_EXTRA])) {
+            if (hasNoData(tuple[INDEX_VALUE])) {
+                if (hasNoData(tuple[INDEX_KEY])){
                     return "" + lseparator;
                 }else{
-                    return tuple[0] + lseparator;
+                    return tuple[INDEX_KEY] + lseparator;
                 }
             }else{
-                return tuple[0] + vseparator2 + tuple[1] + lseparator;
+                return tuple[INDEX_KEY] + vseparator2 + tuple[INDEX_VALUE] + lseparator;
             }
         } else { 
-            return tuple[0] + vseparator2 + tuple[1] + vseparator2 + tuple[2] + lseparator;
+            return tuple[INDEX_KEY] + vseparator2 + tuple[INDEX_VALUE] + vseparator2 + tuple[INDEX_EXTRA] + lseparator;
         }
     }
-    
     public Tuple getACopy(){
         return new Tuple(new String(getKey()), new String(getValue()), new String(getExtra()));
     }
     public void copyTheGivenTuple(Tuple t){
-        this.setKey(new String(t.getKey()));
-        this.setValue(new String(t.getValue()));
-        this.setExtra(new String(t.getExtra()));
+        this.setKey(    new String(t.getKey())  );
+        this.setValue(  new String(t.getValue()));
+        this.setExtra(  new String(t.getExtra()));
     }
-    
     public boolean belongsToGroup(String group_id){
         return this.getKey().startsWith(group_id);
     }
@@ -94,8 +89,5 @@ public class Tuple {
             this.setKey(group_id + this.getKey());
         }
         return this;
-    }
-    
+    }    
 }
-
-

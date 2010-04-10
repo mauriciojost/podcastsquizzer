@@ -164,13 +164,15 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         new Thread(
         new Runnable() {
             public void run() {
+                int i=0;
                 while(stopThread==false){
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
-                    buildHelpText();
+                    i=(i>10000)?0:i+1;
+                    buildHelpText(i);
                 }
             }
         }
@@ -213,8 +215,12 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         
     }
     
-    public void buildHelpText(){
-        helpText = Help.getKeysMeaningNext(mode);
+    public void buildHelpText(int i){
+        
+        String[] helpKeys = ((ScreenHandler)(this.screenHandlersVector.elementAt(this.mode))).getKeysHelp();
+        helpText =            helpKeys[(i+0)%helpKeys.length] + " * ";
+        helpText = helpText + helpKeys[(i+1)%helpKeys.length] + " * ";
+        helpText = helpText + helpKeys[(i+2)%helpKeys.length];
         this.repaint();
     }
     

@@ -1,17 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package main;
 
 import java.util.Vector;
 import javax.microedition.lcdui.Display;
 import javax.microedition.media.Player;
-import persistencepackage.FileActionListener;
-import persistencepackage.Tuple;
-import textboxpackage.TextBoxForm;
-import textboxpackage.TextBoxFormReadyListener;
+import persistencepackage.*;
+import textboxpackage.*;
 import tuplesshowerpackage.*;
 
 
@@ -41,9 +35,32 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
         HybridFile.setGlossaryVector(gl);
     }
     
+    
+    public String getHelp() {
+        String ret = "*TUPLES *MODE (useful to have a vocabulary's quiz)"+ "\n" +
+         "/7 . PREVIOUS TUPLE (shows the previous tuple of the quiz)"+ "\n" +
+         "/8 . REVEAL (shows the following part of the tuple, depending on the 'tuple mode')"+ "\n" +
+         "/9 . NEXT TUPLE"+ "\n" +
+         "/0 . CHANGE TUPLE MODE (changes the 'tuple mode', so the order in which the parts of the tuple are shown will change)"+ "\n" +
+         " "+ "\n";
+        return ret;
+    }
+
+    public String[] getKeysHelp() {
+        String ret[] = {"(1)CH. REVEAL MODE","(2)NEW TERM","(3)",
+                        "(4)KEY COMMENT","(5)VALUE COMMENT","(6)EXTRA COMMENT",
+                        "(7)PREVIOUS","(8)REVEAL","(9)NEXT",
+                        "(*)","(0)SAVE","(#)",
+                        "(ARROWS)AUDIO","(BT)CH. MODE"
+        };
+        return ret;       
+    }
+    
     public boolean keyPressed(int keyCode) {
         boolean catched=true;
         switch(keyCode){
+            
+            //<editor-fold defaultstate="collapsed" desc=" 0 SAVE">
             case '0':
                 player.putTitleNms("SAVING GLOSSARY...", 2000);    
                 HybridFile.setGlossaryVector(iterator.getVector());
@@ -54,10 +71,15 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                     ex.printStackTrace();
                 }
                 break;
+           
+            //</editor-fold>
+            //<editor-fold defaultstate="collapsed" desc=" 1 CH. REV. MODE ">
             case '1':
                 tupleRevelator.nextMode();
                 player.putTitleNms("REV. ("+tupleRevelator.getCurrentModeName()+")", 1000);
                 break;
+            //</editor-fold>
+            //<editor-fold defaultstate="collapsed" desc=" 2 NEW ">
             case '2':
                 try{
                     
@@ -73,9 +95,13 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                 break;
             
 
+            //</editor-fold>
+            //<editor-fold defaultstate="collapsed" desc=" 3 NADA ">
             case '3': break;
             
             
+            //</editor-fold>
+            //<editor-fold defaultstate="collapsed" desc=" 4 KEY COMMENT ">
             case '4':
                 
                 this.textBoxForm.setTitle("KeyComment");
@@ -91,6 +117,8 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
 
                 break;
                 
+            //</editor-fold>
+            //<editor-fold defaultstate="collapsed" desc=" 5 VALUE COMMENT ">
             case '5':
 
                 this.textBoxForm.setTitle("ValueComment");
@@ -104,6 +132,8 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
 
                 break;
             
+            //</editor-fold>
+            //<editor-fold defaultstate="collapsed" desc=" 6 EXTRA COMMENT ">
             case '6':
                 this.textBoxForm.setTitle("ExtraComment");
                 try {
@@ -115,23 +145,32 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                 display.setCurrent(this.textBoxForm.getDisplayable());
                 break;
             
+            //</editor-fold>
+            //<editor-fold defaultstate="collapsed" desc=" 7 PREVIOUS ">
             case '7':
                 player.putTitleNms("PREVIOUS RECORD", 1000);
                 if (iterator!=null)
                     tupleRevelator.setTuple(iterator.getPrevious());
                 break;
+            //</editor-fold>
+            //<editor-fold defaultstate="collapsed" desc=" 8 REVEAL ">
             case '8': 
                 player.putTitleNms("REVEAL", 1000);
                 tupleRevelator.nextRevelation();
                 break;
+            //</editor-fold>
+            //<editor-fold defaultstate="collapsed" desc=" 9 NEXT ">
             case '9':
                 player.putTitleNms("NEXT RECORD", 1000);
                 if (iterator!=null)
                     tupleRevelator.setTuple(iterator.getNext());
                 break;
+            //</editor-fold>
+            //<editor-fold defaultstate="collapsed" desc=" DEFAULT ">
             default:
                 catched = false;
                 break;
+                //</editor-fold>       
         }   
         return catched;
     }
@@ -205,5 +244,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
             player.putTitleNms("GLOSSARY NOT SAVED", 2000);
         }
     }
+
+    
     
 }

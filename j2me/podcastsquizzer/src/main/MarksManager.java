@@ -34,10 +34,8 @@ public class MarksManager{
         
         marksVector.trimToSize();
         if (marksVector.size()!=0) {
-            HybridFile.saveFile(fal, id);
-            
+            HybridFile.saveFile(fal, id);   
         }
-    
     }
     
     public String addMarkNow(long seg) throws Exception{
@@ -51,16 +49,16 @@ public class MarksManager{
         }catch(Exception e){
             counter++;
             marksVector.addElement(new Tuple( "Mark ("+ counter + ")","Comment or explanation." ,text));
+            e.printStackTrace();
             return text;
         }
         
     }
     
-    public Tuple getMark(long seg) throws Exception{
-        String text;
+    public Tuple getMark(long sec) throws Exception{
         Tuple tuple;
-        text =  Parser.sec2hours(seg);
-        tuple = this.tupleFinder.lookFor(new Tuple(null,null,text));
+        //tuple = this.tupleFinder.lookFor(new Tuple(null,null,text));
+        tuple = this.tupleFinder.lookForMoreAppropriate((int)sec);
         currentTupleIndex = this.tupleFinder.getLastIndex();
         return tuple;
     }
