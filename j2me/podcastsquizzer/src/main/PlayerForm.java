@@ -98,12 +98,13 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         MediaServices.getMediaServices().addPlayerListener(this);
         
         this.parser = parser;
+        HybridFile.setParser(parser);
         
         this.setCommandListener(null);
         
         this.screenHandlersVector = new Vector();
         this.screenHandlersVector.addElement(new GlossaryScreenHandler(display, this));     /* Element 0. */
-        this.screenHandlersVector.addElement(new ListeningScreenHandler(display, this));    /* Element 1. */
+        this.screenHandlersVector.addElement(new ListeningScreenHandler(display, this, parser));    /* Element 1. */
         
         this.screenHandlersVector.trimToSize();
         

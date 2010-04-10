@@ -15,23 +15,24 @@ import persistencepackage.*;
  */
 public class HybridFile {
     private static Vector marksVector;
-    private static Parser marksVectorParser;
     private static Vector glossaryVector;
-    private static Parser glossaryVectorParser;
+    private static Parser parser = new Parser("=");
     
-    public static void setMarksVector(Vector mv, Parser mvp){
-        marksVector = mv;
-        marksVectorParser = mvp;
+    public static void setParser(Parser p){
+        parser = p;
     }
     
-    public static void setGlossaryVector(Vector gv, Parser gvp){
+    public static void setMarksVector(Vector mv){
+        marksVector = mv;
+    }
+    
+    public static void setGlossaryVector(Vector gv){
         glossaryVector = gv;
-        glossaryVectorParser = gvp;
     }
     
     public static void saveFile(FileActionListener fal, String id) throws Exception{
         String text;
-        text = marksVectorParser.vector2txt(marksVector) + "\n" + glossaryVectorParser.vector2txt(glossaryVector);
+        text = parser.vector2txt(marksVector) + "\n\n" + parser.vector2txt(glossaryVector);
         String currentPath = MediaServices.getMediaServices().getCurrentPath();        
         String newFilePath = FileServices.getDirectory(currentPath) + FileServices.getFilenameWExtensionFromPath(currentPath) + ".txt";
         FileServices.writeTXTFile(newFilePath, text.getBytes(), fal, id);

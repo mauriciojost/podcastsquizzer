@@ -5,6 +5,7 @@
 
 package tuplesshowerpackage;
 
+import java.util.Vector;
 import persistencepackage.Tuple;
 
 /**
@@ -13,6 +14,9 @@ import persistencepackage.Tuple;
  */
 public interface Iterator {
     public Tuple getNext();
+    public Tuple getCurrent();
     public Tuple getPrevious();
     public void reinitialize();
+    public Vector getVector();
+    public void addNewTuple(Tuple tuple);
 }

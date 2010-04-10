@@ -61,7 +61,7 @@ public class RMSTuple {
         if (tfound==null) {
             this.vector.addElement(tuple); /* Not found. */
         }else{
-            tfound.copy(tuple); /* Found */
+            tfound.copyTheGivenTuple(tuple); /* Found */
         }
     }
 

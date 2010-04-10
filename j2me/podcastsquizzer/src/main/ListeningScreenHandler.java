@@ -18,10 +18,10 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
     
     private MarksManager marksManager;
     
-    public ListeningScreenHandler(Display display, Playerable player){
+    public ListeningScreenHandler(Display display, Playerable player, Parser parser){
         this.display = display;
         this.player = player;
-        this.marksManager = new MarksManager(new Parser("="));
+        this.marksManager = new MarksManager(parser);
         this.textBoxForm = new TextBoxForm(display, player.getDisplayable(), this);
         this.tupleRevelator = new TupleRevelator(this);
         //public TextBoxForm(Display display, Displayable previous, TextBoxFormReadyListener listener){
@@ -36,9 +36,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     player.putTitleNms("SAVING MARKS...", 2000);
                     
                     marksManager.saveMarks(this, "saveMarks");
-                    //agileKey = true;
                 }catch(Exception e){
                     player.putTitleNms("MARKS NOT SAVED", 10000);
+                    e.printStackTrace();
                 }
                 break;
             
@@ -55,6 +55,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     this.tupleRevelator.setTuple(tupleScreen);
                 } catch (Exception ex) {
                     player.putTitleNms("MARK ERROR", 1000);
+                    ex.printStackTrace();
                 }
                 break;
             case '2':
@@ -86,6 +87,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     this.tupleRevelator.setTuple(tupleScreen);
                 } catch (Exception ex) {
                     player.putTitleNms("MARK ERROR", 1000);
+                    ex.printStackTrace();
                 }
                 break;
                 
@@ -143,11 +145,12 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     }
                 } catch (Exception ex) {
                     player.putTitleNms("MARK ERROR", 1000);
+                    ex.printStackTrace();
                 }
                 break;
             case '8':
                 this.tupleRevelator.nextMode();
-                player.putTitleNms("REVELATION MODE ("+this.tupleRevelator.getCurrentModeName()+")", 1000);
+                player.putTitleNms("REV. ("+this.tupleRevelator.getCurrentModeName()+")", 1000);
                 break;
             case '9':
                 try {
@@ -159,6 +162,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     }
                 } catch (Exception ex) {
                     player.putTitleNms("MARK ERROR", 1000);
+                    ex.printStackTrace();
                 }
                 break;
                 
@@ -201,6 +205,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     this.tupleRevelator.setTuple(marksManager.getCurrent());
                     player.putTitleNms("VALUE CHANGED", 1000);
                 } catch (Exception ex) {
+                    player.putTitleNms("ERROR CHANGING...", 1000);
                     ex.printStackTrace();
                 }
                 
@@ -212,13 +217,13 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     this.tupleRevelator.setTuple(marksManager.getCurrent());
                     player.putTitleNms("KEY CHANGED", 1000);
                 } catch (Exception ex) {
+                    player.putTitleNms("ERROR CHANGING...", 1000);
                     ex.printStackTrace();
                 }
                 
             }
         }
         
-        //player.repaint();
     }
 
     public void playerUpdate(Player pl, String str, Object obj){

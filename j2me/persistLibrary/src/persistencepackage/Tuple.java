@@ -73,11 +73,31 @@ public class Tuple {
         }
     }
     
-    public void copy(Tuple t){
+    public Tuple getACopy(){
+        return new Tuple(new String(this.key), new String(this.value), new String(this.extra));
+    }
+    public void copyTheGivenTuple(Tuple t){
         this.key = new String(t.getKey());
         this.value = new String(t.getValue());
         this.extra = new String(t.getExtra());
     }
+    
+    public boolean belongsToGroup(String group_id){
+        return this.getKey().startsWith(group_id);
+    }
+    public Tuple removeGroupID(String group_id){
+        if (belongsToGroup(group_id)){
+            this.setKey(this.getKey().substring(group_id.length()));
+        }
+        return this;
+    }
+    public Tuple addGroupID(String group_id){
+        if (!belongsToGroup(group_id)){
+            this.setKey(group_id + this.getKey());
+        }
+        return this;
+    }
+    
 }
 
 

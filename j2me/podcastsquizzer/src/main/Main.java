@@ -45,7 +45,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     private Command browseAllCommand;
     private Command browseHybridCommand;
     private Form form;
-    private StringItem glossaryItem;
+    private StringItem hybridItem;
     private StringItem listeningItem;
     private StringItem otherItem;
     private Font smallFont;
@@ -216,7 +216,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public Form getForm() {
         if (form == null) {//GEN-END:|14-getter|0|14-preInit
             // write pre-init user code here
-            form = new Form("PodcastsQuizzer", new Item[] { getListeningItem(), getGlossaryItem(), getOtherItem() });//GEN-BEGIN:|14-getter|1|14-postInit
+            form = new Form("PodcastsQuizzer", new Item[] { getListeningItem(), getHybridItem(), getOtherItem() });//GEN-BEGIN:|14-getter|1|14-postInit
             form.addCommand(getExitCommand());
             form.addCommand(getPlayerCommand());
             form.addCommand(getBrowseSongCommand());
@@ -231,19 +231,19 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     }
     //</editor-fold>//GEN-END:|14-getter|2|
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: glossaryItem ">//GEN-BEGIN:|16-getter|0|16-preInit
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: hybridItem ">//GEN-BEGIN:|16-getter|0|16-preInit
     /**
-     * Returns an initiliazed instance of glossaryItem component.
+     * Returns an initiliazed instance of hybridItem component.
      * @return the initialized component instance
      */
-    public StringItem getGlossaryItem() {
-        if (glossaryItem == null) {//GEN-END:|16-getter|0|16-preInit
+    public StringItem getHybridItem() {
+        if (hybridItem == null) {//GEN-END:|16-getter|0|16-preInit
             // write pre-init user code here
-            glossaryItem = new StringItem("Glossary File ", "");//GEN-BEGIN:|16-getter|1|16-postInit
-            glossaryItem.setFont(getSmallFont());//GEN-END:|16-getter|1|16-postInit
+            hybridItem = new StringItem("Hybrid File ", "");//GEN-BEGIN:|16-getter|1|16-postInit
+            hybridItem.setFont(getSmallFont());//GEN-END:|16-getter|1|16-postInit
             // write post-init user code here
         }//GEN-BEGIN:|16-getter|2|
-        return glossaryItem;
+        return hybridItem;
     }
     //</editor-fold>//GEN-END:|16-getter|2|
 
@@ -331,7 +331,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public StringItem getOtherItem() {
         if (otherItem == null) {//GEN-END:|30-getter|0|30-preInit
             // write pre-init user code here
-            otherItem = new StringItem("Transcript File ", "");//GEN-BEGIN:|30-getter|1|30-postInit
+            otherItem = new StringItem("Other files", "");//GEN-BEGIN:|30-getter|1|30-postInit
             otherItem.setFont(getSmallFont());//GEN-END:|30-getter|1|30-postInit
             // write post-init user code here
         }//GEN-BEGIN:|30-getter|2|
@@ -495,20 +495,20 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         Vector glossary, transcript;
         if (path != null){
             try {
-                this.glossaryItem.setText("Loading '"+FileServices.getStandardPath(path)+"'...");
+                this.hybridItem.setText("Loading '"+FileServices.getStandardPath(path)+"'...");
                 extension = FileServices.getExtensionFromPath(path).toUpperCase();
                 if (extension.compareTo("TXT")!=0)
                     throw new Exception("Invalid hybrid file (must be TXT and is "+ extension +").");
                 text = FileServices.readTXTFile(path);
                 vector = this.parser.txt2vector(text);
                 glossary = new Vector(); transcript = new Vector();
-                this.parser.divideVectors(vector, glossary, transcript, "*");
+                this.parser.divideVectors(vector, glossary, transcript, "-");
                 vector = null; 
                 this.playerForm.setTranscript(transcript);
                 this.playerForm.setGlossary(glossary);
-                this.glossaryItem.setText("OK: Hybrid fil successfully loaded ('"+FileServices.getStandardPath(path)+"').");
+                this.hybridItem.setText("OK: Hybrid fil successfully loaded ('"+FileServices.getStandardPath(path)+"').");
             } catch (Exception ex) {
-                this.glossaryItem.setText("CANNOT load hybrid file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage());
+                this.hybridItem.setText("CANNOT load hybrid file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage());
             }
 
         }

@@ -45,4 +45,26 @@ public class SequentialIterator implements Iterator {
     public void reinitialize() {
         current = -1;
     }
+
+    public Tuple getCurrent() {
+        if (vector.size()<=0) {
+            return new Tuple("Empty.","Empty.","Empty.");
+        }else{
+            current = current<0?0:current;
+            return (Tuple)vector.elementAt(current);
+        }
+    }
+
+    public Vector getVector() {
+        return this.vector;
+    }
+
+    public void addNewTuple(Tuple tuple) {
+        if (vector==null){
+            vector = new Vector();
+        }
+        vector.insertElementAt(tuple, current);
+        vector.trimToSize();
+        current = vector.indexOf(tuple);
+    }
 }

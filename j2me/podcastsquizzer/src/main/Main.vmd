@@ -87,8 +87,8 @@
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
                     <Property name="items" typeID="1Cjavax.microedition.lcdui.Item" value="A3:3_R293_R163_R30"/>
                     <Component componentID="16" typeID="Cjavax.microedition.lcdui.StringItem">
-                        <Property name="instanceName" typeID="Pjava.lang.String" value="VglossaryItem"/>
-                        <Property name="label" typeID="Pjava.lang.String" value="VGlossary File "/>
+                        <Property name="instanceName" typeID="Pjava.lang.String" value="VhybridItem"/>
+                        <Property name="label" typeID="Pjava.lang.String" value="VHybrid File "/>
                         <Property name="itemCommandListener" typeID="C#ItemCommandListener" value="R17"/>
                         <Property name="text" typeID="Pjava.lang.String" value="V"/>
                         <Property name="font" typeID="Cjavax.microedition.lcdui.Font" value="R31"/>
@@ -119,7 +119,7 @@
                     </Component>
                     <Component componentID="30" typeID="Cjavax.microedition.lcdui.StringItem">
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VotherItem"/>
-                        <Property name="label" typeID="Pjava.lang.String" value="VTranscript File "/>
+                        <Property name="label" typeID="Pjava.lang.String" value="VOther files"/>
                         <Property name="itemCommandListener" typeID="C#ItemCommandListener" value="R17"/>
                         <Property name="text" typeID="Pjava.lang.String" value="V"/>
                         <Property name="font" typeID="Cjavax.microedition.lcdui.Font" value="R31"/>

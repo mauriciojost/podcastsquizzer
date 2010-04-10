@@ -42,7 +42,7 @@ public class Parser {
      * This method is used to create two Vectors, putting tuples in
      * each one according to the beginning of each tuple.
      */
-    public void divideVectors(Vector source, Vector apply, Vector dontapply, String init){
+    public void divideVectors(Vector source, Vector apply, Vector dontapply, String group_id){
         Enumeration iterator;
         Tuple tuple;
         
@@ -51,7 +51,7 @@ public class Parser {
         
         while(iterator.hasMoreElements()){
             tuple = (Tuple)iterator.nextElement();
-            if (tuple.getKey().startsWith(init)){
+            if (tuple.belongsToGroup(group_id)){
                 apply.addElement(tuple);
             }else{
                 dontapply.addElement(tuple);

@@ -13,20 +13,20 @@ import persistencepackage.*;
  * @author Mauricio
  */
 public class MarksManager{
-    private Parser parser;
     private Vector marksVector;
     private TupleFinder tupleFinder;
     private int counter=0;
     private int currentTupleIndex=-1;
     
     public MarksManager(Parser parser){
-        this.parser = parser;
         this.marksVector = new Vector();
+        HybridFile.setMarksVector(marksVector);
         this.tupleFinder = new TupleFinder(marksVector);
     }
     
     public void setMarks(Vector gv){
         this.marksVector = gv;
+        HybridFile.setMarksVector(marksVector);
         this.tupleFinder = new TupleFinder(marksVector);
     }
             
@@ -34,7 +34,6 @@ public class MarksManager{
         
         marksVector.trimToSize();
         if (marksVector.size()!=0) {
-            HybridFile.setMarksVector(marksVector, this.parser);
             HybridFile.saveFile(fal, id);
             
         }

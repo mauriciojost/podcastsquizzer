@@ -11,7 +11,7 @@ import javax.microedition.lcdui.Displayable;
  *
  * @author Mauricio
  */
-public interface Playerable {
+public interface Playerable{
     public void putTitleNms(String title, int mseconds);
     public void setText(String text);
     public void repaint();

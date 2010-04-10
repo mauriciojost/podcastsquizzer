@@ -60,6 +60,18 @@ public class RandomIterator implements Iterator {
     public void reinitialize() {
         this.copyVectors();
     }
+
+    public Tuple getCurrent() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Vector getVector() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void addNewTuple(Tuple tuple) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
 }
 
