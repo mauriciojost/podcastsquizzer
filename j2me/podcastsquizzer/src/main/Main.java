@@ -498,6 +498,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         String extension;
         //Vector vector;
         Vector glossary, transcript;
+        glossary = new Vector(); transcript = new Vector();
         if (path != null){
             try {
                 this.hybridItem.setText("Loading '"+FileServices.getStandardPath(path)+"'..."); 
@@ -506,17 +507,15 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                     throw new Exception("Invalid hybrid file (must be TXT and is "+ extension +").");
                 text = FileServices.readTXTFile(path, true);
                 //vector = this.parser.txt2vector(text);
-                glossary = new Vector(); transcript = new Vector();
+                
                 //this.parser.divideVectors(vector, glossary, transcript, "-");
                 this.parser.txt2vectors(text, glossary, transcript, "-");
-                
-                this.playerForm.setTranscript(transcript);
-                this.playerForm.setGlossary(glossary);
                 this.hybridItem.setText("OK: Hybrid fil successfully loaded ('"+FileServices.getStandardPath(path)+"').");
             } catch (Exception ex) {
-                this.hybridItem.setText("CANNOT load hybrid file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage());
+                this.hybridItem.setText("CANNOT load hybrid file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage()+". A new one was created.");
             }
-
+            this.playerForm.setTranscript(transcript);
+            this.playerForm.setGlossary(glossary);
         }
     }
         

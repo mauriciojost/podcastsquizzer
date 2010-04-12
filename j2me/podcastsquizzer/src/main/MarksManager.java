@@ -18,7 +18,7 @@ public class MarksManager{
     private Vector marksVector;
     private TupleFinder tupleFinder;
     private int counter=0;
-    private int currentTupleIndex=-1;
+    private int currentTupleIndex=0;
     //private Sorter sorter;
     
     public MarksManager(Parser parser){
@@ -56,7 +56,10 @@ public class MarksManager{
             return "EXISTENT";
         }catch(Exception e){
             counter++;
-            marksVector.addElement(new Tuple( "Mark ("+ counter + ")","Comment or explanation." ,text));
+            Tuple tup;
+            tup = new Tuple( "Mark ("+ counter + ")","Comment or explanation." ,text);
+            marksVector.insertElementAt(tup, this.currentTupleIndex);
+            this.currentTupleIndex = marksVector.indexOf(tup);
             //sorter.sort(marksVector);
             e.printStackTrace();
             return text;
@@ -76,7 +79,7 @@ public class MarksManager{
         int cti = currentTupleIndex;
         if (marksVector!=null) {
             marksVector.trimToSize();
-            cti = (cti + 1) % marksVector.size();
+            cti = Math.min((cti + 1) , marksVector.size()-1);
             
             if (move){
                 currentTupleIndex = cti;
@@ -92,10 +95,10 @@ public class MarksManager{
         if (marksVector!=null) {
             marksVector.trimToSize();
             
-            cti = (cti - 1);
-            if (cti<0){
-                cti = marksVector.size()-1;
-            }
+            cti = Math.max(0,(cti - 1));
+            /*if (cti<0){
+                cti = 0marksVector.size()-1;
+            }*/
             if (move) {
                 this.currentTupleIndex = cti;
             }

@@ -5,6 +5,7 @@
 
 package tuplesshowerpackage;
 
+import canvaspackage.Word;
 import miscellaneouspackage.Tuple;
 
 
@@ -14,7 +15,7 @@ public class TupleRevelator {
     public static final int MODE_ALL = 2;
     public static final String[] MODE_NAME = {"A.AB.ABC","B.AB.ABC", "ABC.ABC.ABC"};
     public static final int AMOUNT_OF_MODES = 3;
-    public static final String HIDEN_TEXT = "<hidden>";
+    public static final String HIDEN_TEXT = Word.NORMAL_RED + "<hidden>";
     
     private TuplesShowerInterface tuplesshower;
     private Tuple currentTuple;

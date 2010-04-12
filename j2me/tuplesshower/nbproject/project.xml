@@ -8,6 +8,17 @@
         </data>
         <references xmlns="http://www.netbeans.org/ns/ant-project-references/2">
             <reference>
+                <foreign-project>canvasLibrary</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>${project.canvasLibrary}/build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+                <properties>
+                    <property name="config.active"/>
+                </properties>
+            </reference>
+            <reference>
                 <foreign-project>persistLibrary</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>${project.persistLibrary}/build.xml</script>

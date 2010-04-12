@@ -79,7 +79,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             //<editor-fold defaultstate="collapsed" desc=" 2 APPLY ">
             case '2':
                 
-                player.putTitleNms(this.nextMode(), 2000);
+                player.putTitleNms(this.updateScreenAccordingToMode(true), 2000);
                 break;
             //</editor-fold>
             //<editor-fold defaultstate="collapsed" desc=" 3 NEXT ">
@@ -275,9 +275,28 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
         return catched;
     }
 
-    public String nextMode(){
-        mode = (mode + 1) % NUM_OF_MODES;
-        lastTuple = new Tuple("","","");
+    public String updateScreenAccordingToMode(boolean change_mode){
+        if (change_mode){
+            mode = (mode + 1) % NUM_OF_MODES;
+        }
+        switch(mode){
+            case MODE_ANIMATION:
+                try {
+                    lastTuple = marksManager.getCurrent();
+                } catch (Exception ex) {ex.printStackTrace();}
+                break;
+            case MODE_ESSAY:
+                String curr="", com="";
+                try{
+                    curr = marksManager.getCurrent().getKey();
+                    com = marksManager.getNext(false).getKey(); 
+                }catch(Exception e){e.printStackTrace();}
+                lastTuple = new Tuple(curr,com,"");
+                break;
+            default:
+                break;
+        }
+        
         refreshScreen();
         return getModeName(mode);
     }
@@ -362,10 +381,11 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
 
     public void setMainElement(Object vector) {
         this.marksManager.setMarks((Vector)vector);
+        this.updateScreenAccordingToMode(false);
     }
 
     public void refreshScreen() {
-        this.setValues(this.lastTuple);
+        this.updateScreenAccordingToMode(false);
     }
 
     public String getName() {

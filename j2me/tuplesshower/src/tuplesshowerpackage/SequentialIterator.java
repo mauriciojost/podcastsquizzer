@@ -9,7 +9,7 @@ import miscellaneouspackage.Tuple;
  */
 public class SequentialIterator implements Iterator {
     private Vector vector;
-    private int currentIndex = -1;
+    private int currentIndex = 0;
     
     public SequentialIterator(Vector vector_orig) {
         this.vector = vector_orig;
@@ -23,7 +23,7 @@ public class SequentialIterator implements Iterator {
         }else{
             Tuple tuple;
             //currentIndex = (currentIndex + 1) % vector.size();
-            currentIndex=((currentIndex>=vector.size())?currentIndex:currentIndex+1);
+            currentIndex=((currentIndex>=vector.size()-1)?currentIndex:currentIndex+1);
             
             tuple = (Tuple)vector.elementAt(currentIndex);
             return tuple;

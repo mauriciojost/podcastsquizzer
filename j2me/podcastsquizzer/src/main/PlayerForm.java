@@ -65,7 +65,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     private boolean goBackFlag = false; /* Idem con la tecla de retroceso. */
     private boolean stateBeforeMoving = false;
     private int backgroundColor = 0x000000;
-    private Image offscreen=null;
+    private Image lastScreen=null;
     //</editor-fold>
     
     //list = new List("list", Choice.IMPLICIT);
@@ -82,7 +82,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         this.previousDisplayable = previous;
         
         this.setFullScreenMode(true);
-        offscreen = Image.createImage(getWidth(), getHeight());
+        lastScreen = Image.createImage(getWidth(), getHeight());
         Rectangle rec = new Rectangle(hborder,vborder,this.getWidth()-(hborder*2), this.getHeight()-(vborder*2));
         this.titleTextPainter = new TextPainter(fontMedium, rec.newSetHeight(vspace));
         this.titleTextPainter.setBackgroundColor(0x221111);
@@ -232,7 +232,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     
     public void paint(Graphics g) {
-        g.drawImage(offscreen, 0, 0, Graphics.TOP|Graphics.LEFT);
+        g.drawImage(lastScreen, 0, 0, Graphics.TOP|Graphics.LEFT);
     }
     
     protected void keyReleased(int keyCode) {
@@ -386,7 +386,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     
     public void repaintIfNecessary(){
-        Graphics g = offscreen.getGraphics();        
+        Graphics g = lastScreen.getGraphics();        
         
         titleTextPainter.paintText(g, this.titleText);
         mainTextPainter.setTranslation(yTranslation);

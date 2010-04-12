@@ -102,7 +102,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
             case '2':
                 try{
                     
-                    Tuple tuple = new Tuple("/New /expression("+cuentaTerminos+")","Explanation", "Examples");
+                    Tuple tuple = new Tuple("New expression("+cuentaTerminos+")","Explanation", "Examples");
                     tuple.addGroupID("-");
                     cuentaTerminos++;
                     iterator.addNewTuple(tuple);

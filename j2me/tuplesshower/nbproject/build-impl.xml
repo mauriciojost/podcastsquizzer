@@ -328,6 +328,9 @@
     </target>
     <!--deps-jar-->
     <target name="deps-jar" depends="conditional-clean" unless="no.deps">
+        <ant target="jar" inheritall="false" antfile="${project.canvasLibrary}/build.xml">
+            <property name="config.active" value=""/>
+        </ant>
         <ant target="jar" inheritall="false" antfile="${project.persistLibrary}/build.xml">
             <property name="config.active" value=""/>
         </ant>
