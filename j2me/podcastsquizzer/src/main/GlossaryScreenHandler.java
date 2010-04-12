@@ -18,11 +18,13 @@ import miscellaneouspackage.TupleAsStringsComparator;
  * @author Mauricio
  */
 public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterface, TextBoxFormReadyListener, FileActionListener{
+    private static final String EMPTY_STRING = Word.NORMAL_RED + "<empty>";
+    private static final Tuple EMPTY_TUPLE = new Tuple(EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);
     private Playerable player;
     private TupleRevelator tupleRevelator;
     private Iterator iterator;
     private Display display;
-    private Tuple lastTuple = new Tuple("","","");
+    private Tuple lastTuple = EMPTY_TUPLE;
     private TextBoxForm textBoxForm;
     private int cuentaTerminos = 0;
     private Sorter sorter;    
@@ -34,6 +36,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
         this.textBoxForm = new TextBoxForm(display, player.getDisplayable(), this);
         sorter = new Sorter(new TupleAsStringsComparator(Tuple.INDEX_EXTRA));
         this.setMainElement(new Vector());
+        this.refreshScreen();
     }
     
     public void setMainElement(Object glossary){
@@ -41,10 +44,13 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
         try{
             sorter.sort(gl);
         }catch(Exception e){
+            player.putTitleNms("GLOSSARY NOT SORTED...", 1000);
             e.printStackTrace();
         }
         this.iterator = new SequentialIterator(gl);
         HybridFile.setGlossaryVector(gl);
+        this.lastTuple = iterator.getCurrent();
+        this.setValues(lastTuple);
     }
     
     
@@ -80,6 +86,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                 try{
                     sorter.sort(vector);
                 }catch(Exception e){
+                    player.putTitleNms("GLOSSARY NOT SORTED...", 1000);
                     e.printStackTrace();
                 }
                 HybridFile.setGlossaryVector(vector);

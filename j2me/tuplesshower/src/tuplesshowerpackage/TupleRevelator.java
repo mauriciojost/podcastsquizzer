@@ -10,6 +10,8 @@ import miscellaneouspackage.Tuple;
 
 
 public class TupleRevelator {
+    private static final String EMPTY_STRING = Word.NORMAL_RED + "<empty>";
+    private static final Tuple EMPTY_TUPLE = new Tuple(EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);
     public static final int MODE_123 = 0;
     public static final int MODE_213 = 1;
     public static final int MODE_ALL = 2;
@@ -21,7 +23,7 @@ public class TupleRevelator {
     private Tuple currentTuple;
     private int mode = TupleRevelator.MODE_123;
     private int stage = 0; 
-    private Tuple lastTuple = new Tuple("","","");
+    private Tuple lastTuple = EMPTY_TUPLE;
     
     public TupleRevelator(TuplesShowerInterface ts){
         this.tuplesshower = ts;
@@ -73,7 +75,7 @@ public class TupleRevelator {
         Tuple tuple;
         
         if (this.currentTuple==null) {
-            tuple = new Tuple("","","");
+            tuple = EMPTY_TUPLE;
         }else{
             
             if (update_with_next_stage==true){
@@ -109,7 +111,9 @@ public class TupleRevelator {
         }
         
         this.lastTuple = tuple;
-        this.tuplesshower.setValues(tuple);     
+        if (tuplesshower!=null){
+            this.tuplesshower.setValues(tuple);     
+        }
         
         
     }

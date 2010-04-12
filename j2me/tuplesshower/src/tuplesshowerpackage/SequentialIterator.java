@@ -1,5 +1,6 @@
 package tuplesshowerpackage;
 
+import canvaspackage.Word;
 import java.util.Vector;
 import miscellaneouspackage.Tuple;
 
@@ -8,18 +9,22 @@ import miscellaneouspackage.Tuple;
  * @author Mauricio
  */
 public class SequentialIterator implements Iterator {
+    private static final String EMPTY_STRING = Word.NORMAL_RED + "<empty>";
+    private static final Tuple EMPTY_TUPLE = new Tuple(EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);
+    
     private Vector vector;
     private int currentIndex = 0;
     
     public SequentialIterator(Vector vector_orig) {
         this.vector = vector_orig;
-        getVector();
     }
     
     public Tuple getNext() {
-        getVector();
+        if (vector==null){
+            return EMPTY_TUPLE;
+        }
         if (vector.size()<=0) {
-            return new Tuple("Empty.","Empty.","Empty.");
+            return EMPTY_TUPLE;
         }else{
             Tuple tuple;
             //currentIndex = (currentIndex + 1) % vector.size();
@@ -31,9 +36,11 @@ public class SequentialIterator implements Iterator {
     }
 
     public Tuple getPrevious() {
-        getVector();
+        if (vector==null){
+            return EMPTY_TUPLE;
+        }
         if (vector.size()<=0) {
-            return new Tuple("Empty.","Empty.","Empty.");
+            return EMPTY_TUPLE;
         }else{
             Tuple tuple;
             /*if (currentIndex<=0) {
@@ -49,13 +56,15 @@ public class SequentialIterator implements Iterator {
     }
 
     public void reinitialize() {
-        currentIndex = -1;
+        currentIndex = 0;
     }
 
     public Tuple getCurrent() {
-        getVector();
+        if (vector==null){
+            return EMPTY_TUPLE;
+        }
         if (vector.size()<=0) {
-            return new Tuple("Empty.","Empty.","Empty.");
+            return EMPTY_TUPLE;
         }else{
             currentIndex = currentIndex<0?0:currentIndex;
             return (Tuple)vector.elementAt(currentIndex);
@@ -63,15 +72,13 @@ public class SequentialIterator implements Iterator {
     }
 
     public Vector getVector() {
-        if (this.vector==null){
-            this.vector = new Vector();
-        }
-        
         return this.vector;
     }
 
     public void addNewTuple(Tuple tuple) {
-        getVector();
+        if (vector==null){
+            return;
+        }
         vector.insertElementAt(tuple, currentIndex);
         vector.trimToSize();
         currentIndex = vector.indexOf(tuple);

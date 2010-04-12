@@ -22,7 +22,7 @@ public class Parser {
     public Vector txt2vector(String text) {
         int previousnl = 0;
         int lastnl = 0;
-        
+        Tuple tuple;
         String current_line = "";
             
         tabla = new Vector();
@@ -33,7 +33,10 @@ public class Parser {
             
             previousnl = lastnl+1;
             lastnl = text.indexOf(line_separator, previousnl);
-            tabla.addElement(parseLine(current_line));
+            tuple = this.parseLine(current_line);
+            if (tuple!=null){
+                tabla.addElement(tuple);
+            }
         }
         
         return tabla;
@@ -52,11 +55,12 @@ public class Parser {
             previousnl = lastnl+1;
             lastnl = text.indexOf(line_separator, previousnl);
             tuple = parseLine(current_line);
-            
-            if (tuple.belongsToGroup(group_id)){
-                apply.addElement(tuple);
-            }else {
-                dontapply.addElement(tuple);
+            if (tuple!=null){
+                if (tuple.belongsToGroup(group_id)){
+                    apply.addElement(tuple);
+                }else {
+                    dontapply.addElement(tuple);
+                }
             }
         }
         
@@ -105,6 +109,10 @@ public class Parser {
     public Tuple parseLine(String line){
         int index;
         Tuple pareja;
+        
+        if (line.trim().compareTo("\n")==0){
+            return null;
+        }
         
         index = line.indexOf(this.values_separator);
         if (index!=-1) {
