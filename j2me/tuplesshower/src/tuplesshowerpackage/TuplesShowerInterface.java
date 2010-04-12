@@ -5,7 +5,7 @@
 
 package tuplesshowerpackage;
 
-import persistencepackage.Tuple;
+import miscellaneouspackage.Tuple;
 
 /**
  *

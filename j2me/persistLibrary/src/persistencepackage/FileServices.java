@@ -22,7 +22,7 @@ public class FileServices {
         return System.getProperty("fileconn.dir.memorycard");
     }
     
-    public static String readTXTFile(String path1) throws Exception{
+    public static String readTXTFile(String path1, boolean replace_odd_chars) throws Exception{
         String cadena = "";
         
         FileConnection fci = (FileConnection)Connector.open(correctURL(path1),Connector.READ);
@@ -34,26 +34,33 @@ public class FileServices {
             while (true) {
                 datum = is.read();
                 if (datum!=-1){
-                    switch (datum){
-                        case '…':
-                        case '\u0085':
-                            cad = "...";
-                            break;
-                        case '“':
-                        case '”':
-                        case '\u0093':
-                        case '\u0094':
-                            cad = "\"";
-                            break;
-                        case '’':
-                        case '\u0092':
-                            cad = "'";
-                            break;
-                        default:
-                            cad = "" + (char)datum;
-                            break;   
-                                
+                    
+                    if (replace_odd_chars){
+                        switch (datum){
+                            case '…':
+                            case '\u0085':
+                                cad = "...";
+                                break;
+                            case '“':
+                            case '”':
+                            case '\u0093':
+                            case '\u0094':
+                                cad = "\"";
+                                break;
+                            case '—':
+                                cad = "-";
+                            case '’':
+                            case '\u0092':
+                                cad = "'";
+                                break;
+                            default:
+                                cad = "" + (char)datum;
+                                break;   
+                        }
+                    }else{
+                        cad = "" + (char)datum;
                     }
+                    
                    cadena = cadena + cad; 
                 }else{
                     break;

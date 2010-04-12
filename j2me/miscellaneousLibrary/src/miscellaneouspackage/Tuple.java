@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package persistencepackage;
+package miscellaneouspackage;
 
 
 public class Tuple {

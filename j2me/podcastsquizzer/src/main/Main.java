@@ -8,6 +8,7 @@
 package main;
 
 
+import miscellaneouspackage.Tuple;
 import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
 import java.util.Vector;
@@ -503,7 +504,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 extension = FileServices.getExtensionFromPath(path).toUpperCase();
                 if (extension.compareTo("TXT")!=0)
                     throw new Exception("Invalid hybrid file (must be TXT and is "+ extension +").");
-                text = FileServices.readTXTFile(path);
+                text = FileServices.readTXTFile(path, true);
                 //vector = this.parser.txt2vector(text);
                 glossary = new Vector(); transcript = new Vector();
                 //this.parser.divideVectors(vector, glossary, transcript, "-");

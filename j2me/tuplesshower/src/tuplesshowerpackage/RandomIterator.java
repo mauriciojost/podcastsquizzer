@@ -7,7 +7,7 @@ package tuplesshowerpackage;
 
 import java.util.Random;
 import java.util.Vector;
-import persistencepackage.Tuple;
+import miscellaneouspackage.Tuple;
 
 /**
  *

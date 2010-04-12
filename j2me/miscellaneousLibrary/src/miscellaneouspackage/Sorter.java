@@ -15,15 +15,18 @@ public class Sorter {
     }
     
     public void sort(Vector vector) throws Exception{
-        vector.trimToSize();
-        Enumeration e = vector.elements();
-        while (e.hasMoreElements()){
-            if (comp.isComparable(e.nextElement())==false){
-                throw new Exception("Some elements are not comparable.");
-            }
-        }
         
-        this.quickSort(vector, 0, vector.size()-1);
+        if (vector.size()>0){
+            vector.trimToSize();
+            Enumeration e = vector.elements();
+            while (e.hasMoreElements()){
+                if (comp.isComparable(e.nextElement())==false){
+                    throw new Exception("Some elements are not comparable.");
+                }
+            }
+
+            this.quickSort(vector, 0, vector.size()-1);
+        }
     }
 
     private int partition(Vector arr, int left, int right){

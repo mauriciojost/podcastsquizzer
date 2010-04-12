@@ -1,7 +1,7 @@
 package tuplesshowerpackage;
 
 import java.util.Vector;
-import persistencepackage.Tuple;
+import miscellaneouspackage.Tuple;
 
 /**
  *

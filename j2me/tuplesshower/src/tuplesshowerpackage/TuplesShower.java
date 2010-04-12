@@ -1,5 +1,6 @@
 package tuplesshowerpackage;
 
+import miscellaneouspackage.Tuple;
 import javax.microedition.lcdui.*;
 import persistencepackage.*;
 

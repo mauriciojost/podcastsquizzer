@@ -117,12 +117,9 @@ public class TextPainter {
             }
             
             paintBorder(g);
-            g.setColor(currentColor);
-            
-            repaintRequired = false;
-        }else{
-            repaintRequired = false;
+            g.setColor(currentColor);   
         }
+        repaintRequired = false;
     }
     
     public Vector breakDownLines(Vector words, int max_width){
@@ -189,7 +186,6 @@ public class TextPainter {
         int basex = 0, max_height=0;
         Word word;
         
-        g.setColor(Word.baseColor);
         Enumeration iterator = line.elements();
         while (iterator.hasMoreElements()){
             word = (Word)iterator.nextElement();

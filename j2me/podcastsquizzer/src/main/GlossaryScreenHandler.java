@@ -1,6 +1,8 @@
 
 package main;
 
+import canvaspackage.Word;
+import miscellaneouspackage.Tuple;
 import java.util.Vector;
 import javax.microedition.lcdui.Display;
 import javax.microedition.media.Player;
@@ -8,6 +10,7 @@ import persistencepackage.*;
 import textboxpackage.*;
 import tuplesshowerpackage.*;
 import miscellaneouspackage.Sorter;
+import miscellaneouspackage.TupleAsStringsComparator;
 
 
 /**
@@ -29,16 +32,17 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
         this.player = player;
         this.tupleRevelator = new TupleRevelator(this);
         this.textBoxForm = new TextBoxForm(display, player.getDisplayable(), this);
-        //sorter = new Sorter(new TupleAsMarkComparator(Tuple.INDEX_EXTRA));
+        sorter = new Sorter(new TupleAsStringsComparator(Tuple.INDEX_EXTRA));
+        this.setMainElement(new Vector());
     }
     
     public void setMainElement(Object glossary){
         Vector gl = (Vector)glossary;
-        /*try{
+        try{
             sorter.sort(gl);
         }catch(Exception e){
             e.printStackTrace();
-        }*/
+        }
         this.iterator = new SequentialIterator(gl);
         HybridFile.setGlossaryVector(gl);
     }
@@ -73,11 +77,11 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                 Vector vector;
                 player.putTitleNms("SAVING GLOSSARY...", 2000);    
                 vector = iterator.getVector();
-                /*try{
+                try{
                     sorter.sort(vector);
                 }catch(Exception e){
                     e.printStackTrace();
-                }*/
+                }
                 HybridFile.setGlossaryVector(vector);
                 try {
                     HybridFile.saveFile(this, "saveGlossary");
@@ -204,9 +208,9 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
             tuple = new Tuple("","");
             e.printStackTrace();
         }
-        text =  "*Word("+current+"): \n"+tuple.getKey()+" \n"+
-                "*Explanation: \n"+tuple.getValue()+" \n"+
-                "*Examples: \n"+tuple.getExtra()+" \n";
+        text =  Word.BOLD_BLUE+"Word("+current+"): \n"+tuple.getKey()+" \n"+
+                Word.BOLD_BLUE+"Explanation: \n"+tuple.getValue()+" \n"+
+                Word.BOLD_BLUE+"Examples: \n"+tuple.getExtra()+" \n";
         player.setText(text);
     }
 
@@ -258,7 +262,6 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                 }    
             }
         }
-        
     }
 
     public void writeOperationReady(String id, String path, boolean operation_successfully) {

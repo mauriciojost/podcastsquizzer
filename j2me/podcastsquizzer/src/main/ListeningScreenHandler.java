@@ -1,6 +1,8 @@
 
 package main;
 
+import canvaspackage.Word;
+import miscellaneouspackage.Tuple;
 import java.util.Vector;
 import javax.microedition.lcdui.Display;
 import javax.microedition.media.Player;
@@ -77,7 +79,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             //<editor-fold defaultstate="collapsed" desc=" 2 APPLY ">
             case '2':
                 
-                player.putTitleNms(">"+this.nextMode(), 2000);
+                player.putTitleNms(this.nextMode(), 2000);
                 break;
             //</editor-fold>
             //<editor-fold defaultstate="collapsed" desc=" 3 NEXT ">
@@ -289,18 +291,18 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
         this.lastTuple = tuple;
         String current = this.marksManager.getCurrentTupleIndex()+1 +"/"+ this.marksManager.getSize();
         if (mode==MODE_ANIMATION){
-            str =   "*<"+getModeName(mode)+">\n" + 
-                    "*Transcript("+current+") \n" + 
+            str =   Word.BOLD_BLUE+"<"+getModeName(mode)+">\n" + 
+                    Word.BOLD_BLUE+"Transcript("+current+") \n" + 
                     tuple.getKey() + 
-                    "\n*Comment \n" + 
+                    "\n"+Word.BOLD_BLUE+"Comment \n" + 
                     tuple.getValue() +
-                    "\n*Time \n" + 
+                    "\n"+Word.BOLD_BLUE+"Time \n" + 
                     tuple.getExtra();
         }else if (mode==MODE_ESSAY){
-            str =   "*<"+getModeName(mode)+">\n" + 
-                    "*Current("+current+") \n" + 
+            str =   Word.BOLD_BLUE+"<"+getModeName(mode)+">\n" + 
+                    Word.BOLD_BLUE+"Current("+current+") \n" + 
                     tuple.getKey() + 
-                    "\n*Next \n" + 
+                    "\n"+Word.BOLD_BLUE+"Next \n" + 
                     tuple.getValue();  
         }
         this.player.setText(str);
