@@ -20,4 +20,5 @@ public interface Iterator {
     public Vector getVector();
     public void addNewTuple(Tuple tuple);
     public int getCurrentIndex();
+    public String setMode(int mode);
 }

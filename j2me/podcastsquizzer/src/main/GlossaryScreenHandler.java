@@ -47,8 +47,8 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
             player.putTitleNms("GLOSSARY NOT SORTED...", 1000);
             e.printStackTrace();
         }
-        //this.iterator = new SequentialIterator(gl);
-        this.iterator = new Shuffler(gl);
+        this.iterator = new SequentialIterator(gl);
+        
         HybridFile.setGlossaryVector(gl);
         this.lastTuple = iterator.getCurrent();
         this.setValues(lastTuple);
@@ -66,11 +66,20 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
     }
 
     public String[] getKeysHelp() {
-        String ret[] = {"(1)CH. REVEAL MODE","(2)NEW TERM","(3)",
-                        "(4)KEY COMMENT","(5)VALUE COMMENT","(6)EXTRA COMMENT",
-                        "(7)PREVIOUS","(8)REVEAL","(9)NEXT",
-                        "(*)","(0)SAVE","(#)",
-                        "(ARROWS)AUDIO","(BT)CH. MODE"
+        String ret[] = {"(1)CH. REVEAL MODE",
+                        "(2)NEW TERM       ",
+                        "(3)ITERATION MODE ",
+                        "(4)KEY COMMENT    ",
+                        "(5)VALUE COMMENT  ",
+                        "(6)EXTRA COMMENT  ",
+                        "(7)PREVIOUS       ",
+                        "(8)REVEAL         ",
+                        "(9)NEXT           ",
+                        "(*)               ",
+                        "(0)SAVE           ",
+                        "(#)               ",
+                        "(ARROWS)AUDIO     ",
+                        "(BT)CH. MODE      "
         };
         return ret;       
     }
@@ -123,10 +132,11 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
             
 
             //</editor-fold>
-            //<editor-fold defaultstate="collapsed" desc=" 3 NADA ">
-            case '3': break;
-            
-            
+            //<editor-fold defaultstate="collapsed" desc=" 3 ITERATION MODE ">
+            case '3': 
+                String res = this.iterator.setMode(-1);
+                player.putTitleNms("ITER. MODE ("+ res +")",1000);
+                break;
             //</editor-fold>
             //<editor-fold defaultstate="collapsed" desc=" 4 KEY COMMENT ">
             case '4':

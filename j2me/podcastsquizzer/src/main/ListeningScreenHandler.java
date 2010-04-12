@@ -49,11 +49,20 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
     
     public String[] getKeysHelp() {
         String[] ret = {    
-                        "(1)PREVIOUS","(2)APPLY","(3)NEXT",
-                        "(4)KEY COMMENT","(5)VALUE COMMENT","(6)NEW MARK",
-                        "(7)PREV","(8)REV. MODE","(9)NEXT",
-                        "(*)","(0)SAVE","(#)",
-                        "(ARROWS)AUDIO","(BT)CH. MODE"
+                        "(1)NADA      ",
+                        "(2)MODE      ",
+                        "(3)NADA      ",
+                        "(4)KEY COMMENT",
+                        "(5)VALUE COMMENT",
+                        "(6)NEW MARK  ",
+                        "(7)PREV      ",
+                        "(8)APPLY MARK/REV. MODE",
+                        "(9)NEXT      ",
+                        "(*)          ",
+                        "(0)SAVE      ",
+                        "(#)          ",
+                        "(ARROWS)AUDIO",
+                        "(BT)CH. MODE "
                         };
         return ret;
     }
@@ -73,24 +82,21 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 }
                 break;
             //</editor-fold>
-            //<editor-fold defaultstate="collapsed" desc=" 1 PREV ">
+            //<editor-fold defaultstate="collapsed" desc=" 1 NADA ">
             case '1':
                 break;
             //</editor-fold>
-            //<editor-fold defaultstate="collapsed" desc=" 2 APPLY ">
+            //<editor-fold defaultstate="collapsed" desc=" 2 MODE ">
             case '2':
                 
                 player.putTitleNms(this.updateScreenAccordingToMode(true), 2000);
                 break;
             //</editor-fold>
-            //<editor-fold defaultstate="collapsed" desc=" 3 NEXT ">
+            //<editor-fold defaultstate="collapsed" desc=" 3 NADA ">
             case '3':
                 break;
-                
-                
-                
             //</editor-fold>
-            //<editor-fold defaultstate="collapsed" desc=" 4 KEYC ">
+            //<editor-fold defaultstate="collapsed" desc=" 4 KEY COMMENT ">
             case '4':
                 try{
                     MediaServices.getMediaServices().pause();
@@ -107,7 +113,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 break;
                 
             //</editor-fold>
-            //<editor-fold defaultstate="collapsed" desc=" 5 VALUEC ">
+            //<editor-fold defaultstate="collapsed" desc=" 5 VALUE COMMENT ">
             case '5':
                 try {
                     MediaServices.getMediaServices().pause();
@@ -124,7 +130,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 break;
             
             //</editor-fold>
-            //<editor-fold defaultstate="collapsed" desc=" 6 NEWMARK ">
+            //<editor-fold defaultstate="collapsed" desc=" 6 NEW MARK ">
             case '6':
                 try{
                     String mark = marksManager.addMarkNow((int)MediaServices.getMediaServices().getPositionSeconds());
@@ -165,7 +171,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 this.refreshScreen();
                 break;
             //</editor-fold>
-            //<editor-fold defaultstate="collapsed" desc=" 8 REV.MODE. ">
+            //<editor-fold defaultstate="collapsed" desc=" 8 APPLY MARK/NEXT MODE REVELATION ">
             case '8':
                 switch(mode){
                     case MODE_ESSAY:
