@@ -1,5 +1,6 @@
 package miscellaneouspackage;
 
+import java.util.Enumeration;
 import java.util.Vector;
 /*
  * Thanks to:
@@ -13,9 +14,15 @@ public class Sorter {
         this.comp = comp;
     }
     
-    
-    public void sort(Vector vector){
+    public void sort(Vector vector) throws Exception{
         vector.trimToSize();
+        Enumeration e = vector.elements();
+        while (e.hasMoreElements()){
+            if (comp.isComparable(e.nextElement())==false){
+                throw new Exception("Some elements are not comparable.");
+            }
+        }
+        
         this.quickSort(vector, 0, vector.size()-1);
     }
 
@@ -23,18 +30,21 @@ public class Sorter {
         int i = left, j = right;
         Object pivot = arr.elementAt((left + right) / 2);
 
-        while (i <= j) {
-            while (comp.compare(arr.elementAt(i), pivot) < 0)
-                i++;
-            while (comp.compare(arr.elementAt(j), pivot) > 0)
-                j--;
-            if (i <= j) {
-                
-                swap(arr, i, j);
-                i++;
-                j--;
-            }
+        try{
+            while (i <= j) {
+                while (comp.compare(arr.elementAt(i), pivot) < 0)
+                    i++;
+                while (comp.compare(arr.elementAt(j), pivot) > 0)
+                    j--;
+                if (i <= j) {
+                    swap(arr, i, j);
+                    i++;
+                    j--;
+                }
         }
+        }catch(Exception e){
+                e.printStackTrace();
+            }
 
         return i;
     }

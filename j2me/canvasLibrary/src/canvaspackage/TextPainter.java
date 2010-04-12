@@ -18,7 +18,7 @@ public class TextPainter {
     private Font font;          /* Font used to paint the text. */
     private int baseLine = 0;   /* Line that's going to be printed first. */
     private int backgroundColor = 0x101010;
-    private int borderColor = 0x777777;
+    private int borderColor = 0xFFFFFF;
     private int fontColor = 0xFFFFFF;
     private int linesPerPage=0;
     private Vector lines;
@@ -58,12 +58,17 @@ public class TextPainter {
         g.setColor(backgroundColor);
         g.fillRect(bounds.getX(), bounds.getY(), bounds.getWidth()/*-1*/, bounds.getHeigth()/*-1*/);
     }
+    private void paintBorder(Graphics g){
+        g.setColor(borderColor);
+        g.drawRect(bounds.getX(), bounds.getY(), bounds.getWidth()/*-1*/, bounds.getHeigth()/*-1*/);
+    }
     
     public void paintText(Graphics g, String text, int color){
         paintBackground(g);
         g.setFont(this.font);
         g.setColor(color);
         g.drawString(text, bounds.getX(), bounds.getY(), Graphics.TOP|Graphics.LEFT);
+        paintBorder(g);
     }
     
     public void paintText(Graphics g, String text){
@@ -78,13 +83,14 @@ public class TextPainter {
         
     }
     
-    public void paintTextComplex(Graphics g){       
+    public void paintTextComplex(Graphics g, boolean avoidable_painting){       
         int row, aux;
         int currentColor;
         Vector line;
         Enumeration iterator;
         
-        if (repaintRequired == true){
+        
+        if ((repaintRequired == true)||(avoidable_painting==false)){ /* If it's required because of a change, or, it's not-avoidable. */
             row = 0;
             
             iterator = lines.elements();
@@ -109,9 +115,8 @@ public class TextPainter {
                 }
                 line_number++;
             }
-
-            g.setColor(borderColor);
-            //g.drawRect(bounds.getX(), bounds.getY(), bounds.getWidth()-1, bounds.getHeigth()-1);
+            
+            paintBorder(g);
             g.setColor(currentColor);
             
             repaintRequired = false;

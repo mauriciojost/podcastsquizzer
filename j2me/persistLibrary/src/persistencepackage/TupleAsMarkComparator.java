@@ -20,15 +20,25 @@ public class TupleAsMarkComparator implements Comparator {
         
     }
 
-    public int compare(Object x, Object y) {
+    public boolean isComparable(Object obj){
+        int x;
+        try{
+            x = Parser.hours2sec(((Tuple) obj).getElement(index));
+            return true;
+        }catch(Exception e){
+            return false;
+        }
+    }
+    
+    public int compare(Object x, Object y) throws Exception{
         int Xo=0;
         int Yo=0;
-        try {
+        //try {
             Xo = Parser.hours2sec(((Tuple) x).getElement(index));
             Yo = Parser.hours2sec(((Tuple)y).getElement(index));
-        } catch (Exception ex) {
+        //} catch (Exception ex) {
             //ex.printStackTrace();
-        }
+        //}
         return Xo-Yo;
     }
 }

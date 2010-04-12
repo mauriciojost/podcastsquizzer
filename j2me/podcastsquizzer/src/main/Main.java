@@ -194,6 +194,8 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     //</editor-fold>//GEN-END:|7-commandAction|16|
 
 
+    
+    
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: exitCommand ">//GEN-BEGIN:|18-getter|0|18-preInit
     /**
@@ -468,11 +470,9 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
      */
     public void browserReady(String title, String path) {
         if (title.compareTo("Listening")==0) {
-            this.listeningItem.setText("Loading..."); 
             this.loadListening(path);
             this.playerCommandStatus(true);
         }else if (title.compareTo("Hybrid")==0){
-            this.hybridItem.setText("Loading..."); 
             this.loadHybridText(path);
             this.playerCommandStatus(true);
         } else if (title.compareTo("All")==0) {
@@ -480,9 +480,6 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 String txtPath = "";
                 String lisPath;
 
-                this.listeningItem.setText("Loading..."); 
-                this.hybridItem.setText("Loading..."); 
-            
                 lisPath = path;
                 txtPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + ".txt";
 
@@ -498,7 +495,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     private void loadHybridText(String path){
         String text = "";
         String extension;
-        Vector vector;
+        //Vector vector;
         Vector glossary, transcript;
         if (path != null){
             try {
@@ -507,10 +504,11 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 if (extension.compareTo("TXT")!=0)
                     throw new Exception("Invalid hybrid file (must be TXT and is "+ extension +").");
                 text = FileServices.readTXTFile(path);
-                vector = this.parser.txt2vector(text);
+                //vector = this.parser.txt2vector(text);
                 glossary = new Vector(); transcript = new Vector();
-                this.parser.divideVectors(vector, glossary, transcript, "-");
-                vector = null; 
+                //this.parser.divideVectors(vector, glossary, transcript, "-");
+                this.parser.txt2vectors(text, glossary, transcript, "-");
+                
                 this.playerForm.setTranscript(transcript);
                 this.playerForm.setGlossary(glossary);
                 this.hybridItem.setText("OK: Hybrid fil successfully loaded ('"+FileServices.getStandardPath(path)+"').");
@@ -527,6 +525,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         String extension;
         if (path != null){
             try{
+                this.listeningItem.setText("Loading '"+FileServices.getStandardPath(path)+"'..."); 
                 extension = FileServices.getExtensionFromPath(path).toUpperCase();
                 if (extension.compareTo("MP3")!=0)
                     throw new Exception("Invalid file for listening (must be MP3 and is "+ extension +").");

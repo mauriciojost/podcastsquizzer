@@ -72,6 +72,10 @@ public class RandomIterator implements Iterator {
     public void addNewTuple(Tuple tuple) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    public int getCurrentIndex() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
 }
 

@@ -10,6 +10,11 @@ import textboxpackage.*;
 import tuplesshowerpackage.*;
 
 public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterface, FileActionListener, TextBoxFormReadyListener {
+    private static final int MODE_ANIMATION = 0;
+    private static final int MODE_ESSAY = 1;
+    private static final int NUM_OF_MODES = 2;
+    private static final String[] modeNames = {"PLAYING","ESSAYING"};
+    
     private Playerable player;
     private TupleRevelator tupleRevelator;
     private TextBoxForm textBoxForm;
@@ -17,6 +22,8 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
     private Tuple lastTuple = new Tuple("","","");
     
     private MarksManager marksManager;
+    private int mode = MODE_ANIMATION;
+    
     
     /*
      * Ir para adelante o para atrás en los marks también cambia el tema. 
@@ -63,57 +70,18 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             //</editor-fold>
             //<editor-fold defaultstate="collapsed" desc=" 1 PREV ">
             case '1':
-                try {
-                    player.putTitleNms("PREVIOUS MARK", 1000);
-
-                    Tuple tupleScreen;
-                    String curr = marksManager.getPrevious(true).getKey();  // Retroceder y obtener el nuevo actual.
-                    String com = marksManager.getNext(false).getKey();     // Obtener el previo (sin retroceso).
-
-                    tupleScreen = new Tuple(curr,com,"");
-
-                    this.tupleRevelator.setTuple(tupleScreen);
-                } catch (Exception ex) {
-                    player.putTitleNms("MARK ERROR", 1000);
-                    ex.printStackTrace();
-                }
+                
+                
                 break;
             //</editor-fold>
             //<editor-fold defaultstate="collapsed" desc=" 2 APPLY ">
             case '2':
-                try {
-                    Tuple tupleScreen;
-                    player.putTitleNms("APPLIED MARK", 1000);
-
-                    String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
-                    marksManager.applyTimeToCurrentMark(MediaServices.getMediaServices().getPositionSeconds());
-                    String com = marksManager.getNext(false).getKey(); // Obtener el previo (sin retroceso).
-
-                    tupleScreen = new Tuple(curr,com,"");
-                    
-                    this.tupleRevelator.setTuple(tupleScreen);
-                } catch (Exception ex) {
-                    player.putTitleNms("MARK ERROR", 1000);
-                    ex.printStackTrace();
-                }
+                
+                player.putTitleNms(">"+this.nextMode(), 2000);
                 break;
             //</editor-fold>
             //<editor-fold defaultstate="collapsed" desc=" 3 NEXT ">
             case '3':
-                try {
-                    player.putTitleNms("NEXT MARK", 1000);
-
-                    Tuple tupleScreen;
-                    String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
-                    String com = marksManager.getNext(false).getKey(); // Obtener el previo (sin retroceso).
-
-                    tupleScreen = new Tuple(curr,com,"");
-
-                    this.tupleRevelator.setTuple(tupleScreen);
-                } catch (Exception ex) {
-                    player.putTitleNms("MARK ERROR", 1000);
-                    ex.printStackTrace();
-                }
                 break;
                 
                 
@@ -169,45 +137,127 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             //</editor-fold>
             //<editor-fold defaultstate="collapsed" desc=" 7 PREV ">
             case '7':
-                try {
-                    
-                    
-                    player.putTitleNms("PREVIOUS MARK", 1000);
-                    Tuple prev = marksManager.getPrevious(true);
-                    this.tupleRevelator.setTuple(prev);
-                    
-                    try{
-                        MediaServices.getMediaServices().setPosition(Parser.hours2sec(prev.getExtra()));
-                    }catch(Exception e){e.printStackTrace();}
-                    
-                } catch (Exception ex) {
-                    player.putTitleNms("MARK ERROR", 1000);
-                    ex.printStackTrace();
+                switch(mode){
+                    case MODE_ESSAY:
+                        
+                        try {
+                            player.putTitleNms("PREVIOUS MARK", 1000);
+
+                            Tuple tupleScreen;
+                            String curr = marksManager.getPrevious(true).getKey();  // Retroceder y obtener el nuevo actual.
+                            String com = marksManager.getNext(false).getKey();     // Obtener el previo (sin retroceso).
+
+                            tupleScreen = new Tuple(curr,com,"");
+
+                            this.tupleRevelator.setTupleTemporaryModeAndStage(tupleScreen,TupleRevelator.MODE_ALL,0);
+                        } catch (Exception ex) {
+                            player.putTitleNms("MARK ERROR", 1000);
+                            ex.printStackTrace();
+                        }
+
+                        break;
+                    case MODE_ANIMATION:
+                        try {
+                        
+                            player.putTitleNms("PREVIOUS MARK", 1000);
+                            Tuple prev = marksManager.getPrevious(true);
+                            this.tupleRevelator.setTuple(prev);
+
+                            try{
+                                MediaServices.getMediaServices().setPosition(Parser.hours2sec(prev.getExtra()));
+                            }catch(Exception e){e.printStackTrace();}
+
+                        } catch (Exception ex) {
+                            player.putTitleNms("MARK ERROR", 1000);
+                            ex.printStackTrace();
+                        }
+                        break;
+                    default:
+                        break;
                 }
+                
                 break;
             //</editor-fold>
             //<editor-fold defaultstate="collapsed" desc=" 8 REV.MODE. ">
             case '8':
-                this.tupleRevelator.nextMode();
-                player.putTitleNms("REV. ("+this.tupleRevelator.getCurrentModeName()+")", 1000);
+                switch(mode){
+                    case MODE_ESSAY:
+                        try {
+                            Tuple tupleScreen;
+                            player.putTitleNms("APPLIED MARK", 1000);
+
+                            //marksManager.applyTimeToCurrentMark(MediaServices.getMediaServices().getPositionSeconds());
+                            //String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
+                            //String comi = marksManager.getNext(false).getKey(); // Obtener el previo (sin retroceso).
+
+                            String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
+                            marksManager.applyTimeToCurrentMark(MediaServices.getMediaServices().getPositionSeconds());
+                            String comi = marksManager.getNext(false).getKey(); // Obtener el previo (sin retroceso).
+
+                            
+                            
+                            tupleScreen = new Tuple(curr,comi,"");
+                            player.resetTranslation();
+                            //this.tupleRevelator.setTuple(tupleScreen);
+                            this.tupleRevelator.setTupleTemporaryModeAndStage(tupleScreen,TupleRevelator.MODE_ALL,0);
+                        } catch (Exception ex) {
+                            player.putTitleNms("MARK ERROR", 1000);
+                            ex.printStackTrace();
+                        }
+                        break;
+                    case MODE_ANIMATION:
+                        this.tupleRevelator.nextMode();
+                        player.putTitleNms("REV. ("+this.tupleRevelator.getCurrentModeName()+")", 1000);
+                        break;
+                    default:
+                        break;
+                }
                 break;
+                
             //</editor-fold>
             //<editor-fold defaultstate="collapsed" desc=" 9 NEXT ">
             case '9':
-                try {
-                    
-                    player.putTitleNms("NEXT MARK", 1000);                    
-                    Tuple next = marksManager.getNext(true);
-                    this.tupleRevelator.setTuple(next);
-                    
-                    try{
-                        MediaServices.getMediaServices().setPosition(Parser.hours2sec(next.getExtra()));
-                    }catch(Exception e){e.printStackTrace();}
+                
+                switch(mode){
+                    case MODE_ESSAY:
+                                
+                        try {
+                            player.putTitleNms("NEXT MARK", 1000);
+
+                            Tuple tupleScreen;
+                            String curr = marksManager.getNext(true).getKey();      // Avanzar y obtener el nuevo actua.
+                            String com = marksManager.getNext(false).getKey(); // Obtener el previo (sin retroceso).
+
+                            tupleScreen = new Tuple(curr,com,"");
+                            //this.tupleRevelator.setTuple(tupleScreen);
+                            this.tupleRevelator.setTupleTemporaryModeAndStage(tupleScreen,TupleRevelator.MODE_ALL,0);
+                        } catch (Exception ex) {
+                            player.putTitleNms("MARK ERROR", 1000);
+                            ex.printStackTrace();
+                        }
+                        break;
+
+                    case MODE_ANIMATION:
+                        try {
+                            player.putTitleNms("NEXT MARK", 1000);                    
+                            Tuple next = marksManager.getNext(true);
+                            this.tupleRevelator.setTuple(next);
+
+                            try{
+                                MediaServices.getMediaServices().setPosition(Parser.hours2sec(next.getExtra()));
+                            }catch(Exception e){e.printStackTrace();}
+
+                        } catch (Exception ex) {
+                            player.putTitleNms("MARK ERROR", 1000);
+                            ex.printStackTrace();
+                        }
                         
-                } catch (Exception ex) {
-                    player.putTitleNms("MARK ERROR", 1000);
-                    ex.printStackTrace();
+                        break;
+                    default:
+                        break;
                 }
+                
+                
                 break;
                 
             
@@ -223,16 +273,36 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
         return catched;
     }
 
+    public String nextMode(){
+        mode = (mode + 1) % NUM_OF_MODES;
+        lastTuple = new Tuple("","","");
+        refreshScreen();
+        return getModeName(mode);
+    }
+    
+    public String getModeName(int mode){
+        return modeNames[Math.abs(mode)%NUM_OF_MODES];
+    }
+    
     public void setValues(Tuple tuple) {
-        String str;
+        String str="";
         this.lastTuple = tuple;
-        str =   "*Transcript \n" + 
-                tuple.getKey() + 
-                "\n*Comment \n" + 
-                tuple.getValue() +
-                "\n*Time \n" + 
-                tuple.getExtra();
-        
+        String current = this.marksManager.getCurrentTupleIndex()+1 +"/"+ this.marksManager.getSize();
+        if (mode==MODE_ANIMATION){
+            str =   "*<"+getModeName(mode)+">\n" + 
+                    "*Transcript("+current+") \n" + 
+                    tuple.getKey() + 
+                    "\n*Comment \n" + 
+                    tuple.getValue() +
+                    "\n*Time \n" + 
+                    tuple.getExtra();
+        }else if (mode==MODE_ESSAY){
+            str =   "*<"+getModeName(mode)+">\n" + 
+                    "*Current("+current+") \n" + 
+                    tuple.getKey() + 
+                    "\n*Next \n" + 
+                    tuple.getValue();  
+        }
         this.player.setText(str);
     }
 
@@ -277,7 +347,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
         int current;
         Tuple t;
         current = ((Integer)obj).intValue();
-        if (MediaServices.getMediaServices().isItPlaying()){
+        if ((MediaServices.getMediaServices().isItPlaying()) && (this.mode==MODE_ANIMATION)){
             try{
                 t = this.marksManager.getMark(current);
                 this.player.resetTranslation();

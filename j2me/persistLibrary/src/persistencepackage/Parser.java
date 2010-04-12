@@ -38,6 +38,32 @@ public class Parser {
         return tabla;
     }
     
+    public void txt2vectors(String text, Vector apply, Vector dontapply, String group_id){
+        int previousnl = 0;
+        int lastnl = 0;
+        Tuple tuple;
+        String current_line = "";
+            
+        lastnl = text.indexOf(line_separator);
+        while(lastnl != -1) {
+            current_line = text.substring(previousnl, lastnl);
+            
+            previousnl = lastnl+1;
+            lastnl = text.indexOf(line_separator, previousnl);
+            tuple = parseLine(current_line);
+            
+            if (tuple.belongsToGroup(group_id)){
+                apply.addElement(tuple);
+            }else {
+                dontapply.addElement(tuple);
+            }
+        }
+        
+        
+        
+        
+    }
+    
     /*
      * This method is used to create two Vectors, putting tuples in
      * each one according to the beginning of each tuple.

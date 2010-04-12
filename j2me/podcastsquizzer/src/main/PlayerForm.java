@@ -65,6 +65,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     private boolean goBackFlag = false; /* Idem con la tecla de retroceso. */
     private boolean stateBeforeMoving = false;
     private int backgroundColor = 0x000000;
+    private boolean avoidablePainting=false;
     //</editor-fold>
     
     //list = new List("list", Choice.IMPLICIT);
@@ -84,12 +85,12 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         
         Rectangle rec = new Rectangle(hborder,vborder,this.getWidth()-(hborder*2), this.getHeight()-(vborder*2));
         this.titleTextPainter = new TextPainter(fontMedium, rec.newSetHeight(vspace));
-        this.titleTextPainter.setBackgroundColor(backgroundColor);
-        Rectangle mainRec = rec.newSetY(vspace).newMoveHeight(-2*vspace);
+        this.titleTextPainter.setBackgroundColor(0xffff00);
+        Rectangle mainRec = rec.newSetY(vspace+2).newMoveHeight(-2*vspace-2);
         this.mainTextPainter = new TextPainter(fontSmall, mainRec);
-        this.mainTextPainter.setBackgroundColor(backgroundColor);
+        this.mainTextPainter.setBackgroundColor(0xff00ff);
         this.helpTextPainter = new TextPainter(fontSmall, rec.newSetHeight(vspace).newMoveY(mainRec.getHeigth()+vspace));
-        this.helpTextPainter.setBackgroundColor(backgroundColor);
+        this.helpTextPainter.setBackgroundColor(0x00ffff);
         this.helpTextPainter.setFontColor(0x999999);
         
         MediaServices.getMediaServices().addPlayerListener(this);
@@ -217,7 +218,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         helpText =            helpKeys[(i+0)%helpKeys.length] + " * ";
         helpText = helpText + helpKeys[(i+1)%helpKeys.length] + " * ";
         helpText = helpText + helpKeys[(i+2)%helpKeys.length];
-        this.repaint();
+        this.repaintIfNecessary();
     }
     
     private void buildTitle(){
@@ -227,14 +228,16 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         } else {
             titleText = ((ScreenHandler)(this.screenHandlersVector.elementAt(this.mode))).getName()+ " " + this.timeText;
         }
-        this.repaint();
+        this.repaintIfNecessary();
     }
     
     public void paint(Graphics g) {
+        avoidablePainting=false;
         helpTextPainter.paintText(g, this.helpText);
         mainTextPainter.setTranslation(yTranslation);
-        mainTextPainter.paintTextComplex(g);
+        mainTextPainter.paintTextComplex(g,avoidablePainting);
         titleTextPainter.paintText(g, this.titleText);
+        
     }
     
     protected void keyReleased(int keyCode) {
@@ -254,7 +257,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         
         if (agileKey==false){
             this.buildTitle();
-            this.repaint();
+            this.repaintIfNecessary();
         }
     }
 
@@ -275,6 +278,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         }
     }
 
+    //<editor-fold defaultstate="collapsed" desc=" Default Key Handling ">
     public void modeDefaultKeyPressed(int keyCode){
 
         switch(keyCode){
@@ -283,7 +287,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
                 String mn = this.changeMode(false);
                 this.putTitleNms("MODE " + mn, 1000);
                 this.buildTitle();
-                this.repaint();
+                this.repaintIfNecessary();
                 break;
             case PlayerForm.KEY_MISC_RIGHT:
                 goPreviousForm();
@@ -345,9 +349,10 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
                         break;
                 }
         }
-
     }
-        
+    
+    //</editor-fold>
+    
     public void playerUpdate(Player pl, String str, Object obj) {
         long current;
         
@@ -365,7 +370,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
       
     public void setText(String text){
         this.mainTextPainter.setText(text);
-        this.repaint();
+        this.repaintIfNecessary();
     }
     
     private void goPreviousForm(){
@@ -383,6 +388,11 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     
     public void resetTranslation(){
         this.yTranslation = 0;
+    }
+    
+    public void repaintIfNecessary(){
+        avoidablePainting=true;
+        this.repaint();
     }
     
 }

@@ -177,10 +177,19 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
 
     public void setValues(Tuple t) {
         String text;
-        this.lastTuple = t;
-        Tuple tuple = t.getACopy();
-        tuple.removeGroupID("-");
-        text =  "*Word: \n"+tuple.getKey()+" \n"+
+        String current="0/0";
+        Tuple tuple;
+        try{
+            current = this.iterator.getCurrentIndex()+1 +"/"+ this.iterator.getVector().size();
+            this.lastTuple = t;
+            tuple = t.getACopy();
+            tuple.removeGroupID("-");
+            
+        }catch(Exception e){
+            tuple = new Tuple("","");
+            e.printStackTrace();
+        }
+        text =  "*Word("+current+"): \n"+tuple.getKey()+" \n"+
                 "*Explanation: \n"+tuple.getValue()+" \n"+
                 "*Examples: \n"+tuple.getExtra()+" \n";
         player.setText(text);

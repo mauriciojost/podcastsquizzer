@@ -19,4 +19,5 @@ public interface Iterator {
     public void reinitialize();
     public Vector getVector();
     public void addNewTuple(Tuple tuple);
+    public int getCurrentIndex();
 }

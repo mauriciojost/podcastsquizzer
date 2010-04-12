@@ -37,7 +37,7 @@ public class TupleFinder {
     }
     
     
-    public Tuple lookForMoreAppropriate(int sec_actual) throws Exception{
+    public Tuple lookForMoreAppropriate1(int sec_actual) throws Exception{
         Tuple currentT=null;
         int diff;
         
@@ -60,6 +60,11 @@ public class TupleFinder {
     public int getLastIndex(){
         return lastIndex;
     }
+    
+    public int getIndex(Tuple tuple){
+        return vector.indexOf(tuple);
+    }
+    
     
     private boolean areTimesEqual(Tuple tuple, int sec, int index) {
         if (tuple!=null){
