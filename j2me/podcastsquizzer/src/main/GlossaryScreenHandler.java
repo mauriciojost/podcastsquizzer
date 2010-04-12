@@ -7,6 +7,7 @@ import javax.microedition.media.Player;
 import persistencepackage.*;
 import textboxpackage.*;
 import tuplesshowerpackage.*;
+import miscellaneouspackage.Sorter;
 
 
 /**
@@ -21,16 +22,23 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
     private Tuple lastTuple = new Tuple("","","");
     private TextBoxForm textBoxForm;
     private int cuentaTerminos = 0;
+    private Sorter sorter;    
     
     public GlossaryScreenHandler (Display display, Playerable player){
         this.display = display;
         this.player = player;
         this.tupleRevelator = new TupleRevelator(this);
         this.textBoxForm = new TextBoxForm(display, player.getDisplayable(), this);
+        //sorter = new Sorter(new TupleAsMarkComparator(Tuple.INDEX_EXTRA));
     }
     
     public void setMainElement(Object glossary){
         Vector gl = (Vector)glossary;
+        /*try{
+            sorter.sort(gl);
+        }catch(Exception e){
+            e.printStackTrace();
+        }*/
         this.iterator = new SequentialIterator(gl);
         HybridFile.setGlossaryVector(gl);
     }
@@ -62,8 +70,15 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
             
             //<editor-fold defaultstate="collapsed" desc=" 0 SAVE">
             case '0':
+                Vector vector;
                 player.putTitleNms("SAVING GLOSSARY...", 2000);    
-                HybridFile.setGlossaryVector(iterator.getVector());
+                vector = iterator.getVector();
+                /*try{
+                    sorter.sort(vector);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }*/
+                HybridFile.setGlossaryVector(vector);
                 try {
                     HybridFile.saveFile(this, "saveGlossary");
                 } catch (Exception ex) {

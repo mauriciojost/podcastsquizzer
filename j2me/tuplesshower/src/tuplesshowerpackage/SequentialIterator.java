@@ -22,7 +22,9 @@ public class SequentialIterator implements Iterator {
             return new Tuple("Empty.","Empty.","Empty.");
         }else{
             Tuple tuple;
-            currentIndex = (currentIndex + 1) % vector.size();
+            //currentIndex = (currentIndex + 1) % vector.size();
+            currentIndex=((currentIndex>=vector.size())?currentIndex:currentIndex+1);
+            
             tuple = (Tuple)vector.elementAt(currentIndex);
             return tuple;
         }
@@ -34,11 +36,12 @@ public class SequentialIterator implements Iterator {
             return new Tuple("Empty.","Empty.","Empty.");
         }else{
             Tuple tuple;
-            if (currentIndex<=0) {
+            /*if (currentIndex<=0) {
                 currentIndex = vector.size()-1;
             } else {
                 currentIndex = currentIndex - 1;
-            }
+            }*/
+            currentIndex=((currentIndex<=0)?0:currentIndex-1);
             
             tuple = (Tuple)vector.elementAt(currentIndex);
             return tuple;

@@ -85,12 +85,12 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         
         Rectangle rec = new Rectangle(hborder,vborder,this.getWidth()-(hborder*2), this.getHeight()-(vborder*2));
         this.titleTextPainter = new TextPainter(fontMedium, rec.newSetHeight(vspace));
-        this.titleTextPainter.setBackgroundColor(0xffff00);
+        this.titleTextPainter.setBackgroundColor(0x221111);
         Rectangle mainRec = rec.newSetY(vspace+2).newMoveHeight(-2*vspace-2);
         this.mainTextPainter = new TextPainter(fontSmall, mainRec);
-        this.mainTextPainter.setBackgroundColor(0xff00ff);
+        this.mainTextPainter.setBackgroundColor(0x111122);
         this.helpTextPainter = new TextPainter(fontSmall, rec.newSetHeight(vspace).newMoveY(mainRec.getHeigth()+vspace));
-        this.helpTextPainter.setBackgroundColor(0x00ffff);
+        this.helpTextPainter.setBackgroundColor(0x221111);
         this.helpTextPainter.setFontColor(0x999999);
         
         MediaServices.getMediaServices().addPlayerListener(this);
@@ -232,11 +232,12 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     
     public void paint(Graphics g) {
-        avoidablePainting=false;
-        helpTextPainter.paintText(g, this.helpText);
+        
+        titleTextPainter.paintText(g, this.titleText);
         mainTextPainter.setTranslation(yTranslation);
         mainTextPainter.paintTextComplex(g,avoidablePainting);
-        titleTextPainter.paintText(g, this.titleText);
+        avoidablePainting=false;
+        helpTextPainter.paintText(g, this.helpText);
         
     }
     
