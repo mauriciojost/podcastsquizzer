@@ -34,7 +34,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
         this.player = player;
         this.tupleRevelator = new TupleRevelator(this);
         this.textBoxForm = new TextBoxForm(display, player.getDisplayable(), this);
-        sorter = new Sorter(new TupleAsStringsComparator(Tuple.INDEX_EXTRA));
+        sorter = new Sorter(new TupleAsStringsComparator(Tuple.INDEX_KEY));
         this.setMainElement(new Vector());
         this.refreshScreen();
     }

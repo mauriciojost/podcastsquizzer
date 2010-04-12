@@ -20,7 +20,9 @@ public class Sorter {
             vector.trimToSize();
             Enumeration e = vector.elements();
             while (e.hasMoreElements()){
-                if (comp.isComparable(e.nextElement())==false){
+                Object elem = e.nextElement();
+                boolean boo = comp.isComparable(elem);
+                if (boo==false){
                     throw new Exception("Some elements are not comparable.");
                 }
             }

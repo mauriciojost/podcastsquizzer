@@ -38,7 +38,6 @@ public class Parser {
                 tabla.addElement(tuple);
             }
         }
-        
         return tabla;
     }
     
@@ -63,10 +62,6 @@ public class Parser {
                 }
             }
         }
-        
-        
-        
-        
     }
     
     /*
@@ -109,7 +104,6 @@ public class Parser {
     public Tuple parseLine(String line){
         int index;
         Tuple pareja;
-        
         
         if (line.trim().compareTo("")==0){
             return null;

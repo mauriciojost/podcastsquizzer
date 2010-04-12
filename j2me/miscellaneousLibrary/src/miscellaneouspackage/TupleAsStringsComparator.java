@@ -31,6 +31,7 @@ public class TupleAsStringsComparator implements Comparator {
         //} catch (Exception ex) {
             //ex.printStackTrace();
         //}
-        return Xo.compareTo(Yo);
+        int i = Xo.compareTo(Yo);
+        return i;
     }
 }
