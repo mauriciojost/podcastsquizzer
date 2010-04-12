@@ -110,7 +110,8 @@ public class Parser {
         int index;
         Tuple pareja;
         
-        if (line.trim().compareTo("\n")==0){
+        
+        if (line.trim().compareTo("")==0){
             return null;
         }
         
