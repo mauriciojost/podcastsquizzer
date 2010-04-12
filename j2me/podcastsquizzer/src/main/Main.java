@@ -15,6 +15,7 @@ import java.util.Vector;
 import mediaservicespackage.*;
 import browserpackage.*;
 import persistencepackage.*;
+import tuplesshowerpackage.Shuffler;
 
 
 /** Main MIDlet.

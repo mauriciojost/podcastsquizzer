@@ -47,7 +47,8 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
             player.putTitleNms("GLOSSARY NOT SORTED...", 1000);
             e.printStackTrace();
         }
-        this.iterator = new SequentialIterator(gl);
+        //this.iterator = new SequentialIterator(gl);
+        this.iterator = new Shuffler(gl);
         HybridFile.setGlossaryVector(gl);
         this.lastTuple = iterator.getCurrent();
         this.setValues(lastTuple);

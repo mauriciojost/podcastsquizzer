@@ -206,10 +206,8 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
             if (ListeningScreenHandler.class.isInstance(current)){
                 current.setMainElement(gv);
                 break;
-            }
-                    
+            }   
         }
-        
     }
     
     public void buildHelpText(int i){

@@ -15,7 +15,7 @@ public class SequentialIterator implements Iterator {
     private Vector vector;
     private int currentIndex = 0;
     
-    public SequentialIterator(Vector vector_orig) {
+    public SequentialIterator(Vector vector_orig, int t) {
         this.vector = vector_orig;
     }
     
