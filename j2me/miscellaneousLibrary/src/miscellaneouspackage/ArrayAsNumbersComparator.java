@@ -1,12 +1,10 @@
 package miscellaneouspackage;
 
-
 public class ArrayAsNumbersComparator implements Comparator {
     private int index;
     public ArrayAsNumbersComparator(int index){
         this.index = index;
     }
-    
     
     
     public boolean isComparable(Object obj){

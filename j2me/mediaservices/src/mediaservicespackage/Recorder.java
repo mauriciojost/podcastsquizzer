@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package mediaservicespackage;
 
 import java.io.ByteArrayInputStream;
@@ -13,10 +8,6 @@ import javax.microedition.media.MediaException;
 import javax.microedition.media.Player;
 import javax.microedition.media.control.RecordControl;
 
-/**
- *
- * @author Mauricio
- */
 public class Recorder {
     private ByteArrayOutputStream last_recorded;
     private Player recorderP;    

@@ -1,18 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package main;
 
 import java.util.Vector;
 import mediaservicespackage.MediaServices;
 import persistencepackage.*;
 
-/**
- *
- * @author Mauricio
- */
 public class HybridFile {
     private static Vector marksVector;
     private static Vector glossaryVector;

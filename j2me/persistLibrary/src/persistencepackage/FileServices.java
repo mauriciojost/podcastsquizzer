@@ -1,15 +1,9 @@
-
 package persistencepackage;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import java.io.*;
 
-
-/**
- *
- * @author Mauricio
- */
 public class FileServices {
     private static char fileSeparatorCh = 'A';
     
@@ -34,34 +28,13 @@ public class FileServices {
             while (true) {
                 datum = is.read();
                 if (datum!=-1){
-                    
                     if (replace_odd_chars){
-                        switch (datum){
-                            case '…':
-                            case '\u0085':
-                                cad = "...";
-                                break;
-                            case '“':
-                            case '”':
-                            case '\u0093':
-                            case '\u0094':
-                                cad = "\"";
-                                break;
-                            case '—':
-                                cad = "-";
-                            case '’':
-                            case '\u0092':
-                                cad = "'";
-                                break;
-                            default:
-                                cad = "" + (char)datum;
-                                break;   
-                        }
+                        cad = replaceOddChars(datum);
                     }else{
                         cad = "" + (char)datum;
                     }
                     
-                   cadena = cadena + cad; 
+                   cadena.concat(cad); 
                 }else{
                     break;
                 }
@@ -75,6 +48,43 @@ public class FileServices {
         return cadena;
         
     }    
+    
+    public static String replaceOddCharsFromAText(String source){
+        int i;
+        int ch;
+        String ret = "";
+        for (i=0;i<source.length();i++){
+            ch = source.charAt(fileSeparatorCh);
+            ret.concat(String.valueOf(ch));
+        }
+        return ret;
+    }
+    
+    private static String replaceOddChars(int datum){
+        String cad;
+        switch (datum){
+            case '…':
+            case '\u0085':
+                cad = "...";
+                break;
+            case '“':
+            case '”':
+            case '\u0093':
+            case '\u0094':
+                cad = "\"";
+                break;
+            case '—':
+                cad = "-";
+            case '’':
+            case '\u0092':
+                cad = "'";
+                break;
+            default:
+                cad = "" + (char)datum;
+                break;   
+        }
+        return cad;
+    }
     
     public static boolean writeTXTFile(String pat, byte[] dat) throws Exception { 
         return writeTXTFile(pat, dat, null, null);

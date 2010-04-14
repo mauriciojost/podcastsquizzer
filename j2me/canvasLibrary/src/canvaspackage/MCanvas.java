@@ -1,12 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package canvaspackage;
-
-import javax.microedition.lcdui.*;
-
+//import javax.microedition.lcdui.*;
 
 public class MCanvas /*extends Canvas */{
 /*    private String mainText = "<>";

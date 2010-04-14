@@ -1,4 +1,3 @@
-
 package main;
 
 import canvaspackage.Word;
@@ -12,11 +11,6 @@ import tuplesshowerpackage.*;
 import miscellaneouspackage.Sorter;
 import miscellaneouspackage.TupleAsStringsComparator;
 
-
-/**
- *
- * @author Mauricio
- */
 public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterface, TextBoxFormReadyListener, FileActionListener{
     private static final String EMPTY_STRING = Word.NORMAL_RED + "<empty>";
     private static final Tuple EMPTY_TUPLE = new Tuple(EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);

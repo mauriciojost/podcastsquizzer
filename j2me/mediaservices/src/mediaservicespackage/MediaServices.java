@@ -1,4 +1,3 @@
-
 package mediaservicespackage;
 
 import java.io.InputStream;
@@ -12,11 +11,6 @@ import javax.microedition.media.Player;
 import javax.microedition.media.PlayerListener;
 import javax.microedition.media.control.VolumeControl;
 
-
-/**
- *
- * @author Mauri
- */
 public class MediaServices implements Runnable{
     
     private static MediaServices mediaServicesInstance = null;

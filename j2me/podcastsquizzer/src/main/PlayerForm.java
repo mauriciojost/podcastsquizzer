@@ -1,8 +1,3 @@
-/**
- * @author Mauri
- * 
- */
-
 package main;
 
 import javax.microedition.lcdui.*;
@@ -12,8 +7,7 @@ import java.util.Vector;
 import mediaservicespackage.*;
 import persistencepackage.*;
 import canvaspackage.*;
-import java.util.Enumeration;
-
+import java.util.Enumeration; 
 
 /**
  * This class is intended to provide the user with an environment where to play

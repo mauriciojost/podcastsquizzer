@@ -7,10 +7,6 @@ import miscellaneouspackage.ArrayAsNumbersComparator;
 import miscellaneouspackage.Sorter;
 import miscellaneouspackage.Tuple;
 
-/**
- *
- * @author Mauricio
- */
 public class Shuffler{
     private static final String EMPTY_STRING = Word.NORMAL_RED + "<empty>";
     private static final Tuple EMPTY_TUPLE = new Tuple(EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);

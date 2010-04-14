@@ -1,14 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package textboxpackage;
 
-/**
- *
- * @author Mauricio
- */
 public interface TextBoxFormReadyListener {
     /** 
      * Tells the caller form what file has been selected.

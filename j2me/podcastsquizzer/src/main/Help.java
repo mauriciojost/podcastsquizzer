@@ -1,14 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package main;
 
-/**
- *
- * @author Mauricio
- */
 public class Help {
     private static final int ROWS_OF_KEYS=5;
     private static int stage=0;

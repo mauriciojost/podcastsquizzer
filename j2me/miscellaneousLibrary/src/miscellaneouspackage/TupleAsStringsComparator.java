@@ -1,4 +1,3 @@
-
 package miscellaneouspackage;
 
 public class TupleAsStringsComparator implements Comparator {

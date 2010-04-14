@@ -1,10 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package miscellaneouspackage;
-
 
 public class Tuple {
     public static final int INDEX_KEY=0;

@@ -1,8 +1,3 @@
-/**
- *
- * @author Mauri
- */
-
 package persistencepackage;
 
 import miscellaneouspackage.Tuple;

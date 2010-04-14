@@ -1,10 +1,7 @@
-
 package canvaspackage;
 
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-
-
 
 public class Word{
     

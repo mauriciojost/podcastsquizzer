@@ -1,15 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package canvaspackage;
 
 /**
  * This class should not be used by the user.
  * This was made in order to provide elements to the main classes of 
  * this package.
- * @author Mauricio
  */
 public class Rectangle {
     private int x, y, height, width;

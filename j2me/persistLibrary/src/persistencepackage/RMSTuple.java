@@ -1,4 +1,3 @@
-
 package persistencepackage;
 
 import miscellaneouspackage.Tuple;
@@ -6,10 +5,6 @@ import java.util.Enumeration;
 import java.util.Vector;
 import javax.microedition.rms.RecordEnumeration;
 
-/**
- *
- * @author Mauricio
- */
 public class RMSTuple {
     private RMSServices rmss;
     private Parser parser;

@@ -4,10 +4,6 @@ import canvaspackage.Word;
 import java.util.Vector;
 import miscellaneouspackage.Tuple;
 
-/**
- *
- * @author Mauricio
- */
 public class SequentialIterator implements Iterator {
     private static final String EMPTY_STRING = Word.NORMAL_RED + "<empty>";
     private static final Tuple EMPTY_TUPLE = new Tuple(EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);
@@ -34,13 +30,7 @@ public class SequentialIterator implements Iterator {
         if (vector.size()<=0) {
             return EMPTY_TUPLE;
         }else{
-            Tuple tuple;
-            //currentIndex = (currentIndex + 1) % vector.size();
             currentIndex=((currentIndex>=vector.size()-1)?currentIndex:currentIndex+1);
-            
-            
-            
-            
             
             if (mode==MODE_SEQUENTIAL){
                 return (Tuple)vector.elementAt(currentIndex);
@@ -57,23 +47,12 @@ public class SequentialIterator implements Iterator {
         if (vector.size()<=0) {
             return EMPTY_TUPLE;
         }else{
-            Tuple tuple;
-            /*if (currentIndex<=0) {
-                currentIndex = vector.size()-1;
-            } else {
-                currentIndex = currentIndex - 1;
-            }*/
             currentIndex=((currentIndex<=0)?0:currentIndex-1);
-            
-            
-            
             if (mode==MODE_SEQUENTIAL){
                 return (Tuple)vector.elementAt(currentIndex);
             }else{
                 return (Tuple)shuffler.getRandomElement(vector, currentIndex);
             }
-            
-            
         }
     }
 
@@ -123,5 +102,4 @@ public class SequentialIterator implements Iterator {
         }
         return MODE_NAMES[mode];
     }
-
 }

@@ -1,12 +1,6 @@
-
 package persistencepackage;
 
 import javax.microedition.rms.*;
-
-/**
- *
- * @author Mauricio
- */
 
 public class RMSServices{
     

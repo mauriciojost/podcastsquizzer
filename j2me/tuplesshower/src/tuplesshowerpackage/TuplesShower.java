@@ -2,7 +2,6 @@ package tuplesshowerpackage;
 
 import miscellaneouspackage.Tuple;
 import javax.microedition.lcdui.*;
-import persistencepackage.*;
 
 public class TuplesShower implements CommandListener, TuplesShowerInterface {
       

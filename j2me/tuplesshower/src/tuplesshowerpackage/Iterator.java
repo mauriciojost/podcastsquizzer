@@ -1,17 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package tuplesshowerpackage;
 
 import java.util.Vector;
 import miscellaneouspackage.Tuple;
 
-/**
- *
- * @author Mauricio
- */
 public interface Iterator {
     public Tuple getNext();
     public Tuple getCurrent();

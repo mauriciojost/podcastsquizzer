@@ -1,12 +1,4 @@
-
-/**
- * @author Mauri
- * 
- */
-
-
 package main;
-
 
 import miscellaneouspackage.Tuple;
 import javax.microedition.midlet.*;
@@ -15,8 +7,6 @@ import java.util.Vector;
 import mediaservicespackage.*;
 import browserpackage.*;
 import persistencepackage.*;
-import tuplesshowerpackage.Shuffler;
-
 
 /** Main MIDlet.
  * It shows the main screens of the application. 

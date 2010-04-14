@@ -8,9 +8,7 @@ import javax.microedition.lcdui.Graphics;
 /**
  * This class provides the user with the ability to write a text in a graphic, 
  * but using the text wrap feature.
- * @author Mauricio
  */
-
 public class TextPainter {
 
     private Rectangle bounds;   /* Bounds of the painting area. */

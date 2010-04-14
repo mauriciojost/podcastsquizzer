@@ -1,14 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package browserpackage;
 
-/**
- *
- * @author Mauricio
- */
 public interface BrowserReadyListener {
     /** 
      * Tells the caller form what file has been selected.

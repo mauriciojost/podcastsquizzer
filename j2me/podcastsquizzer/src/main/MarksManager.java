@@ -1,20 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package main;
 
 import canvaspackage.Word;
 import miscellaneouspackage.Tuple;
 import java.util.Vector;
-//import miscellaneouspackage.Sorter;
 import persistencepackage.*;
 
-/**
- *
- * @author Mauricio
- */
 public class MarksManager{
     private static final String EMPTY_STRING = Word.NORMAL_RED + "<empty>";
     private static final Tuple EMPTY_TUPLE = new Tuple(EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);
