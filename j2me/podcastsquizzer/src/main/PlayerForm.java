@@ -191,6 +191,12 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         MediaServices.getMediaServices().load(currentListeningPath);
     }
     
+    public void addDictionary(String dictionary_path) throws Exception{
+        DictionaryScreenHandler nd = new DictionaryScreenHandler();
+        nd.setMainElement(dictionary_path);
+        this.screenHandlersVector.addElement(nd);
+    }
+    
     public void setTranscript(Vector gv){
         
         Enumeration it = this.screenHandlersVector.elements();

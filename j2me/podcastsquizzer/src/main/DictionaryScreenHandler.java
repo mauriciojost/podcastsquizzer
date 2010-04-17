@@ -5,26 +5,17 @@ import java.io.InputStream;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.media.Player;
-import miscellaneouspackage.Tuple;
-import persistencepackage.FileActionListener;
 import persistencepackage.FileServices;
-import textboxpackage.TextBoxFormReadyListener;
-import tuplesshowerpackage.TuplesShowerInterface;
 
-public class DictionaryScreenHandler implements ScreenHandler, TuplesShowerInterface, TextBoxFormReadyListener, FileActionListener{
+public class DictionaryScreenHandler implements ScreenHandler{
     private static final int UNINITIALIZED_VALUE=-1;
     private String path;
     private int[] index;
     
-    public DictionaryScreenHandler(String dict_path){
-        path = dict_path;
-        try {
-            createIndex(path);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        
+    public DictionaryScreenHandler(){
+        path = null;
     }
+    
     
     private void initializeIndex(int[] index){
         int i;
@@ -40,6 +31,7 @@ public class DictionaryScreenHandler implements ScreenHandler, TuplesShowerInter
         index = new int[GROUPS];
         
         initializeIndex(index);
+        
         FileConnection fci = (FileConnection)Connector.open(FileServices.correctURL(path1),Connector.READ);
         InputStream is = (InputStream)fci.openInputStream();
         String cad;
@@ -63,15 +55,8 @@ public class DictionaryScreenHandler implements ScreenHandler, TuplesShowerInter
                 }
             }
 
-            
-            
-            
-            
             is.close();
             
-            
-            int i = index['C'-'A'];
-            String str = getLineAt(i);
         }catch(IOException e){
             is.close();
             throw e;
@@ -136,11 +121,16 @@ public class DictionaryScreenHandler implements ScreenHandler, TuplesShowerInter
     }
 
     public boolean keyPressed(int keyCode) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return false;
     }
 
     public void setMainElement(Object main_element) {
-        
+        try {
+            this.path = (String)main_element;
+            createIndex(path);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void refreshScreen() {
@@ -148,27 +138,18 @@ public class DictionaryScreenHandler implements ScreenHandler, TuplesShowerInter
     }
 
     public String getHelp() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        return "Ayuda";
     }
 
     public String[] getKeysHelp() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String[] a = {"Ayuda", "Ayuda"};
+        return a;
     }
 
     public void playerUpdate(Player arg0, String arg1, Object arg2) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     }
 
-    public void setValues(Tuple tuple) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void textBoxReady(String title, String text) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void writeOperationReady(String id, String path, boolean operation_successfully) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
     
 }

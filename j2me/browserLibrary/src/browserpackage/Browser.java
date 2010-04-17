@@ -1,7 +1,7 @@
 package browserpackage;
 
 import javax.microedition.lcdui.*;
-import org.netbeans.microedition.lcdui.pda.FileBrowser;
+//import org.netbeans.microedition.lcdui.pda.FileBrowser;
 import persistencepackage.FileServices;
 
 public class Browser implements CommandListener{

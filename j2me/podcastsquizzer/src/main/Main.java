@@ -36,6 +36,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     private Command saveLastListeningCommand;
     private Command browseAllCommand;
     private Command browseHybridCommand;
+    private Command browseDictionaryCommand;
     private Form form;
     private StringItem hybridItem;
     private StringItem listeningItem;
@@ -47,10 +48,6 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
      * The Main constructor.
      */
     public Main() {
-        
-        /* TEST ZONE */
-        
-        /* TEST ZONE */
         
         browser = new Browser(
                 this.getDisplay(), 
@@ -145,40 +142,50 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 //this.browser.setExtension("mp3");   /* Show only mp3 files. */
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.browser.getDisplayable());
-            } else if (command == browseHybridCommand) {//GEN-LINE:|7-commandAction|3|43-preAction
+                this.playerCommandStatus(false);
+            } else if (command == browseDictionaryCommand) {//GEN-LINE:|7-commandAction|3|45-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|4|43-postAction
+//GEN-LINE:|7-commandAction|4|45-postAction
+                // write post-action user code here
+                this.browser.setTitle("Dictionary");
+                //this.browser.setExtension("txt");   /* Show only txt files. */
+                this.switchDisplayable(null,        /* Switching the form. */
+                        this.browser.getDisplayable());
+            } else if (command == browseHybridCommand) {//GEN-LINE:|7-commandAction|5|43-preAction
+                // write pre-action user code here
+//GEN-LINE:|7-commandAction|6|43-postAction
                 // write post-action user code here
                 this.browser.setTitle("Hybrid");
                 //this.browser.setExtension("txt");   /* Show only txt files. */
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.browser.getDisplayable());
-            } else if (command == exitCommand) {//GEN-LINE:|7-commandAction|5|19-preAction
+                this.playerCommandStatus(false);
+            } else if (command == exitCommand) {//GEN-LINE:|7-commandAction|7|19-preAction
                 // write pre-action user code here
-                exitMIDlet();//GEN-LINE:|7-commandAction|6|19-postAction
+                exitMIDlet();//GEN-LINE:|7-commandAction|8|19-postAction
                 // write post-action user code here
-            } else if (command == loadLastListeningCommand) {//GEN-LINE:|7-commandAction|7|35-preAction
+            } else if (command == loadLastListeningCommand) {//GEN-LINE:|7-commandAction|9|35-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|8|35-postAction
+//GEN-LINE:|7-commandAction|10|35-postAction
                 // write post-action user code here
                 
                 this.loadLastListeningFile();       /* Load the last used Listening File. */
-            } else if (command == playerCommand) {//GEN-LINE:|7-commandAction|9|24-preAction
+            } else if (command == playerCommand) {//GEN-LINE:|7-commandAction|11|24-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|10|24-postAction
+//GEN-LINE:|7-commandAction|12|24-postAction
                 // write post-action user code here
                 this.switchDisplayable(null,        /* Switching the form. */
                         this.playerForm);
-            } else if (command == saveLastListeningCommand) {//GEN-LINE:|7-commandAction|11|39-preAction
+            } else if (command == saveLastListeningCommand) {//GEN-LINE:|7-commandAction|13|39-preAction
                 // write pre-action user code here
-//GEN-LINE:|7-commandAction|12|39-postAction
+//GEN-LINE:|7-commandAction|14|39-postAction
                 // write post-action user code here
                 this.saveLastListeningFile();
-            }//GEN-BEGIN:|7-commandAction|13|7-postCommandAction
-        }//GEN-END:|7-commandAction|13|7-postCommandAction
+            }//GEN-BEGIN:|7-commandAction|15|7-postCommandAction
+        }//GEN-END:|7-commandAction|15|7-postCommandAction
         // write post-action user code here
-    }//GEN-BEGIN:|7-commandAction|14|
-    //</editor-fold>//GEN-END:|7-commandAction|14|
+    }//GEN-BEGIN:|7-commandAction|16|
+    //</editor-fold>//GEN-END:|7-commandAction|16|
 
 
 
@@ -215,6 +222,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             form.addCommand(getBrowseAllCommand());
             form.addCommand(getSaveLastListeningCommand());
             form.addCommand(getBrowseHybridCommand());
+            form.addCommand(getBrowseDictionaryCommand());
             form.setCommandListener(this);//GEN-END:|14-getter|1|14-postInit
             // write post-init user code here
         }//GEN-BEGIN:|14-getter|2|
@@ -420,6 +428,21 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     }
     //</editor-fold>//GEN-END:|42-getter|2|
 
+    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: browseDictionaryCommand ">//GEN-BEGIN:|44-getter|0|44-preInit
+    /**
+     * Returns an initiliazed instance of browseDictionaryCommand component.
+     * @return the initialized component instance
+     */
+    public Command getBrowseDictionaryCommand() {
+        if (browseDictionaryCommand == null) {//GEN-END:|44-getter|0|44-preInit
+            // write pre-init user code here
+            browseDictionaryCommand = new Command("Browse Dictionary File", Command.ITEM, 0);//GEN-LINE:|44-getter|1|44-postInit
+            // write post-init user code here
+        }//GEN-BEGIN:|44-getter|2|
+        return browseDictionaryCommand;
+    }
+    //</editor-fold>//GEN-END:|44-getter|2|
+
     public Display getDisplay () {
         return Display.getDisplay(this);
     }
@@ -456,7 +479,9 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
      * @param path          path for the choosen file. null if an abort operation was selected. 
      */
     public void browserReady(String title, String path) {
-        if (title.compareTo("Hybrid")==0){
+        if (title.compareTo("Dictionary")==0){
+            this.loadDictionaryFile(path);
+        }else if (title.compareTo("Hybrid")==0){
             this.loadHybridText(path);
             this.playerCommandStatus(true);
         } else if (title.compareTo("All")==0) {
@@ -469,9 +494,6 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
 
                 this.loadListening(lisPath);
                 this.loadHybridText(txtPath);
-                
-                //DictionaryScreenHandler d = new DictionaryScreenHandler(txtPath);
-                
                 
                 this.playerCommandStatus(true);
             }
@@ -505,6 +527,13 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         }
     }
         
+    private void loadDictionaryFile(String path){
+        try{
+            this.playerForm.addDictionary(path);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     
     
     private void loadListening(String path){
