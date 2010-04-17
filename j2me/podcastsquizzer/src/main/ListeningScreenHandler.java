@@ -177,8 +177,8 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                         try {
                             player.putTitleNms("APPLIED MARK", 1000);
                             player.resetTranslation();
-                            marksManager.getNext(true);  
                             marksManager.applyTimeToCurrentMark(MediaServices.getMediaServices().getPositionSeconds());
+                            marksManager.getNext(true);  
                             this.refreshScreen();
                         } catch (Exception ex) {
                             player.putTitleNms("MARK ERROR", 1000);
@@ -241,12 +241,13 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 } catch (Exception ex) {ex.printStackTrace();}
                 break;
             case MODE_ESSAY:
-                String curr="", com="";
+                String applied="", coming="";
                 try{
-                    curr = marksManager.getCurrent().getKey();
-                    com = marksManager.getNext(false).getKey(); 
+                    applied = marksManager.getPrevious(false).getKey();
+                    coming = marksManager.getCurrent().getKey();
+                    //coming = marksManager.getNext(false).getKey(); 
                 }catch(Exception e){e.printStackTrace();}
-                lastTuple = new Tuple(curr,com,"");
+                lastTuple = new Tuple(applied,coming,"");
                 break;
         }
         this.setValues(lastTuple);
@@ -270,14 +271,16 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     "\n"+Word.BOLD_BLUE+"Time \n" + 
                     tuple.getExtra();
         }else if (mode==MODE_ESSAY){
-            str =   Word.BOLD_BLUE+"<"+getModeName(mode)+">\n" + 
-                    Word.BOLD_BLUE+"Current("+current+") \n" + 
-                    tuple.getKey() + 
-                    "\n"+Word.BOLD_BLUE+"Next \n" + 
-                    tuple.getValue();  
+            str =   Word.BOLD_BLUE+"<"+getModeName(mode)+">\n" +
+                    Word.BOLD_BLUE+"Current "+Word.BOLD_BLUE+"(already "+Word.BOLD_BLUE+"applied)("+current+") \n" + 
+                    tuple.getKey() + "\n" + 
+                    Word.BOLD_BLUE+"Next "+Word.BOLD_BLUE+"(press "+Word.BOLD_BLUE+"when "+Word.BOLD_BLUE+"it's "+Word.BOLD_BLUE+"heard)("+current+") \n" + 
+                    tuple.getValue()+ "\n" ;    
         }
         this.player.setText(str);
     }
+    
+    
 
 
     public void writeOperationReady(String id, String path, boolean operation_successfully) {

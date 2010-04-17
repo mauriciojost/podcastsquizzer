@@ -2,7 +2,6 @@ package main;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.media.Player;
@@ -15,9 +14,16 @@ import tuplesshowerpackage.TuplesShowerInterface;
 public class DictionaryScreenHandler implements ScreenHandler, TuplesShowerInterface, TextBoxFormReadyListener, FileActionListener{
     private static final int UNINITIALIZED_VALUE=-1;
     private String path;
+    private int[] index;
     
     public DictionaryScreenHandler(String dict_path){
         path = dict_path;
+        try {
+            createIndex(path);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        
     }
     
     private void initializeIndex(int[] index){
@@ -31,7 +37,7 @@ public class DictionaryScreenHandler implements ScreenHandler, TuplesShowerInter
         int current_pos=0, last_pos=0;
         String line="";
         final int GROUPS = (int)('Z'-'A')+1;
-        int[] index = new int[GROUPS];
+        index = new int[GROUPS];
         
         initializeIndex(index);
         FileConnection fci = (FileConnection)Connector.open(FileServices.correctURL(path1),Connector.READ);
@@ -48,8 +54,8 @@ public class DictionaryScreenHandler implements ScreenHandler, TuplesShowerInter
                         last_pos = current_pos;
                         line = new String();
                     }else{
-                        cad = String.valueOf(datum);
-                        line.concat(cad);
+                        cad = String.valueOf((char)datum);
+                        line = line + cad;
                     }
                     current_pos++;
                 }else{
@@ -57,7 +63,15 @@ public class DictionaryScreenHandler implements ScreenHandler, TuplesShowerInter
                 }
             }
 
+            
+            
+            
+            
             is.close();
+            
+            
+            int i = index['C'-'A'];
+            String str = getLineAt(i);
         }catch(IOException e){
             is.close();
             throw e;
@@ -65,14 +79,55 @@ public class DictionaryScreenHandler implements ScreenHandler, TuplesShowerInter
     }
     
     private void processDictionaryLine(int[] index, String line, int line_init_pos){
-        char ch1;
-        line.toUpperCase();
-        ch1 = line.charAt(0);
-        
-        if ((ch1>='A') && (ch1<='Z')){
-            if (index[ch1-'A']==UNINITIALIZED_VALUE){
-                index[ch1-'A']=line_init_pos;
+        char ch1=(char)-1;
+        try{
+            line.toUpperCase();
+            ch1 = line.charAt(0);
+            if ((ch1>='A') && (ch1<='Z')){
+                if (index[ch1-'A']==UNINITIALIZED_VALUE){
+                    index[ch1-'A']=line_init_pos+1;
+                }
             }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        
+    }
+    
+    public String getLineAt(int i) throws IOException{
+        String line="";
+        final int GROUPS = (int)('Z'-'A')+1;
+        index = new int[GROUPS];
+        
+        //initializeIndex(index);
+        FileConnection fci = (FileConnection)Connector.open(FileServices.correctURL(path),Connector.READ);
+        InputStream is = (InputStream)fci.openInputStream();
+        String cad;
+        int datum;
+        
+        is.skip(i);
+        
+        try{
+            while (true) {
+                datum = is.read();
+                if (datum!=-1){ 
+                    if ((char)datum=='\n'){
+                        is.close();
+                        return line;
+                    }else{
+                        cad = String.valueOf((char)datum);
+                        line = line + cad;
+                    }
+                }else{
+                    break;
+                }
+            }
+            is.close();
+            return line;
+        }catch(IOException e){
+            is.close();
+            throw e;
         }
     }
     
