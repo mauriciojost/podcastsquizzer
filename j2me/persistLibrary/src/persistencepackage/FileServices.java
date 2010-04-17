@@ -34,7 +34,7 @@ public class FileServices {
                         cad = "" + (char)datum;
                     }
                     
-                   cadena.concat(cad); 
+                   cadena = cadena + cad;
                 }else{
                     break;
                 }
@@ -55,7 +55,7 @@ public class FileServices {
         String ret = "";
         for (i=0;i<source.length();i++){
             ch = source.charAt(fileSeparatorCh);
-            ret.concat(String.valueOf(ch));
+            ret = ret + String.valueOf(ch);
         }
         return ret;
     }
