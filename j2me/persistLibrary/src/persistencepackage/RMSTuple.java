@@ -20,11 +20,11 @@ public class RMSTuple {
     }
     
     
-    public void resetRMSTuple() throws Exception{
+    public synchronized void resetRMSTuple() throws Exception{
         this.vector.removeAllElements();
         this.rmss.resetRecordStore();
     }
-    private void loadRMSS() throws Exception{
+    private synchronized void loadRMSS() throws Exception{
         RecordEnumeration re;
         byte[] b;
         String str;
@@ -39,7 +39,7 @@ public class RMSTuple {
         rmss.closeRecordStore();
     }
     
-    private void saveRMSS() throws Exception{
+    private synchronized void saveRMSS() throws Exception{
         Tuple t;
         Enumeration e = vector.elements();
         rmss.resetRecordStore();
@@ -51,7 +51,7 @@ public class RMSTuple {
         
     }
     
-    public void addTuple(Tuple tuple){
+    public synchronized void addTuple(Tuple tuple){
         Tuple tfound;
         tfound = this.getTupleByKey(tuple.getKey());
         if (tfound==null) {
@@ -61,7 +61,7 @@ public class RMSTuple {
         }
     }
 
-    public Tuple cutTupleByKey(String key){
+    public synchronized Tuple cutTupleByKey(String key){
 
         Tuple t;
         Enumeration re = vector.elements();
@@ -75,7 +75,7 @@ public class RMSTuple {
         return null;
     }
     
-    public Tuple getTupleByKey(String key){
+    public synchronized Tuple getTupleByKey(String key){
         Tuple t;
         Enumeration re = vector.elements();
         while(re.hasMoreElements()){
@@ -87,7 +87,7 @@ public class RMSTuple {
         return null;    
     }
     
-    public void saveRMSTuple() throws Exception{
+    public synchronized void saveRMSTuple() throws Exception{
         this.saveRMSS();
     }
     

@@ -1,5 +1,7 @@
 package main;
 
+import canvaspackage.Key2Text;
+import canvaspackage.Word;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.microedition.io.Connector;
@@ -9,64 +11,75 @@ import persistencepackage.FileServices;
 
 public class DictionaryScreenHandler implements ScreenHandler{
     private static final int UNINITIALIZED_VALUE=-1;
+    private static final String NO_MATCH = "<no match>";
+    private Playerable player;
     private String path;
-    private int[] index;
+    private int[] dictionaryIndex;
+    private Key2Text key2text;
+    private InputStream is;
+    private String currentWord = "";
     
-    public DictionaryScreenHandler(){
+    public DictionaryScreenHandler(Playerable player){
         path = null;
+        this.player = player;
+        key2text = new Key2Text();
     }
     
-    
-    private void initializeIndex(int[] index){
-        int i;
-        for(i=0; i<index.length; i++){
-            index[i]=UNINITIALIZED_VALUE;
-        }
+    public void setMainElement(Object main_element) {
+        try {
+            this.path = (String)main_element;
+            openDictionary(this.path); EL PROBLEMA ES QUE NUNCA SE CREA EL ARREGLO DEL ÍNDICE DEL DICCIONARIO... YO NO PUEDO MÁS! ME CANSÉ :)
+            dictionaryIndex = this.createIndex();
+        } catch (Exception ex) {ex.printStackTrace();}
     }
     
-    private void createIndex(String path1) throws IOException{
+    private void openDictionary(String path) throws IOException{
+        FileConnection fci = (FileConnection)Connector.open(FileServices.correctURL(path),Connector.READ);
+        is = (InputStream)fci.openInputStream();
+        is.mark(1);
+    }
+    
+    private int[] createIndex() throws IOException{
         int current_pos=0, last_pos=0;
+        int[] index;
         String line="";
         final int GROUPS = (int)('Z'-'A')+1;
         index = new int[GROUPS];
         
-        initializeIndex(index);
+        this.initializeIndex(index);
         
-        FileConnection fci = (FileConnection)Connector.open(FileServices.correctURL(path1),Connector.READ);
-        InputStream is = (InputStream)fci.openInputStream();
+        
         String cad;
         int datum;
         
         try{
-            while (true) {
-                datum = is.read();
-                if (datum!=-1){ 
-                    if ((char)datum=='\n'){
-                        processDictionaryLine(index, line, last_pos);
-                        last_pos = current_pos;
-                        line = new String();
-                    }else{
-                        cad = String.valueOf((char)datum);
-                        line = line + cad;
-                    }
-                    current_pos++;
+            while ((datum = is.read())!=-1) {
+                if ((char)datum=='\n'){         /* End of the line? */
+                    processDictionaryLine(index, line, last_pos);
+                    last_pos = current_pos;     
+                    line = new String();
                 }else{
-                    break;
+                    cad = String.valueOf((char)datum);
+                    line = line + cad;
                 }
+                current_pos++;
             }
-
-            is.close();
+            return index;
             
         }catch(IOException e){
-            is.close();
             throw e;
         }
     }
     
+    private void initializeIndex(int[] index){
+        for(int i=0; i<index.length; i++)
+            index[i]=UNINITIALIZED_VALUE;
+    }
+    
     private void processDictionaryLine(int[] index, String line, int line_init_pos){
-        char ch1=(char)-1;
+        char ch1=(char)(-1);
         try{
-            line.toUpperCase();
+            line = line.toUpperCase();
             ch1 = line.charAt(0);
             if ((ch1>='A') && (ch1<='Z')){
                 if (index[ch1-'A']==UNINITIALIZED_VALUE){
@@ -79,41 +92,93 @@ public class DictionaryScreenHandler implements ScreenHandler{
         
         
     }
-    
-    public String getLineAt(int i) throws IOException{
+        
+    public String getLineMatchAt(String match){
         String line="";
-        final int GROUPS = (int)('Z'-'A')+1;
-        index = new int[GROUPS];
+        int i=7767;
+        int j=3648;
         
-        //initializeIndex(index);
-        FileConnection fci = (FileConnection)Connector.open(FileServices.correctURL(path),Connector.READ);
-        InputStream is = (InputStream)fci.openInputStream();
-        String cad;
-        int datum;
+        if (match==null)
+            return NO_MATCH;
         
-        is.skip(i);
+        if (match.length()<1)
+            return NO_MATCH;
         
         try{
-            while (true) {
-                datum = is.read();
-                if (datum!=-1){ 
-                    if ((char)datum=='\n'){
-                        is.close();
-                        return line;
-                    }else{
-                        cad = String.valueOf((char)datum);
-                        line = line + cad;
-                    }
-                }else{
-                    break;
-                }
+            match = match.toUpperCase();
+
+        }catch(Exception e){return "match upper: " + match;}
+
+        char jj=435;
+        try{
+            
+            jj = match.charAt(0);
+            i =  jj - 'A';
+        }catch(Exception e){return "43match: " + match + " i="+i + " jj="+jj + " " +e.getMessage();}
+        
+        try{
+            if (i>=this.dictionaryIndex.length){
+                return NO_MATCH + ", match: " + match;
             }
-            is.close();
-            return line;
-        }catch(IOException e){
-            is.close();
-            throw e;
+            
+            j = dictionaryIndex[i];
+
+        }catch(Exception e){return "2match: " + match + " i="+i + " j="+j +" length: "+dictionaryIndex.length +"\n" + e.getMessage();}
+        
+        if (!is.markSupported()){
+            return "<Error: Marks not supported...>";
         }
+        
+        try{
+            is.reset();
+        }catch(Exception e){return "reset";}
+        try{
+            is.skip(j);
+        }catch(Exception e){return "skip";}
+        
+
+        while(true){
+            try{
+                line = getNextLine(is).toUpperCase();
+            }catch(Exception e){return "getNextLine";}
+            
+            String line2,line3,line4,line5;
+            if (line.startsWith(match)){
+                try{
+                    line2 = getNextLine(is).toUpperCase();
+                    line3 = getNextLine(is).toUpperCase();
+                    line4 = getNextLine(is).toUpperCase();
+                    line5 = getNextLine(is).toUpperCase();
+                    
+                }catch(Exception e){return "getNextLine";}
+                return line + "\n" + line2 + "\n" + line3 + "\n" + line4 + "\n" + line5;
+            }
+            try{
+                if (match.charAt(0)!=line.charAt(0)){
+                    return NO_MATCH + " (match=" + line.charAt(0) + ")";
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+                break;
+            }
+        }
+        return NO_MATCH + "112";
+
+    }
+    
+    private String getNextLine(InputStream is) throws IOException{
+        String cad, line="";
+        int datum;
+        
+        while ((datum = is.read())!=-1) {
+            if ((char)datum=='\n'){
+                return line;
+            }else{
+                cad = String.valueOf((char)datum);
+                line = line + cad;
+            }
+        }
+        return "";
     }
     
     public String getName() {
@@ -121,24 +186,27 @@ public class DictionaryScreenHandler implements ScreenHandler{
     }
 
     public boolean keyPressed(int keyCode) {
-        return false;
+        currentWord = key2text.newKey(keyCode);
+        this.refreshScreen();
+        
+        return ((keyCode>='0') && (keyCode<='9'));
     }
 
-    public void setMainElement(Object main_element) {
+    public void refreshScreen() {
+        String match = NO_MATCH;
+        //try{
+            match = this.getLineMatchAt(currentWord);
+        //}catch(Exception e){
+        //    match = "ERROR111 " + e.getMessage();
+        //}
         try {
-            this.path = (String)main_element;
-            createIndex(path);
+            player.setText(Word.BOLD_BLUE+ "Word: " + Word.BOLD_BLUE + currentWord +  " \n" + match);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public void refreshScreen() {
-        
-    }
-
     public String getHelp() {
-        //throw new UnsupportedOperationException("Not supported yet.");
         return "Ayuda";
     }
 
@@ -150,6 +218,4 @@ public class DictionaryScreenHandler implements ScreenHandler{
     public void playerUpdate(Player arg0, String arg1, Object arg2) {
         
     }
-
-    
 }

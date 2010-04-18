@@ -25,6 +25,10 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             LAST_LISTENING_FILE_KEY = 
             "lastlisteningpath";    /* Key for the last listening path. */
     
+    private final String
+            DICTIONARY_FILE_KEY = 
+            "dictionarypath";       /* Key for the dictionary path. */
+    
     //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
     private Command exitCommand;
     private Command browseGlossaryCommand;
@@ -501,38 +505,60 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             
     }
 
-    private void loadHybridText(String path){
-        String text = "";
-        String extension;
-        //Vector vector;
-        Vector glossary, transcript;
-        glossary = new Vector(); transcript = new Vector();
+    private void loadHybridText(String path1){
+        final String path = path1;
+        
         if (path != null){
-            try {
-                this.hybridItem.setText("Loading '"+FileServices.getStandardPath(path)+"'..."); 
-                extension = FileServices.getExtensionFromPath(path).toUpperCase();
-                if (extension.compareTo("TXT")!=0)
-                    throw new Exception("Invalid hybrid file (must be TXT and is "+ extension +").");
-                text = FileServices.readTXTFile(path, true);
-                //vector = this.parser.txt2vector(text);
-                
-                //this.parser.divideVectors(vector, glossary, transcript, "-");
-                this.parser.txt2vectors(text, glossary, transcript, "-");
-                this.hybridItem.setText("OK: Hybrid fil successfully loaded ('"+FileServices.getStandardPath(path)+"').");
-            } catch (Exception ex) {
-                this.hybridItem.setText("CANNOT load hybrid file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage()+". A new one was created.");
-            }
-            this.playerForm.setTranscript(transcript);
-            this.playerForm.setGlossary(glossary);
+            Runnable runa = new Runnable(){
+
+                public void run() {
+                    String text = "";
+                    Vector glossary, transcript;
+                    String extension;
+                    glossary = new Vector(); transcript = new Vector();
+                    
+                    try {
+                        hybridItem.setText("Loading '"+FileServices.getStandardPath(path)+"'..."); 
+                        extension = FileServices.getExtensionFromPath(path).toUpperCase();
+                        if (extension.compareTo("TXT")!=0)
+                            throw new Exception("Invalid hybrid file (must be TXT and is "+ extension +").");
+                        text = FileServices.readTXTFile(path, true);
+                        parser.txt2vectors(text, glossary, transcript, "-");
+                        hybridItem.setText("OK: Hybrid fil successfully loaded ('"+FileServices.getStandardPath(path)+"').");
+                    } catch (Exception ex) {
+                        hybridItem.setText("CANNOT load hybrid file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage()+". A new one was created.");
+                    }
+                    playerForm.setTranscript(transcript);
+                    playerForm.setGlossary(glossary);
+                }
+            };
+            
+            (new Thread(runa, "Hilo de carga de archivo híbrido")).start();    
         }
     }
         
-    private void loadDictionaryFile(String path){
-        try{
-            this.playerForm.addDictionary(path);
-        }catch(Exception e){
-            e.printStackTrace();
+    private void loadDictionaryFile(String path1){
+        final String path = path1;
+        
+        if (path != null){
+            Runnable runa = new Runnable(){
+
+                public void run() {
+                       try{
+                        otherItem.setText("Loading '"+FileServices.getStandardPath(path)+"'..."); 
+                        playerForm.addDictionary(path);
+                        rmsTuple.addTuple(new Tuple(DICTIONARY_FILE_KEY,path));    
+                        rmsTuple.saveRMSTuple();
+                        otherItem.setText("OK: dictionary file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        otherItem.setText("CANNOT load dictionary file ('" + FileServices.getStandardPath(path) + "'). "+ e.getMessage());
+                    }
+                }
+            };
+            (new Thread(runa, "Hilo de carga de diccionario")).start();
         }
+         
     }
     
     
@@ -557,13 +583,18 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
      * It loads the last listening file choosen in the previous session. 
      * If no previous record exists, nothing will be done.
      */
-    public void loadLastListeningFile(){
+    public void loadLastListeningFile(){ /* CHANGE TO "LOAD LAST ENVIRONMENT" */
         Tuple lfile;
         
         lfile = this.rmsTuple.getTupleByKey(LAST_LISTENING_FILE_KEY);
         if (lfile!=null){
             this.lastfilepath = lfile.getValue();
             this.browserReady("All", lastfilepath);
+        }
+        
+        lfile = this.rmsTuple.getTupleByKey(this.DICTIONARY_FILE_KEY);
+        if (lfile!=null){
+            this.loadDictionaryFile(lfile.getValue());
         }
     }
     
@@ -579,7 +610,6 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         }
     }
     
-   
     void playerCommandStatus(boolean status){
         if (status==true){
             this.getForm().addCommand(this.playerCommand);

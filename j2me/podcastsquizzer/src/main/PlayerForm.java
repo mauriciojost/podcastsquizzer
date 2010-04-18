@@ -171,7 +171,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         //</editor-fold>
     }
     
-    public void setGlossary(Vector gv){
+    public synchronized void setGlossary(Vector gv){
         //this.glossaryVector = gv;
         
         Enumeration it = this.screenHandlersVector.elements();
@@ -186,18 +186,18 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         }
     }
     
-    public void setListening(String currentListeningPath) throws Exception{
+    public synchronized void setListening(String currentListeningPath) throws Exception{
         this.currentListeningPath = currentListeningPath;
         MediaServices.getMediaServices().load(currentListeningPath);
     }
     
-    public void addDictionary(String dictionary_path) throws Exception{
-        DictionaryScreenHandler nd = new DictionaryScreenHandler();
+    public synchronized void addDictionary(String dictionary_path) throws Exception{
+        DictionaryScreenHandler nd = new DictionaryScreenHandler(this);
         nd.setMainElement(dictionary_path);
         this.screenHandlersVector.addElement(nd);
     }
     
-    public void setTranscript(Vector gv){
+    public synchronized void setTranscript(Vector gv){
         
         Enumeration it = this.screenHandlersVector.elements();
         ScreenHandler current;
@@ -361,7 +361,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         buildTitle();
     }
       
-    public void setText(String text){
+    public synchronized void setText(String text){
         this.mainTextPainter.setText(text);
         this.repaintIfNecessary();
     }
@@ -383,7 +383,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         this.yTranslation = 0;
     }
     
-    public void repaintIfNecessary(){
+    public synchronized void repaintIfNecessary(){
         Graphics g = lastScreen.getGraphics();        
         
         titleTextPainter.paintText(g, this.titleText);

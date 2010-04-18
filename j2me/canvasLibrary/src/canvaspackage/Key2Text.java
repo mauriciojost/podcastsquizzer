@@ -21,7 +21,11 @@ public class Key2Text {
         if (keyCode == -3) {
             text = text + textPendant;
             textPendant = "";
-            text = text.substring(0, text.length()-1);
+            try{
+                text = text.substring(0, text.length()-1);
+            }catch(Exception e){
+                text = "";
+            }
             return text; 
         }
         
@@ -43,7 +47,7 @@ public class Key2Text {
         return ret;
     }
     
-    public boolean closeTimes(long first, long last){
+    private boolean closeTimes(long first, long last){
         if ((first + timeTolerance) > last) {
             return true;
         } else {
