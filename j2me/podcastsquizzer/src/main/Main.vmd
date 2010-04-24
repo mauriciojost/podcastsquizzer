@@ -78,11 +78,16 @@
                     <Property name="label" typeID="Pjava.lang.String" value="VBrowse Hybrid File"/>
                     <Property name="type" typeID="Pint" value="V8"/>
                 </Component>
+                <Component componentID="44" typeID="Cjavax.microedition.lcdui.Command">
+                    <Property name="instanceName" typeID="Pjava.lang.String" value="VbrowseDictionaryCommand"/>
+                    <Property name="label" typeID="Pjava.lang.String" value="VBrowse Dictionary File"/>
+                    <Property name="type" typeID="Pint" value="V8"/>
+                </Component>
             </Component>
             <Component componentID="10" typeID="C#DisplayablesCategory">
                 <Component componentID="14" typeID="Cjavax.microedition.lcdui.Form">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="Vform"/>
-                    <Property name="commands" typeID="1C#CommandEventSource" value="A7:3_R193_R243_R283_R353_R373_R393_R43"/>
+                    <Property name="commands" typeID="1C#CommandEventSource" value="A7:3_R193_R243_R353_R373_R393_R433_R45"/>
                     <Property name="title" typeID="Pjava.lang.String" value="VPodcastsQuizzer"/>
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
                     <Property name="items" typeID="1Cjavax.microedition.lcdui.Item" value="A3:3_R293_R163_R30"/>
@@ -113,10 +118,6 @@
                         <Property name="text" typeID="Pjava.lang.String" value="V"/>
                         <Property name="font" typeID="Cjavax.microedition.lcdui.Font" value="R31"/>
                     </Component>
-                    <Component componentID="28" typeID="C#CommandEventSource">
-                        <Property name="displayable" typeID="Cjavax.microedition.lcdui.Displayable" value="R14"/>
-                        <Property name="command" typeID="Cjavax.microedition.lcdui.Command" value="R27"/>
-                    </Component>
                     <Component componentID="30" typeID="Cjavax.microedition.lcdui.StringItem">
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VotherItem"/>
                         <Property name="label" typeID="Pjava.lang.String" value="VOther files"/>
@@ -140,6 +141,10 @@
                         <Property name="displayable" typeID="Cjavax.microedition.lcdui.Displayable" value="R14"/>
                         <Property name="command" typeID="Cjavax.microedition.lcdui.Command" value="R42"/>
                     </Component>
+                    <Component componentID="45" typeID="C#CommandEventSource">
+                        <Property name="displayable" typeID="Cjavax.microedition.lcdui.Displayable" value="R14"/>
+                        <Property name="command" typeID="Cjavax.microedition.lcdui.Command" value="R44"/>
+                    </Component>
                 </Component>
             </Component>
             <Component componentID="13" typeID="C#ResourcesCategory">
@@ -153,7 +158,7 @@
         </Component>
     </Document>
     <FlowScene version="1">
-        <Node componentID="14" descriptorID="componentNode14" x="50" y="50"/>
         <Node componentID="2" descriptorID="componentNode2" x="50" y="50"/>
+        <Node componentID="14" descriptorID="componentNode14" x="50" y="50"/>
     </FlowScene>
 </VisualDesign>
