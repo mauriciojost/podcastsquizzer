@@ -28,7 +28,7 @@ public class DictionaryScreenHandler implements ScreenHandler{
     public void setMainElement(Object main_element) {
         try {
             this.path = (String)main_element;
-            openDictionary(this.path); EL PROBLEMA ES QUE NUNCA SE CREA EL ARREGLO DEL ÍNDICE DEL DICCIONARIO... YO NO PUEDO MÁS! ME CANSÉ :)
+            openDictionary(this.path); //EL PROBLEMA ES QUE NUNCA SE CREA EL ARREGLO DEL ÍNDICE DEL DICCIONARIO... YO NO PUEDO MÁS! ME CANSÉ :)
             dictionaryIndex = this.createIndex();
         } catch (Exception ex) {ex.printStackTrace();}
     }

@@ -26,7 +26,6 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     private Displayable previousDisplayable;
     private Display display;
     
-    private Parser parser;
     private TextPainter mainTextPainter;
     private TextPainter helpTextPainter;
     private TextPainter titleTextPainter;
@@ -89,16 +88,14 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         
         MediaServices.getMediaServices().addPlayerListener(this);
         
-        this.parser = parser;
+
         HybridFile.setParser(parser);
         
         this.setCommandListener(null);
         
         this.screenHandlersVector = new Vector();
-        this.screenHandlersVector.addElement(new GlossaryScreenHandler(display, this));     /* Element 0. */
-        this.screenHandlersVector.addElement(new ListeningScreenHandler(display, this, parser));    /* Element 1. */
-        
-        this.screenHandlersVector.trimToSize();
+        this.addScreenHandler(new GlossaryScreenHandler(display, this));            /* Element 0. */
+        this.addScreenHandler(new ListeningScreenHandler(display, this, parser));   /* Element 1. */
         
         this.changeMode(true);
         
@@ -174,7 +171,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     public synchronized void setGlossary(Vector gv){
         //this.glossaryVector = gv;
         
-        Enumeration it = this.screenHandlersVector.elements();
+        Enumeration it = this.getScreenHandlerEnumerator();
         ScreenHandler current;
         while (it.hasMoreElements()){
             current = (ScreenHandler)it.nextElement();
@@ -194,12 +191,36 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     public synchronized void addDictionary(String dictionary_path) throws Exception{
         DictionaryScreenHandler nd = new DictionaryScreenHandler(this);
         nd.setMainElement(dictionary_path);
-        this.screenHandlersVector.addElement(nd);
+        this.addScreenHandler(nd);
     }
+
     
+    //<editor-fold defaultstate="collapsed" desc=" Screen Handler Methods ">
+    private synchronized void addScreenHandler(ScreenHandler sh){
+        this.screenHandlersVector.addElement(sh);
+        this.screenHandlersVector.trimToSize();
+    }
+
+    private synchronized ScreenHandler getScreenHandlerAt(int i){
+        this.screenHandlersVector.trimToSize();
+        return (ScreenHandler) this.screenHandlersVector.elementAt(i);
+    }
+
+    private synchronized int getAmountOfScreenHandler(){
+        this.screenHandlersVector.trimToSize();
+        return this.screenHandlersVector.size();
+    }
+
+    private synchronized Enumeration getScreenHandlerEnumerator(){
+        this.screenHandlersVector.trimToSize();
+        Enumeration it = this.screenHandlersVector.elements();
+        return it;
+    }
+    //</editor-fold>
+
     public synchronized void setTranscript(Vector gv){
         
-        Enumeration it = this.screenHandlersVector.elements();
+        Enumeration it = this.getScreenHandlerEnumerator();
         ScreenHandler current;
         while (it.hasMoreElements()){
             current = (ScreenHandler)it.nextElement();
@@ -212,7 +233,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     
     public void buildHelpText(int i){
         
-        String[] helpKeys = ((ScreenHandler)(this.screenHandlersVector.elementAt(this.mode))).getKeysHelp();
+        String[] helpKeys = ((ScreenHandler)(this.getScreenHandlerAt(this.mode))).getKeysHelp();
         helpText =            helpKeys[(i+0)%helpKeys.length] + " * ";
         helpText = helpText + helpKeys[(i+1)%helpKeys.length] + " * ";
         helpText = helpText + helpKeys[(i+2)%helpKeys.length];
@@ -224,7 +245,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         if (titleTimeCounter>0) { /* El mensaje debe ser mostrado aún. */
             titleText = ">" + this.messageTitle;
         } else {
-            titleText = ((ScreenHandler)(this.screenHandlersVector.elementAt(this.mode))).getName()+ " " + this.timeText;
+            titleText = ((ScreenHandler)(this.getScreenHandlerAt(this.mode))).getName()+ " " + this.timeText;
         }
         this.repaintIfNecessary();
     }
@@ -242,7 +263,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         agileKey = false;
         boolean catched=false;
         
-        catched = ((ScreenHandler)this.screenHandlersVector.elementAt(this.mode)).keyPressed(keyCode);
+        catched = ((ScreenHandler)this.getScreenHandlerAt(this.mode)).keyPressed(keyCode);
         
         if (catched==false){
             this.modeDefaultKeyPressed(keyCode);
@@ -255,15 +276,15 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
 
     private String changeMode(boolean initialize) {
-        if (this.screenHandlersVector.size()>0){
+        if (this.getAmountOfScreenHandler()>0){
             if (initialize) {
                 this.mode = 0;
             }else{
-                this.mode = (mode+1)%this.screenHandlersVector.size();
+                this.mode = (mode+1)%this.getAmountOfScreenHandler();
             }
         
             this.resetTranslation();
-            ScreenHandler currentSH = ((ScreenHandler)this.screenHandlersVector.elementAt(this.mode));
+            ScreenHandler currentSH = ((ScreenHandler)this.getScreenHandlerAt(this.mode));
             currentSH.refreshScreen();
             return currentSH.getName();
         }else{
@@ -352,7 +373,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         current = (pl.getMediaTime()/MediaServices.TIME_FACTOR); 
         this.setTimeText(current, pl.getDuration()/MediaServices.TIME_FACTOR);    
     
-        ((ScreenHandler)this.screenHandlersVector.elementAt(this.mode)).playerUpdate(pl, str, new Integer((int)current));
+        ((ScreenHandler)this.getScreenHandlerAt(this.mode)).playerUpdate(pl, str, new Integer((int)current));
         
     }
     
