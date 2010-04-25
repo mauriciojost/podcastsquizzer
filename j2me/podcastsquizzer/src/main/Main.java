@@ -524,12 +524,15 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                             throw new Exception("Invalid hybrid file (must be TXT and is "+ extension +").");
                         text = FileServices.readTXTFile(path, true);
                         parser.txt2vectors(text, glossary, transcript, "-");
-                        hybridItem.setText("OK: Hybrid fil successfully loaded ('"+FileServices.getStandardPath(path)+"').");
+                        playerForm.setTranscript(transcript);
+                        playerForm.setGlossary(glossary);
+                        //hybridItem.setText("OK: Hybrid fil successfully loaded ('"+FileServices.getStandardPath(path)+"').");
+                        hybridItem.setText("OK: Hybrid fil successfully loaded ('"+path+"').");
                     } catch (Exception ex) {
-                        hybridItem.setText("CANNOT load hybrid file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage()+". A new one was created.");
+                        //hybridItem.setText("CANNOT load hybrid file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage()+". A new one was created.");
+                        hybridItem.setText("CANNOT load hybrid file ('" + path + "'). "+ ex.getMessage()+". A new one was created.");
                     }
-                    playerForm.setTranscript(transcript);
-                    playerForm.setGlossary(glossary);
+                    
                 }
             };
             
@@ -544,15 +547,17 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             Runnable runa = new Runnable(){
 
                 public void run() {
-                       try{
-                        otherItem.setText("Loading '"+FileServices.getStandardPath(path)+"'..."); 
+                   try{
+                        otherItem.setText("Loading '"+FileServices.getStandardPath(path)+"'...");
+                        otherItem.setText("Loading '"+path+"'...");
                         playerForm.addDictionary(path);
                         rmsTuple.addTuple(new Tuple(DICTIONARY_FILE_KEY,path));    
                         rmsTuple.saveRMSTuple();
                         otherItem.setText("OK: dictionary file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
                     }catch(Exception e){
                         e.printStackTrace();
-                        otherItem.setText("CANNOT load dictionary file ('" + FileServices.getStandardPath(path) + "'). "+ e.getMessage());
+                        //otherItem.setText("CANNOT load dictionary file ('" + FileServices.getStandardPath(path) + "'). "+ e.getMessage());
+                        otherItem.setText("CANNOT load dictionary file ('" + path + "'). "+ e.getMessage());
                     }
                 }
             };

@@ -25,18 +25,44 @@ public class DictionaryScreenHandler implements ScreenHandler{
         key2text = new Key2Text();
     }
     
-    public void setMainElement(Object main_element) {
-        try {
-            this.path = (String)main_element;
-            openDictionary(this.path); //EL PROBLEMA ES QUE NUNCA SE CREA EL ARREGLO DEL ÍNDICE DEL DICCIONARIO... YO NO PUEDO MÁS! ME CANSÉ :)
-            dictionaryIndex = this.createIndex();
-        } catch (Exception ex) {ex.printStackTrace();}
+    public void setMainElement(Object main_element) throws Exception{
+        this.path = (String)main_element;
+        try{
+            
+            this.openDictionary(this.path); //EL PROBLEMA ES QUE NUNCA SE CREA EL ARREGLO DEL ÍNDICE DEL DICCIONARIO... YO NO PUEDO MÁS! ME CANSÉ :)
+
+        }catch(Exception e){
+            throw new Exception("openDictionary" + "->" + e.getMessage());
+        }
+
+        try{
+           this.dictionaryIndex = this.createIndex();
+        }catch(Exception e){
+            throw new Exception("createIndex" + "->" + e.getMessage());
+        }
     }
     
     private void openDictionary(String path) throws IOException{
-        FileConnection fci = (FileConnection)Connector.open(FileServices.correctURL(path),Connector.READ);
-        is = (InputStream)fci.openInputStream();
-        is.mark(1);
+        FileConnection fci;
+        path = "file:///E:/Spanish.txt"; hay que borrar esta línea. el problema está en el formato del archivo cuando este está bien en la parte de la raíz del filesystem.
+        String pathc = FileServices.correctURL(path);
+        
+        try{
+            fci = (FileConnection)Connector.open(pathc,Connector.READ);
+        }catch(IOException e){
+            throw new IOException("Connector.open, path: '"+ pathc +"'" + "->" + e.getMessage());
+        }
+        try{
+            is = (InputStream)fci.openInputStream();
+        }catch(IOException e){
+            throw new IOException("fci.openInputStream" + "->" + e.getMessage());
+        }
+        try{
+            is.mark(1);
+        }catch(Exception e){
+            throw new IOException("is.mark(1)" + "->" + e.getMessage());
+        }
+        
     }
     
     private int[] createIndex() throws IOException{
@@ -52,23 +78,21 @@ public class DictionaryScreenHandler implements ScreenHandler{
         String cad;
         int datum;
         
-        try{
-            while ((datum = is.read())!=-1) {
-                if ((char)datum=='\n'){         /* End of the line? */
-                    processDictionaryLine(index, line, last_pos);
-                    last_pos = current_pos;     
-                    line = new String();
-                }else{
-                    cad = String.valueOf((char)datum);
-                    line = line + cad;
-                }
-                current_pos++;
+        
+        while ((datum = is.read())!=-1) {
+            if ((char)datum=='\n'){         /* End of the line? */
+                processDictionaryLine(index, line, last_pos);
+                last_pos = current_pos;
+                line = new String();
+            }else{
+                cad = String.valueOf((char)datum);
+                line = line + cad;
             }
-            return index;
-            
-        }catch(IOException e){
-            throw e;
+            current_pos++;
         }
+        return index;
+
+
     }
     
     private void initializeIndex(int[] index){

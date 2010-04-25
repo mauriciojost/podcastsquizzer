@@ -155,6 +155,7 @@
                     <Property name="bold" typeID="Pint" value="V8"/>
                 </Component>
             </Component>
+            <Component componentID="44" typeID="C#DatabindingCategory"/>
         </Component>
     </Document>
     <FlowScene version="1">

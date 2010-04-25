@@ -168,7 +168,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         //</editor-fold>
     }
     
-    public synchronized void setGlossary(Vector gv){
+    public synchronized void setGlossary(Vector gv) throws Exception{
         //this.glossaryVector = gv;
         
         Enumeration it = this.getScreenHandlerEnumerator();
@@ -218,7 +218,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     //</editor-fold>
 
-    public synchronized void setTranscript(Vector gv){
+    public synchronized void setTranscript(Vector gv) throws Exception{
         
         Enumeration it = this.getScreenHandlerEnumerator();
         ScreenHandler current;
