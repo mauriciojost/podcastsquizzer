@@ -535,8 +535,10 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                     
                 }
             };
-            
-            (new Thread(runa, "Hilo de carga de archivo híbrido")).start();    
+
+            Thread hibr = new Thread(runa, "Hilo de carga de archivo híbrido");
+            hibr.setPriority(Thread.MAX_PRIORITY);
+            hibr.start();
         }
     }
         
@@ -561,7 +563,10 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                     }
                 }
             };
-            (new Thread(runa, "Hilo de carga de diccionario")).start();
+            Thread hibr = new Thread(runa, "Hilo de carga de diccionario");
+            hibr.setPriority(Thread.MIN_PRIORITY);
+            hibr.start();
+            
         }
          
     }

@@ -23,7 +23,19 @@ public class FileServices {
         InputStream is = (InputStream)fci.openInputStream();
         String cad;
         int datum;
-        
+
+        try{
+            byte[] bytes = new byte[is.available()];
+            is.read(bytes);
+            cadena = new String(bytes);
+            if (cadena.trim().length()!=0){
+                return cadena;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+
         try{
             while (true) {
                 datum = is.read();
@@ -163,6 +175,18 @@ public class FileServices {
         } else {
             return "file:" + sep3 + path;
         }*/
+        /*FileServices.setUpFileSeparatorCharacter(path);
+        String rep = FileServices.fileSeparatorCh + FileServices.fileSeparatorCh + "";
+        int ind;
+
+        //try{
+            while ((ind = path.indexOf(rep))!=-1){
+                path = path.substring(0, ind) + path.substring(ind+1);
+            }
+        //}catch(Exception e){
+        //    e.printStackTrace();
+        //}
+        */
         return path;
     }
     

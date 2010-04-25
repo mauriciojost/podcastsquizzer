@@ -188,7 +188,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         MediaServices.getMediaServices().load(currentListeningPath);
     }
     
-    public synchronized void addDictionary(String dictionary_path) throws Exception{
+    public void addDictionary(String dictionary_path) throws Exception{
         DictionaryScreenHandler nd = new DictionaryScreenHandler(this);
         nd.setMainElement(dictionary_path);
         this.addScreenHandler(nd);

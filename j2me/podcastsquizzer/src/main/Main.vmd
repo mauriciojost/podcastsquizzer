@@ -78,11 +78,6 @@
                     <Property name="label" typeID="Pjava.lang.String" value="VBrowse Hybrid File"/>
                     <Property name="type" typeID="Pint" value="V8"/>
                 </Component>
-                <Component componentID="44" typeID="Cjavax.microedition.lcdui.Command">
-                    <Property name="instanceName" typeID="Pjava.lang.String" value="VbrowseDictionaryCommand"/>
-                    <Property name="label" typeID="Pjava.lang.String" value="VBrowse Dictionary File"/>
-                    <Property name="type" typeID="Pint" value="V8"/>
-                </Component>
             </Component>
             <Component componentID="10" typeID="C#DisplayablesCategory">
                 <Component componentID="14" typeID="Cjavax.microedition.lcdui.Form">
