@@ -26,55 +26,65 @@
             <Component componentID="8" typeID="C#CommandsCategory">
                 <Component componentID="18" typeID="Cjavax.microedition.lcdui.Command">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="VexitCommand"/>
+                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
                     <Property name="label" typeID="Pjava.lang.String" value="VExit"/>
                     <Property name="type" typeID="Pint" value="V7"/>
                 </Component>
                 <Component componentID="21" typeID="Cjavax.microedition.lcdui.Command">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="VbrowseGlossaryCommand"/>
+                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
                     <Property name="label" typeID="Pjava.lang.String" value="VBrowse Glossary"/>
                     <Property name="type" typeID="Pint" value="V8"/>
                 </Component>
                 <Component componentID="23" typeID="Cjavax.microedition.lcdui.Command">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="VplayerCommand"/>
+                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
                     <Property name="label" typeID="Pjava.lang.String" value="VPlayer"/>
                     <Property name="type" typeID="Pint" value="V4"/>
                     <Property name="priority" typeID="Pint" value="V-1"/>
                 </Component>
                 <Component componentID="25" typeID="Cjavax.microedition.lcdui.Command">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="VtuplesShowerCommand"/>
+                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
                     <Property name="label" typeID="Pjava.lang.String" value="VShower"/>
                     <Property name="type" typeID="Pint" value="V8"/>
                     <Property name="priority" typeID="Pint" value="V0"/>
                 </Component>
                 <Component componentID="27" typeID="Cjavax.microedition.lcdui.Command">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="VbrowseSongCommand"/>
+                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
                     <Property name="label" typeID="Pjava.lang.String" value="VBrowse Listening"/>
                     <Property name="type" typeID="Pint" value="V8"/>
                     <Property name="priority" typeID="Pint" value="V0"/>
                 </Component>
                 <Component componentID="34" typeID="Cjavax.microedition.lcdui.Command">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="VloadLastListeningCommand"/>
+                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
                     <Property name="label" typeID="Pjava.lang.String" value="VLoad Last Listening"/>
                     <Property name="type" typeID="Pint" value="V8"/>
                     <Property name="priority" typeID="Pint" value="V-1"/>
                 </Component>
                 <Component componentID="32" typeID="Cjavax.microedition.lcdui.Command">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="VbrowseTranscriptCommand"/>
+                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
                     <Property name="label" typeID="Pjava.lang.String" value="VBrowse Transcript"/>
                     <Property name="type" typeID="Pint" value="V8"/>
                 </Component>
                 <Component componentID="38" typeID="Cjavax.microedition.lcdui.Command">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="VsaveLastListeningCommand"/>
-                    <Property name="label" typeID="Pjava.lang.String" value="VSave as Last Listening"/>
+                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
+                    <Property name="label" typeID="Pjava.lang.String" value="VSave as Last Environment"/>
                     <Property name="type" typeID="Pint" value="V8"/>
                 </Component>
                 <Component componentID="36" typeID="Cjavax.microedition.lcdui.Command">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="VbrowseAllCommand"/>
-                    <Property name="label" typeID="Pjava.lang.String" value="VBrowse All"/>
+                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
+                    <Property name="label" typeID="Pjava.lang.String" value="VBrowse Listening"/>
                     <Property name="type" typeID="Pint" value="V8"/>
                 </Component>
                 <Component componentID="42" typeID="Cjavax.microedition.lcdui.Command">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="VbrowseHybridCommand"/>
+                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
                     <Property name="label" typeID="Pjava.lang.String" value="VBrowse Hybrid File"/>
                     <Property name="type" typeID="Pint" value="V8"/>
                 </Component>
@@ -82,12 +92,14 @@
             <Component componentID="10" typeID="C#DisplayablesCategory">
                 <Component componentID="14" typeID="Cjavax.microedition.lcdui.Form">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="Vform"/>
+                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
                     <Property name="commands" typeID="1C#CommandEventSource" value="A7:3_R193_R243_R353_R373_R393_R433_R45"/>
                     <Property name="title" typeID="Pjava.lang.String" value="VPodcastsQuizzer"/>
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
                     <Property name="items" typeID="1Cjavax.microedition.lcdui.Item" value="A3:3_R293_R163_R30"/>
                     <Component componentID="16" typeID="Cjavax.microedition.lcdui.StringItem">
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VhybridItem"/>
+                        <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
                         <Property name="label" typeID="Pjava.lang.String" value="VHybrid File "/>
                         <Property name="itemCommandListener" typeID="C#ItemCommandListener" value="R17"/>
                         <Property name="text" typeID="Pjava.lang.String" value="V"/>
@@ -108,6 +120,7 @@
                     </Component>
                     <Component componentID="29" typeID="Cjavax.microedition.lcdui.StringItem">
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VlisteningItem"/>
+                        <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
                         <Property name="label" typeID="Pjava.lang.String" value="VListening File "/>
                         <Property name="itemCommandListener" typeID="C#ItemCommandListener" value="R17"/>
                         <Property name="text" typeID="Pjava.lang.String" value="V"/>
@@ -115,6 +128,7 @@
                     </Component>
                     <Component componentID="30" typeID="Cjavax.microedition.lcdui.StringItem">
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VotherItem"/>
+                        <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
                         <Property name="label" typeID="Pjava.lang.String" value="VOther files"/>
                         <Property name="itemCommandListener" typeID="C#ItemCommandListener" value="R17"/>
                         <Property name="text" typeID="Pjava.lang.String" value="V"/>
@@ -145,6 +159,7 @@
             <Component componentID="13" typeID="C#ResourcesCategory">
                 <Component componentID="31" typeID="Cjavax.microedition.lcdui.Font">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="VsmallFont"/>
+                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
                     <Property name="fontKind" typeID="Pint" value="V1"/>
                     <Property name="face" typeID="Pint" value="V32"/>
                     <Property name="bold" typeID="Pint" value="V8"/>

@@ -52,7 +52,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
      * The Main constructor.
      */
     public Main() {
-        
+
         browser = new Browser(
                 this.getDisplay(), 
                 this.getForm(), 
@@ -483,32 +483,34 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
      * @param path          path for the choosen file. null if an abort operation was selected. 
      */
     public void browserReady(String title, String path) {
+        if (path==null)
+            return;
+
         if (title.compareTo("Dictionary")==0){
             this.loadDictionaryFile(path);
         }else if (title.compareTo("Hybrid")==0){
             this.loadHybridText(path);
             this.playerCommandStatus(true);
         } else if (title.compareTo("All")==0) {
-            if (path != null){
-                String txtPath = "";
-                String lisPath;
+            String txtPath = "";
+            String lisPath;
 
-                lisPath = path;
-                txtPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + ".txt";
+            lisPath = path;
+            txtPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + ".txt";
 
-                this.loadListening(lisPath);
-                this.loadHybridText(txtPath);
-                
-                this.playerCommandStatus(true);
-            }
+            this.loadListening(lisPath);
+            this.loadHybridText(txtPath);
+
+            this.playerCommandStatus(true);
         } 
             
     }
 
     private void loadHybridText(String path1){
-        final String path = path1;
-        
-        if (path != null){
+        if (path1 != null){
+
+            final String path = FileServices.correctURL(path1);
+
             Runnable runa = new Runnable(){
 
                 public void run() {
@@ -518,7 +520,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                     glossary = new Vector(); transcript = new Vector();
                     
                     try {
-                        hybridItem.setText("Loading '"+FileServices.getStandardPath(path)+"'..."); 
+                        hybridItem.setText("Loading '"+path+"'..."); 
                         extension = FileServices.getExtensionFromPath(path).toUpperCase();
                         if (extension.compareTo("TXT")!=0)
                             throw new Exception("Invalid hybrid file (must be TXT and is "+ extension +").");
@@ -543,19 +545,20 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     }
         
     private void loadDictionaryFile(String path1){
-        final String path = path1;
-        
-        if (path != null){
+        if (path1 != null){
+
+            final String path = FileServices.correctURL(path1);
+
             Runnable runa = new Runnable(){
 
                 public void run() {
                    try{
-                        otherItem.setText("Loading '"+FileServices.getStandardPath(path)+"'...");
+                        
                         otherItem.setText("Loading '"+path+"'...");
                         playerForm.addDictionary(path);
                         rmsTuple.addTuple(new Tuple(DICTIONARY_FILE_KEY,path));    
                         rmsTuple.saveRMSTuple();
-                        otherItem.setText("OK: dictionary file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
+                        otherItem.setText("OK: dictionary file successfully loaded ('"+path+"').");
                     }catch(Exception e){
                         e.printStackTrace();
                         //otherItem.setText("CANNOT load dictionary file ('" + FileServices.getStandardPath(path) + "'). "+ e.getMessage());
@@ -575,16 +578,17 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     private void loadListening(String path){
         String extension;
         if (path != null){
+            path = FileServices.correctURL(path);
             try{
-                this.listeningItem.setText("Loading '"+FileServices.getStandardPath(path)+"'..."); 
+                this.listeningItem.setText("Loading '"+path+"'..."); 
                 extension = FileServices.getExtensionFromPath(path).toUpperCase();
                 if (extension.compareTo("MP3")!=0)
                     throw new Exception("Invalid file for listening (must be MP3 and is "+ extension +").");
                 MediaServices.getMediaServices().load(path);
                 this.lastfilepath = path;
-                this.listeningItem.setText("OK: MP3 file successfully loaded ('"+FileServices.getStandardPath(path)+"').");
+                this.listeningItem.setText("OK: MP3 file successfully loaded ('"+path+"').");
             }catch(Exception e){
-                this.listeningItem.setText("CANNOT load MP3 file ('" + FileServices.getStandardPath(path) + "'). "+ e.getMessage());
+                this.listeningItem.setText("CANNOT load MP3 file ('" +path+ "'). "+ e.getMessage());
             }
         }
     }

@@ -16,25 +16,28 @@ public class FileServices {
         return System.getProperty("fileconn.dir.memorycard");
     }
     
-    public static String readTXTFile(String path1, boolean replace_odd_chars) throws Exception{
+    public static synchronized String readTXTFile(String path1, boolean replace_odd_chars) throws Exception{
         String cadena = "";
-        
-        FileConnection fci = (FileConnection)Connector.open(correctURL(path1),Connector.READ);
-        InputStream is = (InputStream)fci.openInputStream();
-        String cad;
-        int datum;
+
+        InputStream is; FileConnection fci;
+
+        try{ fci = (FileConnection)Connector.open(correctURL(path1),Connector.READ);
+        }catch(Exception e){throw new Exception("Error while opening the file... "+e.getMessage());}
+
+        try{ is = (InputStream)fci.openInputStream();
+        }catch(Exception e){throw new Exception("Error while reading the file... "+e.getMessage());}
+
+        String cad; int datum;
 
         try{
             byte[] bytes = new byte[is.available()];
             is.read(bytes);
             cadena = new String(bytes);
+            bytes = null;
             if (cadena.trim().length()!=0){
                 return cadena;
             }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
+        }catch(Exception e){e.printStackTrace(); }
 
         try{
             while (true) {
@@ -55,7 +58,7 @@ public class FileServices {
             is.close();
         }catch(IOException e){
             is.close();
-            throw e;
+            throw new Exception("Error while getting bytes... " + e.getMessage());
         }
         return cadena;
         
@@ -175,18 +178,22 @@ public class FileServices {
         } else {
             return "file:" + sep3 + path;
         }*/
-        /*FileServices.setUpFileSeparatorCharacter(path);
-        String rep = FileServices.fileSeparatorCh + FileServices.fileSeparatorCh + "";
-        int ind;
+        FileServices.setUpFileSeparatorCharacter(path);
+        String rep = FileServices.fileSeparatorCh + "" + FileServices.fileSeparatorCh;
+        int ind=0;
 
-        //try{
-            while ((ind = path.indexOf(rep))!=-1){
-                path = path.substring(0, ind) + path.substring(ind+1);
+        try{
+            while ((ind = path.indexOf(rep, ind))!=-1){
+                if (path.charAt(ind+2)!=FileServices.fileSeparatorCh){
+                    path = path.substring(0, ind) + path.substring(ind+1);
+                }else{
+                    ind = ind + 2;
+                }
             }
-        //}catch(Exception e){
-        //    e.printStackTrace();
-        //}
-        */
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
         return path;
     }
     

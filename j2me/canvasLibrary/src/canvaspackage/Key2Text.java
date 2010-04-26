@@ -36,6 +36,7 @@ public class Key2Text {
                 textPendant = "" + (char)(KeysTranslator.key2Char(keyCode,pressNumber++));
                 ret = text + textPendant;
             }catch(Exception e){
+                textPendant = "";
                 ret = text;
             }
             
@@ -47,6 +48,7 @@ public class Key2Text {
                 textPendant = "" + (char)(KeysTranslator.key2Char(keyCode,pressNumber++));
                 ret = text + textPendant;
             }catch(Exception e){
+                textPendant = "";
                 ret = text;
             }
         }

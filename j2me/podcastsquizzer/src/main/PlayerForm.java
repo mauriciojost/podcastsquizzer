@@ -17,10 +17,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     private final static int KEY_MISC_LEFT = -7;
     private final static int KEY_MISC_RIGHT = -6;
     //<editor-fold defaultstate="collapsed" desc=" About Modes ">                      
-    public static final int MODE_GLOSSARY = 0;
-    public static final int MODE_LISTENING = 1;
-    public static final int MODE_HELP = 2;
-    private int mode = MODE_GLOSSARY;
+    private int mode = 0;
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc=" Useful objects ">                      
     private Displayable previousDisplayable;

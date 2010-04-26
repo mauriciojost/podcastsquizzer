@@ -29,7 +29,7 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
         meaningOfTheExpression = Word.NORMAL_RED+"<searching>";
         this.refreshScreen();
 
-        if (keyCode=='1'){
+        if (keyCode=='*'){
             dictionary.findMeaning(expressionBeingSearched);
         }else{
             dictionary.findMeaning(expressionBeingSearched=key2text.newKey(keyCode).toUpperCase());
@@ -64,10 +64,14 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
     }
 
     private String highlightWord(String base_text, String word_to_highlight){
+
         try{
+            if (word_to_highlight.trim().length()==0){
+                return base_text;
+            }
             int ind = base_text.indexOf(word_to_highlight);
             if (ind!=-1){
-                return "" + base_text.substring(0, ind) + Word.NORMAL_RED + base_text.substring(ind);
+                return "" + base_text.substring(0, ind) + (" " + Word.NORMAL_RED) + base_text.substring(ind);
             }else{
                 throw new Exception();
             }
