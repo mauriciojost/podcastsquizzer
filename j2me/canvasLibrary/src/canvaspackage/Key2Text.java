@@ -6,6 +6,7 @@ package canvaspackage;
  * this package.
  */
 public class Key2Text {
+    public static int BACKSPACE_KEY = -3;
     private String text = "";
     private String textPendant = "";
     
@@ -18,7 +19,7 @@ public class Key2Text {
         
         String ret;
         
-        if (keyCode == -3) { /* I can't remember which is the meaning of the -3... :) It's a kind of backspace... */
+        if (keyCode == BACKSPACE_KEY) { /* Removes a character. */
             text = text + textPendant;
             textPendant = "";
             try{

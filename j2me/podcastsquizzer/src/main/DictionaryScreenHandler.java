@@ -38,7 +38,7 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
     }
 
     public void expressionFound(String meaning) {
-        meaningOfTheExpression = meaning;
+        meaningOfTheExpression = "..." + meaning + "...";
         this.refreshScreen();
     }
 
@@ -67,7 +67,7 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
         try{
             int ind = base_text.indexOf(word_to_highlight);
             if (ind!=-1){
-                return "" + base_text.substring(0, ind+1) + Word.NORMAL_RED + base_text.substring(ind+1);
+                return "" + base_text.substring(0, ind) + Word.NORMAL_RED + base_text.substring(ind);
             }else{
                 throw new Exception();
             }

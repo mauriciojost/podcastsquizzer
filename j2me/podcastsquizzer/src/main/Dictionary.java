@@ -16,7 +16,7 @@ public class Dictionary {
     }
 
     public void openDictionary(String path) throws Exception {
-        path = "file:///E:/Spanish2.txt"; //hay que borrar esta línea. el problema está en el formato del archivo cuando este está bien en la parte de la raíz del filesystem.
+        path = "file:///E:/Spanish.txt"; //hay que borrar esta línea. el problema está en el formato del archivo cuando este está bien en la parte de la raíz del filesystem.
         dictionary = FileServices.readTXTFile(path, false).toUpperCase();
     }
 

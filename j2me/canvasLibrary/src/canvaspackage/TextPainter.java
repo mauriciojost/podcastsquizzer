@@ -170,7 +170,7 @@ public class TextPainter {
         int begin=0;
         for (int i=0;i<text.length();i++){
             ch = text.charAt(i);
-            if ((ch==' ') || (ch=='\n')){
+            if ((ch==' ') || (ch=='\n') || (ch=='\t')){
                 words_vector.addElement(new Word(text.substring(begin, Math.min(i+1,text.length()))));
                 begin = i+1;
             }
