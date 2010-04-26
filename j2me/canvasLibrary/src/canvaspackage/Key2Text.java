@@ -18,7 +18,7 @@ public class Key2Text {
         
         String ret;
         
-        if (keyCode == -3) {
+        if (keyCode == -3) { /* I can't remember which is the meaning of the -3... :) It's a kind of backspace... */
             text = text + textPendant;
             textPendant = "";
             try{
@@ -31,14 +31,23 @@ public class Key2Text {
         
         if ((keyCode == lastKey) &&(closeTimes(lastPress, System.currentTimeMillis())))  {
             /* Se repite la tecla y en tiempo de cambio. */
-            textPendant = "" + (char)(KeysTranslator.key2Char(keyCode,pressNumber++));
-            ret = text + textPendant;
+            try{
+                textPendant = "" + (char)(KeysTranslator.key2Char(keyCode,pressNumber++));
+                ret = text + textPendant;
+            }catch(Exception e){
+                ret = text;
+            }
+            
         } else {
             /* Se aprieta otra tecla, o la misma pero tarde. */
             pressNumber=0;
             text = text + textPendant;
-            textPendant = "" + (char)(KeysTranslator.key2Char(keyCode,pressNumber++));
-            ret = text + textPendant;
+            try{
+                textPendant = "" + (char)(KeysTranslator.key2Char(keyCode,pressNumber++));
+                ret = text + textPendant;
+            }catch(Exception e){
+                ret = text;
+            }
         }
         
         lastKey = keyCode; 

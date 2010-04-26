@@ -7,19 +7,17 @@ package canvaspackage;
  * this package.
  */
 public class KeysTranslator {
-    public static char key2Char(int tecla, int veces){
+    public static char key2Char(int tecla, int veces) throws Exception{
         switch (tecla){
             case '0': 
                 return ' ';
             case '1':
-                
                 veces = veces % 3;
                 switch(veces) {
                     case 0: return '-';
                     case 1: return '?';
                     case 2: return '\'';
                 }
-                
             case '2':
                 veces = veces % 3;
                 switch(veces) {
@@ -87,7 +85,7 @@ public class KeysTranslator {
                 }
 
             default: 
-                return ' ';
+                throw new Exception("Invalid key...");
         }
     }
 

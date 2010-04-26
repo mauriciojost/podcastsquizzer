@@ -8,14 +8,13 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
     private Playerable player;
     private Dictionary dictionary;
     private Key2Text key2text;
-    private String currentWord = "";
-    private String match="";
+    private String expressionBeingSearched = "";
+    private String meaningOfTheExpression="";
     
     public DictionaryScreenHandler(Playerable player){
         this.player = player;
         key2text = new Key2Text();
-        //fileDictionary = new FileDictionary(this);
-        dictionary = new MemoryDictionary(this);
+        dictionary = new Dictionary(this);
     }
     
     public void setMainElement(Object main_element) throws Exception{
@@ -27,28 +26,25 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
     }
 
     public boolean keyPressed(int keyCode) {
-        currentWord = key2text.newKey(keyCode);
-
-        //try{
-        dictionary.findMeaning(currentWord);
-        match = "<searching>";
+        meaningOfTheExpression = Word.NORMAL_RED+"<searching>";
         this.refreshScreen();
-        //}catch(Exception e){
-        //    match = "ERROR111 " + e.getMessage();
-        //}
 
-        
-        return ((keyCode>='0') && (keyCode<='9'));
+        if (keyCode=='1'){
+            dictionary.findMeaning(expressionBeingSearched);
+        }else{
+            dictionary.findMeaning(expressionBeingSearched=key2text.newKey(keyCode).toUpperCase());
+        }
+        return ((keyCode>='0')&&(keyCode<='9'));
     }
 
     public void expressionFound(String meaning) {
-        match = meaning;
+        meaningOfTheExpression = meaning;
         this.refreshScreen();
     }
 
     public void refreshScreen() {   
         try {
-            player.setText(Word.BOLD_BLUE+ "Word: " + Word.BOLD_BLUE + currentWord +  " \n" + match);
+            player.setText(Word.BOLD_BLUE+ "Word: " + Word.BOLD_BLUE + expressionBeingSearched +  " \n" + highlightWord(meaningOfTheExpression, this.expressionBeingSearched));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -67,5 +63,17 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
         
     }
 
+    private String highlightWord(String base_text, String word_to_highlight){
+        try{
+            int ind = base_text.indexOf(word_to_highlight);
+            if (ind!=-1){
+                return "" + base_text.substring(0, ind+1) + Word.NORMAL_RED + base_text.substring(ind+1);
+            }else{
+                throw new Exception();
+            }
+        }catch(Exception e){
+            return base_text;
+        }
+    }
     
 }
