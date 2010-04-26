@@ -6,7 +6,7 @@ import javax.microedition.media.Player;
 
 public class DictionaryScreenHandler implements ScreenHandler, DictionaryListener{
     private Playerable player;
-    private Dictionary fileDictionary;
+    private Dictionary dictionary;
     private Key2Text key2text;
     private String currentWord = "";
     private String match="";
@@ -14,11 +14,12 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
     public DictionaryScreenHandler(Playerable player){
         this.player = player;
         key2text = new Key2Text();
-        fileDictionary = new Dictionary(this);
+        //fileDictionary = new FileDictionary(this);
+        dictionary = new MemoryDictionary(this);
     }
     
     public void setMainElement(Object main_element) throws Exception{
-        fileDictionary.setDictionaryFile((String)main_element);
+        dictionary.openDictionary((String)main_element);
     }
     
     public String getName() {
@@ -29,7 +30,7 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
         currentWord = key2text.newKey(keyCode);
 
         //try{
-        fileDictionary.findMeaning(currentWord);
+        dictionary.findMeaning(currentWord);
         match = "<searching>";
         this.refreshScreen();
         //}catch(Exception e){
