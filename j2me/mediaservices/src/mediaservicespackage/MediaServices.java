@@ -1,15 +1,11 @@
 package mediaservicespackage;
 
 import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.*;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
-import javax.microedition.media.Manager;
-import javax.microedition.media.MediaException;
-import javax.microedition.media.Player;
-import javax.microedition.media.PlayerListener;
-import javax.microedition.media.control.VolumeControl;
+import javax.microedition.media.*;
+import javax.microedition.media.control.*;
 
 public class MediaServices implements Runnable{
 
@@ -83,6 +79,8 @@ public class MediaServices implements Runnable{
             vc.setLevel(100);
         }
         player.prefetch();
+
+        this.play();
     }
         
   
@@ -151,7 +149,14 @@ public class MediaServices implements Runnable{
         }
     }
     
-    
+
+    public void stopAll(){
+        try{
+        this.player.stop();
+            player.deallocate();
+        }catch(Exception e){e.printStackTrace();}
+    }
+
     
     
     

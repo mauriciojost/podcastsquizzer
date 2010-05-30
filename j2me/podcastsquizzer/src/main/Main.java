@@ -533,8 +533,14 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                         //hybridItem.setText("OK: Hybrid fil successfully loaded ('"+FileServices.getStandardPath(path)+"').");
                         hybridItem.setText("OK: Hybrid fil successfully loaded ('"+path+"').");
                     } catch (Exception ex) {
+                        hybridItem.setText("CANNOT load hybrid file ('" + path + "'). " + ex.getMessage() + ". A new one was created.");
                         //hybridItem.setText("CANNOT load hybrid file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage()+". A new one was created.");
-                        hybridItem.setText("CANNOT load hybrid file ('" + path + "'). "+ ex.getMessage()+". A new one was created.");
+                        try {
+                            playerForm.setTranscript(new Vector());
+                            playerForm.setGlossary(new Vector());
+                        } catch (Exception ex1) {
+                            ex1.printStackTrace();
+                        }
                     }
                     
                 }
@@ -635,10 +641,13 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     }
 
     public void loadPodcast(String command) {
+        MediaServices.getMediaServices().stopAll();
         if (command.compareTo(PodcastsLoader.NEXT)==0){
             this.browserReady("All", this.getNextPodcastPath(this.lastfilepath));
         }else if (command.compareTo(PodcastsLoader.PREVIOUS)==0){
             this.browserReady("All", this.getPreviousPodcastPath(this.lastfilepath));
+        }else{
+            this.browserReady("All", command);
         }
     }
 

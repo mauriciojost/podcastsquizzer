@@ -126,11 +126,18 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
                                 timeChangeInProgress = false;
                                 try{
                                     //MediaServices.getMediaServices().movePosition(desiredTimeChange);
-                                    MediaServices.getMediaServices().setPosition(baseTimeForChange + desiredTimeChange);
-                                    
-                                    if(stateBeforeMoving==true){
-                                        MediaServices.getMediaServices().play();
-                                    }           
+                                    int new_position;
+                                    new_position = baseTimeForChange + desiredTimeChange;
+                                    if (new_position < 0){
+                                        requestActionForThePreStartOfTheCurrentSong();
+                                    }else if (new_position>MediaServices.getMediaServices().getDurationSeconds()){
+                                        requestActionForEndOfTheCurrentSong();
+                                    }else{
+                                        MediaServices.getMediaServices().setPosition(new_position);
+                                        if(stateBeforeMoving==true){
+                                            MediaServices.getMediaServices().play();
+                                        }
+                                    }
                                 }catch(Exception e){
                                     e.printStackTrace();
                                 }
@@ -374,7 +381,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         duration_sec = (pl.getDuration() /MediaServices.TIME_FACTOR);
         this.setTimeText(current_sec, duration_sec);
         ((ScreenHandler)this.getScreenHandlerAt(this.mode)).playerUpdate(pl, str, new Integer((int)current_sec));
-        if (current_sec >= (duration_sec -1)){
+        if ((duration_sec>0) && (current_sec >= (duration_sec -1)) && (pl.getState()==Player.STARTED)){
             this.requestActionForEndOfTheCurrentSong();
         }
     }
@@ -419,6 +426,10 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
 
     private void requestActionForEndOfTheCurrentSong(){
         this.podcastsLoader.loadPodcast(PodcastsLoader.NEXT);
+    }
+
+    private void requestActionForThePreStartOfTheCurrentSong(){
+        this.podcastsLoader.loadPodcast(PodcastsLoader.PREVIOUS);
     }
 
 }
