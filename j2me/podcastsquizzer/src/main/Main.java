@@ -59,7 +59,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 this);                      /* Creating browser. */
         parser = new Parser("=");           /* Creating parser. */
         playerForm = new PlayerForm(
-                this.getDisplay(), 
+                this.getDisplay(),
                 this.getForm(), 
                 parser);                    /* Creating a new PlayerForm. */
         

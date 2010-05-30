@@ -9,14 +9,14 @@
 package browserpackage;
 
 
-import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Vector;
+
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
 import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
+import java.util.Vector;
 
 /**
 *
@@ -27,10 +27,6 @@ import javax.microedition.lcdui.*;
 public class FileManager implements CommandListener
 {
 
-    public void commandAction(Command arg0, Displayable arg1) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-/*
  public List directoryList;
  private Command openCommand;
  private Command upCommand;
@@ -64,88 +60,65 @@ public class FileManager implements CommandListener
     upCommand = new Command("Up", Command.BACK, 2);
     useCommand = new Command("Use", Command.ITEM, 3);
     cancelCommand = new Command("Cancel", Command.CANCEL, 4);
-    if (selectionMode == DIRECTORY_SELECTION_ONLY)
-    {
-    try
-    {
-    //folderIcon = ImageUtil.getFolderIcon();
-    }
-    catch (IOException ex)
-    {
-    ex.printStackTrace();
-    }
-    }
-    else if (selectionMode == AUDIO_FILE_SELECTION_ONLY)
-    {
-    try
-    {
-    //songIcon = ImageUtil.getSongIcon();
-    }
-    catch (Exception e)
-    {
-    }
-    }
-    else if(selectionMode == IMAGE_FILE_SELECTION_ONLY)
-    {
-    try
-    {
-    //imageIcon = ImageUtil.getImageIcon();
-    }
-    catch (Exception e)
-    {
-    }
+    if (selectionMode == DIRECTORY_SELECTION_ONLY){
+//        try{
+//            folderIcon = ImageUtil.getFolderIcon();
+//        }catch (IOException ex){
+//            ex.printStackTrace();
+//        }
+    } else if (selectionMode == AUDIO_FILE_SELECTION_ONLY) {
+        try {
+            //songIcon = ImageUtil.getSongIcon();
+        } catch (Exception e) {}
+    }else if(selectionMode == IMAGE_FILE_SELECTION_ONLY){
+        try{
+            //imageIcon = ImageUtil.getImageIcon();
+        }catch (Exception e){}
     }
 
+}
+
+    private void addCommands(){
+        if (this.selectionMode == DIRECTORY_SELECTION_ONLY){
+        }else{
+        }
+        directoryList.addCommand(openCommand);
+        directoryList.addCommand(upCommand);
+        directoryList.addCommand(cancelCommand);
+        directoryList.setSelectCommand(useCommand);
+        directoryList.setCommandListener(this);
     }
 
-    private void addCommands()
-    {
-    if (this.selectionMode == DIRECTORY_SELECTION_ONLY)
-    {
-    }
-    else
-    {
-    }
-    directoryList.addCommand(openCommand);
-    directoryList.addCommand(upCommand);
-    directoryList.addCommand(cancelCommand);
-    directoryList.setSelectCommand(useCommand);
-    directoryList.setCommandListener(this);
+    private final String[] getRoots(){
+        try{
+//            if (!DeviceManager.isFileManagerSupported()){
+//                throw new Exception("File Browsing is not permitted in your hand set.");
+//            }
+            Enumeration enumeration = FileSystemRegistry.listRoots();
+            Vector temp = new Vector();
+            String root = "";
+            while (enumeration.hasMoreElements())
+            {
+                root = (String) enumeration.nextElement();
+                if (true)
+                {
+                    temp.addElement(root);
+                }
+                else
+                {
+                    temp.addElement(root);
+                }
+            }
+            String[] ret = new String[temp.size()];
+            temp.copyInto(ret);
+            return ret;
 
-    }
-
-    private final String[] getRoots()
-    {
-    try
-    {
-    if (!DeviceManager.isFileManagerSupported()){
-    throw new Exception("File Browsing is not permitted in your hand set.");
-    }
-    Enumeration enumeration = FileSystemRegistry.listRoots();
-    Vector temp = new Vector();
-    String root = "";
-    while (enumeration.hasMoreElements())
-    {
-    root = (String) enumeration.nextElement();
-    if (true)
-    {
-    temp.addElement(root);
-    }
-    else
-    {
-    temp.addElement(root);
-    }
-    }
-    String[] ret = new String[temp.size()];
-    temp.copyInto(ret);
-    return ret;
-
-    }
-    catch (Exception exception)
-    {
-    exception.printStackTrace();
-    return null;
-    }
+        }
+        catch (Exception exception)
+        {
+            exception.printStackTrace();
+            return null;
+        }
 
     }
 
@@ -217,7 +190,8 @@ public class FileManager implements CommandListener
                     }
                 } 
             }
-            application.getDisplay().setCurrent(directoryList);
+
+            Display.getDisplay(application).setCurrent(directoryList);
         }catch (Exception ex){
             ex.printStackTrace();
             throw ex;
@@ -240,108 +214,108 @@ public class FileManager implements CommandListener
 
     private boolean isFileTypeSupported(String fileName)
     {
-    String extension = getFileType(fileName);
-    if (selectionMode == AUDIO_FILE_SELECTION_ONLY)
-    {
-    if (extension.equalsIgnoreCase("mp3"))
-    {
-    return true;
-    }
-    }
-    else if (selectionMode == IMAGE_FILE_SELECTION_ONLY)
-    {
-    if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"))
-    {
-    return true;
-    }
-    }
-    return false;
+        String extension = getFileType(fileName);
+        if (selectionMode == AUDIO_FILE_SELECTION_ONLY)
+        {
+            if (extension.equalsIgnoreCase("mp3"))
+            {
+                return true;
+            }
+        }
+        else if (selectionMode == IMAGE_FILE_SELECTION_ONLY)
+        {
+            if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg"))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void commandAction(Command c, Displayable d)
     {
-    if (d == directoryList)
-    {
-    if (c == openCommand || c.getCommandType() == Command.OK)
-    {
-    String selected = directoryList.getString(directoryList.getSelectedIndex());
-    currentDirectory += selected;
-    if (isDirectory(selected))
-    {
-
-    Thread t = new Thread(new Runnable()
-    {
-
-    public void run()
-    {
-    try
-    {
-    show();
-    }
-    catch (Exception ex)
-    {
-    ex.printStackTrace();
-    }
-    }
-    });
-    t.start();
-
-    }
-    else
-    {
-    if (isFileTypeSupported(selected))
-    {
-    selectedFileName = selected;
-    ((Form) backDisplay).append(currentDirectory);
-    application.getDisplay().setCurrent(backDisplay);
-    }
-    }
-    }
-    else if (c == upCommand || c.getCommandType() == Command.BACK)
-    {
-
-    Thread t = new Thread(new Runnable()
+        if (d == directoryList)
         {
+            if (c == openCommand || c.getCommandType() == Command.OK)
+            {
+                String selected = directoryList.getString(directoryList.getSelectedIndex());
+                currentDirectory += selected;
+                if (isDirectory(selected))
+                {
 
-        public void run()
-        {
-        int index = currentDirectory.lastIndexOf(SEP_CHAR);
-        currentDirectory = currentDirectory.substring(0, index);
-        index = currentDirectory.lastIndexOf(SEP_CHAR);
-        currentDirectory = currentDirectory.substring(0, index + 1);
-        try
-        {
-            show();
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-        }
-        });
-        t.start();
+                    Thread t = new Thread(new Runnable()
+                    {
 
-        }
-        else if (c == useCommand)
-        {
-        Thread t = new Thread(new Runnable()
-        {
+                        public void run()
+                        {
+                            try
+                            {
+                                show();
+                            }
+                            catch (Exception ex)
+                            {
+                                ex.printStackTrace();
+                            }
+                        }
+                    });
+                    t.start();
 
-        public void run()
-        {
-        selectedFileName = directoryList.getString(directoryList.getSelectedIndex());
-        currentDirectory += selectedFileName;
-        ((Form) backDisplay).append(currentDirectory);
-        application.getDisplay().setCurrent(backDisplay);
-        }
-        });
-        t.start();
+                }
+                else
+                {
+                    if (isFileTypeSupported(selected))
+                    {
+                        selectedFileName = selected;
+                        ((Form) backDisplay).append(currentDirectory);
+                        Display.getDisplay(application).setCurrent(backDisplay);
+                    }
+                }
+            }
+            else if (c == upCommand || c.getCommandType() == Command.BACK)
+            {
 
-        }
-        else if (c == cancelCommand)
-        {
-        application.getDisplay().setCurrent(backDisplay);
-        }
+                Thread t = new Thread(new Runnable()
+                {
+
+                    public void run()
+                    {
+                        int index = currentDirectory.lastIndexOf(SEP_CHAR);
+                        currentDirectory = currentDirectory.substring(0, index);
+                        index = currentDirectory.lastIndexOf(SEP_CHAR);
+                        currentDirectory = currentDirectory.substring(0, index + 1);
+                        try
+                        {
+                            show();
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+                t.start();
+
+            }
+            else if (c == useCommand)
+            {
+                Thread t = new Thread(new Runnable()
+                {
+
+                    public void run()
+                    {
+                        selectedFileName = directoryList.getString(directoryList.getSelectedIndex());
+                        currentDirectory += selectedFileName;
+                        ((Form) backDisplay).append(currentDirectory);
+                        Display.getDisplay(application).setCurrent(backDisplay);
+                    }
+                });
+                t.start();
+
+            }
+            else if (c == cancelCommand)
+            {
+                Display.getDisplay(application).setCurrent(backDisplay);
+            }
 
         }
     }
@@ -351,5 +325,5 @@ public class FileManager implements CommandListener
     {
         return selectedFileName;
     }
- * */
+ 
 } 
