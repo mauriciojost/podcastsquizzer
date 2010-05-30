@@ -637,6 +637,8 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public void loadPodcast(String command) {
         if (command.compareTo(PodcastsLoader.NEXT)==0){
             this.browserReady("All", this.getNextPodcastPath(this.lastfilepath));
+        }else if (command.compareTo(PodcastsLoader.PREVIOUS)==0){
+            this.browserReady("All", this.getPreviousPodcastPath(this.lastfilepath));
         }
     }
 
@@ -663,6 +665,33 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             return directory + (String)en.nextElement();
         }else{
             return directory + (String)first_file;
+        }
+
+    }
+
+    public String getPreviousPodcastPath(String current_one){
+        String directory = FileServices.getDirectory(current_one);
+        String curr_file = FileServices.getFileName(current_one);
+        String file=null;
+        String last_file=null;
+        String previous_file=null;
+
+        Vector files = this.browser.getCurrDirFiles(directory, ".mp3");
+        last_file = (String)files.lastElement() ;
+        Enumeration en = files.elements();
+
+        while(en.hasMoreElements()){
+            previous_file = file;
+            file = (String)en.nextElement();
+
+            if (file.compareTo(curr_file)==0){
+                break;
+            }
+        }
+        if (previous_file==null){
+            return directory + last_file; /* The matched file was the first one. */
+        }else{
+            return directory + previous_file;
         }
 
     }
