@@ -308,4 +308,62 @@ public class FileBrowser extends List implements  CommandListener {
             commandListener.commandAction(SELECT_FILE_COMMAND, this);
         }
     }
+
+
+
+
+    /**
+     * Return the Enumeration of the files that match the filter in the given directory.
+     */
+    public Vector getCurrDirFiles(String currDirName, String filter) {
+
+        Vector lista = new Vector();
+
+        Enumeration e = null;
+        FileConnection currDir = null;
+
+        //if (MEGA_ROOT.equals(currDirName)) {
+        //    e = FileSystemRegistry.listRoots();
+        //} else {
+            try {
+                currDir = (FileConnection) Connector.open(currDirName);
+                e = currDir.list();
+            } catch (IOException ioe) {
+            }
+
+        //}
+
+        if (e == null) {
+            try {
+                currDir.close();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+            return null;
+        }
+
+        while (e.hasMoreElements()) {
+            String fileName = (String) e.nextElement();
+            if (fileName.charAt(fileName.length() - 1) == SEP) {
+                // This is directory
+                /* lista.append(fileName, dirIcon); // mgj */
+            } else {
+                // this is regular file
+                if (filter == null || fileName.indexOf(filter) > -1) {
+                    lista.addElement(fileName);
+                }
+            }
+        }
+
+        if (currDir != null) {
+            try {
+                currDir.close();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }
+
+        return lista;
+    }
+
 }

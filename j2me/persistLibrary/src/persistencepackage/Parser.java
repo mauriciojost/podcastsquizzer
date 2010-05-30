@@ -43,21 +43,25 @@ public class Parser {
     public void txt2vectors(String text, Vector apply, Vector dontapply, String group_id){
         int previousnl = 0;
         int lastnl = 0;
+        boolean groupsLineSeparatorAlreadyFound=false;
         Tuple tuple;
         String current_line = "";
             
         lastnl = text.indexOf(line_separator);
         while(lastnl != -1) {
             current_line = text.substring(previousnl, lastnl);
-            
             previousnl = lastnl+1;
             lastnl = text.indexOf(line_separator, previousnl);
-            tuple = parseLine(current_line);
-            if (tuple!=null){
-                if (tuple.belongsToGroup(group_id)){
-                    apply.addElement(tuple);
-                }else {
-                    dontapply.addElement(tuple);
+            if (current_line.toUpperCase().startsWith(group_id.toUpperCase())){
+                groupsLineSeparatorAlreadyFound = true;
+            }else{
+                tuple = parseLine(current_line);
+                if (tuple!=null){
+                    if (/*tuple.belongsToGroup(group_id) ||*/ groupsLineSeparatorAlreadyFound){
+                        apply.addElement(tuple);
+                    }else {
+                        dontapply.addElement(tuple);
+                    }
                 }
             }
         }

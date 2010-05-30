@@ -7,3 +7,10 @@ http://code.google.com/p/podcastsquizzer/
 Hugs!
 
 Mauri :)
+
+
+Paths of emulators' filesystems
+----- -- ---------- -----------
+
+1. C:\Documents and Settings\Mauricio\javame-sdk\3.0\work\0\appdb\filesystem\root1
+2. C:\Nokia\Devices\S40_6th_Edition_SDK\bin\Storage\6260000\E

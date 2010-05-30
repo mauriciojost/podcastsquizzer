@@ -1,5 +1,6 @@
 package browserpackage;
 
+import java.util.Vector;
 import javax.microedition.lcdui.*;
 //import org.netbeans.microedition.lcdui.pda.FileBrowser;
 import persistencepackage.FileServices;
@@ -73,4 +74,12 @@ public class Browser implements CommandListener{
     //public void setExtension(String extension){
     //    this.fbrowser.setFilter(extension);
     //}
+
+    /**
+     * Return the Enumeration of the files that match the filter in the given directory.
+     */
+    public Vector getCurrDirFiles(String currDirName, String filter) {
+        return fbrowser.getCurrDirFiles(currDirName, filter);
+    }
+
 }

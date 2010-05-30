@@ -114,7 +114,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                 try{
                     
                     Tuple tuple = new Tuple("New expression("+cuentaTerminos+")","Explanation", "Examples");
-                    tuple.addGroupID("-");
+                    //tuple.addGroupID("-");
                     cuentaTerminos++;
                     iterator.addNewTuple(tuple);
                     player.putTitleNms("NEW KEY", 1000);
@@ -138,7 +138,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                 this.textBoxForm.setTitle("KeyComment");
                 try {
                     Tuple tuple = this.iterator.getCurrent().getACopy();
-                    tuple.removeGroupID("-");   
+                    //tuple.removeGroupID("-");
                     this.textBoxForm.setText(tuple.getKey());
                 } catch (Exception ex) {
                     this.textBoxForm.setText("");
@@ -214,7 +214,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
             current = this.iterator.getCurrentIndex()+1 +"/"+ this.iterator.getVector().size();
             this.lastTuple = t;
             tuple = t.getACopy();
-            tuple.removeGroupID("-");
+            //tuple.removeGroupID("-");
             
         }catch(Exception e){
             tuple = new Tuple("","");
@@ -254,7 +254,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
             if (text!=null){
                 try {
                     iterator.getCurrent().setKey(text);
-                    iterator.getCurrent().addGroupID("-");
+                    //iterator.getCurrent().addGroupID("-");
                     this.tupleRevelator.setTuple(iterator.getCurrent());
                     player.putTitleNms("KEY CHANGED", 1000);
                 } catch (Exception ex) {

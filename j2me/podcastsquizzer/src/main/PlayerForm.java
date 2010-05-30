@@ -55,7 +55,8 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     private boolean goBackFlag = false; /* Idem con la tecla de retroceso. */
     private boolean stateBeforeMoving = false;
     private int backgroundColor = 0x000000;
-    private Image lastScreen=null;
+    private Image lastScreen = null;
+    private PodcastsLoader podcastsLoader= null;
     //</editor-fold>
     
     //list = new List("list", Choice.IMPLICIT);
@@ -63,7 +64,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     
     
     
-    public PlayerForm (Display display, Displayable previous, Parser parser)  {
+    public PlayerForm (Display display, Displayable previous, Parser parser, PodcastsLoader pl)  {
         //<editor-fold defaultstate="collapsed" desc=" General Initialization ">
         int vspace, vborder = 1, hborder = 1;
         
@@ -163,6 +164,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         }
         ,"Help Thread").start();
         //</editor-fold>
+        this.podcastsLoader = pl;
     }
     
     public synchronized void setGlossary(Vector gv) throws Exception{
@@ -365,13 +367,16 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     //</editor-fold>
     
     public void playerUpdate(Player pl, String str, Object obj) {
-        long current;
+        long current_sec;
+        long duration_sec;
         
-        current = (pl.getMediaTime()/MediaServices.TIME_FACTOR); 
-        this.setTimeText(current, pl.getDuration()/MediaServices.TIME_FACTOR);    
-    
-        ((ScreenHandler)this.getScreenHandlerAt(this.mode)).playerUpdate(pl, str, new Integer((int)current));
-        
+        current_sec =  (pl.getMediaTime()/MediaServices.TIME_FACTOR);
+        duration_sec = (pl.getDuration() /MediaServices.TIME_FACTOR);
+        this.setTimeText(current_sec, duration_sec);
+        ((ScreenHandler)this.getScreenHandlerAt(this.mode)).playerUpdate(pl, str, new Integer((int)current_sec));
+        if (current_sec >= (duration_sec -1)){
+            this.requestActionForEndOfTheCurrentSong();
+        }
     }
     
     public void setTimeText(long time, long duration){
@@ -410,6 +415,11 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         helpTextPainter.paintText(g, this.helpText);
         this.repaint();
     }
-    
+
+
+    private void requestActionForEndOfTheCurrentSong(){
+        this.podcastsLoader.loadPodcast(PodcastsLoader.NEXT);
+    }
+
 }
 

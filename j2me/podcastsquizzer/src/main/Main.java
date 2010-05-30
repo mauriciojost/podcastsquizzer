@@ -6,12 +6,13 @@ import javax.microedition.lcdui.*;
 import java.util.Vector;
 import mediaservicespackage.*;
 import browserpackage.*;
+import java.util.Enumeration;
 import persistencepackage.*;
 
 /** Main MIDlet.
  * It shows the main screens of the application. 
  */
-public class Main extends MIDlet implements CommandListener, BrowserReadyListener {
+public class Main extends MIDlet implements CommandListener, BrowserReadyListener, PodcastsLoader {
     
     private boolean midletPaused = false;
     private Browser browser;        /* File browser form. */
@@ -61,7 +62,8 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         playerForm = new PlayerForm(
                 this.getDisplay(),
                 this.getForm(), 
-                parser);                    /* Creating a new PlayerForm. */
+                parser,
+                this);                    /* Creating a new PlayerForm. */
         
         try {
             rmsTuple = new RMSTuple("pq");  /* Loading RMSTuple to save features. */
@@ -495,7 +497,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             String txtPath = "";
             String lisPath;
 
-            lisPath = path;
+            lisPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + ".mp3";
             txtPath = FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + ".txt";
 
             this.loadListening(lisPath);
@@ -525,7 +527,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                         if (extension.compareTo("TXT")!=0)
                             throw new Exception("Invalid hybrid file (must be TXT and is "+ extension +").");
                         text = FileServices.readTXTFile(path, true);
-                        parser.txt2vectors(text, glossary, transcript, "-");
+                        parser.txt2vectors(text, glossary, transcript, HybridFile.GLOSSARY_GROUP_SEPARATOR);
                         playerForm.setTranscript(transcript);
                         playerForm.setGlossary(glossary);
                         //hybridItem.setText("OK: Hybrid fil successfully loaded ('"+FileServices.getStandardPath(path)+"').");
@@ -630,5 +632,38 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
         }else{
             this.getForm().removeCommand(this.playerCommand);
         }
+    }
+
+    public void loadPodcast(String command) {
+        if (command.compareTo(PodcastsLoader.NEXT)==0){
+            this.browserReady("All", this.getNextPodcastPath(this.lastfilepath));
+        }
+    }
+
+    public String getNextPodcastPath(String current_one){
+        String directory = FileServices.getDirectory(current_one);
+        String curr_file = FileServices.getFileName(current_one);
+        String file;
+        String first_file=null;
+
+        Vector files = this.browser.getCurrDirFiles(directory, ".mp3");
+        Enumeration en = files.elements();
+        while(en.hasMoreElements()){
+
+            file = (String)en.nextElement();
+            if (first_file==null){
+                first_file = file;
+            }
+
+            if (file.compareTo(curr_file)==0){
+                break;
+            }
+        }
+        if (en.hasMoreElements()==true){
+            return directory + (String)en.nextElement();
+        }else{
+            return directory + (String)first_file;
+        }
+
     }
 }

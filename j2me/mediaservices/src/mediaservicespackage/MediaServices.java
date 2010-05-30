@@ -12,7 +12,8 @@ import javax.microedition.media.PlayerListener;
 import javax.microedition.media.control.VolumeControl;
 
 public class MediaServices implements Runnable{
-    
+
+    public final int UPDATE_RATE_MS = 333;
     private static MediaServices mediaServicesInstance = null;
     private Player player;
     private long length = 0;
@@ -196,7 +197,7 @@ public class MediaServices implements Runnable{
         PlayerListener playerListener;
         Enumeration iterator;
         while (true){
-            try { Thread.sleep(333); } catch (InterruptedException ex) { ex.printStackTrace(); }
+            try { Thread.sleep(UPDATE_RATE_MS); } catch (InterruptedException ex) { ex.printStackTrace(); }
             iterator = this.vectorPlayerListeners.elements();
             while(iterator.hasMoreElements()){
                 playerListener = (PlayerListener)iterator.nextElement();
