@@ -12,7 +12,6 @@ public class MediaServices implements Runnable{
     public final int UPDATE_RATE_MS = 333;
     private static MediaServices mediaServicesInstance = null;
     private Player player;
-    private long length = 0;
     private int step = 10;
     //private PlayerListener playerListener;
     private Vector vectorPlayerListeners;
@@ -65,9 +64,6 @@ public class MediaServices implements Runnable{
             }
         }
 
-        
-        
-        this.length = player.getDuration();
 
         /*if (this.playerListener!=null){
             player.addPlayerListener(this.playerListener);
@@ -100,7 +96,7 @@ public class MediaServices implements Runnable{
     
     public void goBack() {
         try {
-            this.player.setMediaTime(this.player.getMediaTime() - ((this.length/1000)*step));
+            this.player.setMediaTime(this.player.getMediaTime() - ((this.player.getDuration()/1000)*step));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -108,7 +104,7 @@ public class MediaServices implements Runnable{
     
     public void goForward() {
         try {
-            this.player.setMediaTime(this.player.getMediaTime() + ((this.length/1000)*step));
+            this.player.setMediaTime(this.player.getMediaTime() + ((this.player.getDuration()/1000)*step));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -165,11 +161,11 @@ public class MediaServices implements Runnable{
     }
     
     public long getDuration() {
-        return this.length;
+        return this.player.getDuration();
     }
     
     public long getDurationSeconds(){
-        return this.length/MediaServices.TIME_FACTOR; 
+        return this.player.getDuration()/MediaServices.TIME_FACTOR;
     }
     
     public long getPosition() throws Exception {
