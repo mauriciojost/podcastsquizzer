@@ -46,6 +46,7 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
         try {
             player.setText(Word.BOLD_BLUE+ "Word: " + Word.BOLD_BLUE + expressionBeingSearched +  " \n" + highlightWord(meaningOfTheExpression, this.expressionBeingSearched));
         } catch (Exception ex) {
+            if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
             ex.printStackTrace();
         }
     }
@@ -71,7 +72,7 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
             }
             int ind = base_text.indexOf(word_to_highlight);
             if (ind!=-1){
-                return "" + base_text.substring(0, ind) + (" " + Word.NORMAL_RED) + base_text.substring(ind);
+                return "" + base_text.substring(0, ind) + (">>") + base_text.substring(ind, ind+word_to_highlight.length())+ ("<<") +base_text.substring(ind+word_to_highlight.length());
             }else{
                 throw new Exception();
             }

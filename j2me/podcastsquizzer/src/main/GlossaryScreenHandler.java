@@ -39,6 +39,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
             sorter.sort(gl);
         }catch(Exception e){
             player.putTitleNms("GLOSSARY NOT SORTED...", 1000);
+            if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
             e.printStackTrace();
         }
         this.iterator = new SequentialIterator(gl);
@@ -91,13 +92,16 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                     sorter.sort(vector);
                 }catch(Exception e){
                     player.putTitleNms("GLOSSARY NOT SORTED...", 1000);
+                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
                     e.printStackTrace();
                 }
+
                 HybridFile.setGlossaryVector(vector);
                 try {
-                    HybridFile.saveFile(this, "saveGlossary");
+                    HybridFile.saveFile(this, "saveGlossary", player.getPathFileWithExtension("txt"));
                 } catch (Exception ex) {
-                    player.putTitleNms("ERROR SAVING...", 10000);    
+                    player.putTitleNms("ERROR SAVING...", 10000);
+                    if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                     ex.printStackTrace();
                 }
                 break;
@@ -121,6 +125,8 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                     tupleRevelator.setTuple(iterator.getCurrent());
                 }catch(Exception e){
                     player.putTitleNms("ERROR ADDING...",1000);
+                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    e.printStackTrace();
                 }
                 break;
             
@@ -142,6 +148,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                     this.textBoxForm.setText(tuple.getKey());
                 } catch (Exception ex) {
                     this.textBoxForm.setText("");
+                    if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                     ex.printStackTrace();
                 }
                 display.setCurrent(this.textBoxForm.getDisplayable());
@@ -157,6 +164,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                     this.textBoxForm.setText(this.iterator.getCurrent().getValue());
                 } catch (Exception ex) {
                     this.textBoxForm.setText("");
+                    if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                     ex.printStackTrace();
                 }
                 display.setCurrent(this.textBoxForm.getDisplayable());
@@ -171,6 +179,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                     this.textBoxForm.setText(this.iterator.getCurrent().getExtra());
                 } catch (Exception ex) {
                     this.textBoxForm.setText("");
+                    if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                     ex.printStackTrace();
                 }
                 display.setCurrent(this.textBoxForm.getDisplayable());
@@ -218,6 +227,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
             
         }catch(Exception e){
             tuple = new Tuple("","");
+            if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
             e.printStackTrace();
         }
         text =  Word.BOLD_BLUE+"Word("+current+"): \n"+tuple.getKey()+" \n"+
@@ -247,6 +257,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                     player.putTitleNms("VALUE CHANGED", 1000);
                 } catch (Exception ex) {
                     player.putTitleNms("ERROR CHANGING...", 1000);
+                    if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                     ex.printStackTrace();
                 }
             }
@@ -259,6 +270,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                     player.putTitleNms("KEY CHANGED", 1000);
                 } catch (Exception ex) {
                     player.putTitleNms("ERROR CHANGING...", 1000);
+                    if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                     ex.printStackTrace();
                 }    
             }
@@ -270,6 +282,7 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
                     player.putTitleNms("EXTRA CHANGED", 1000);
                 } catch (Exception ex) {
                     player.putTitleNms("ERROR CHANGING...", 1000);
+                    if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                     ex.printStackTrace();
                 }    
             }

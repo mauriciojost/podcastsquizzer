@@ -190,10 +190,6 @@ public class MediaServices implements Runnable{
         this.vectorPlayerListeners.addElement(pl);
     }
     
-    public String getCurrentPath(){
-        return this.path;
-    }
-
     public void run() {
         PlayerListener playerListener;
         Enumeration iterator;

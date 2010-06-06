@@ -74,9 +74,10 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 try{
                     player.putTitleNms("SAVING MARKS...", 2000);
                     
-                    marksManager.saveMarks(this, "saveMarks");
+                    marksManager.saveMarks(this, "saveMarks", player.getPath());
                 }catch(Exception e){
                     player.putTitleNms("MARKS NOT SAVED", 10000);
+                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
                     e.printStackTrace();
                 }
                 break;
@@ -99,12 +100,16 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             case '4':
                 try{
                     MediaServices.getMediaServices().pause();
-                }catch(Exception e){e.printStackTrace();}
+                }catch(Exception e){
+                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    e.printStackTrace();
+                }
                 this.textBoxForm.setTitle("Transcript");
                 try {
                     this.textBoxForm.setText(marksManager.getCurrent().getKey());
                 } catch (Exception ex) {
                     this.textBoxForm.setText("");
+                    if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                     ex.printStackTrace();
                 }
                 display.setCurrent(this.textBoxForm.getDisplayable());
@@ -116,12 +121,16 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             case '5':
                 try {
                     MediaServices.getMediaServices().pause();
-                }catch(Exception e){e.printStackTrace();}
+                }catch(Exception e){
+                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    e.printStackTrace();
+                }
                 this.textBoxForm.setTitle("Add comment");
                 try {
                     this.textBoxForm.setText(marksManager.getCurrent().getValue());
                 } catch (Exception ex) {
                     this.textBoxForm.setText("");
+                    if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                     ex.printStackTrace();
                 }
                 display.setCurrent(this.textBoxForm.getDisplayable());
@@ -137,6 +146,8 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     player.putTitleNms("NEW MARK: " + mark, 1000);
                 }catch(Exception e){
                     player.putTitleNms("ERROR ADDING MARK...",1000);
+                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    e.printStackTrace();
                 }
                 break;
             //</editor-fold>
@@ -150,6 +161,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                             marksManager.getPrevious(true);  
                         } catch (Exception ex) {
                             player.putTitleNms("MARK ERROR", 1000);
+                            if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                             ex.printStackTrace();
                         }
                         break;
@@ -163,6 +175,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                             }catch(Exception e){e.printStackTrace();}
                         } catch (Exception ex) {
                             player.putTitleNms("MARK ERROR", 1000);
+                            if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                             ex.printStackTrace();
                         }
                         break;
@@ -182,6 +195,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                             this.refreshScreen();
                         } catch (Exception ex) {
                             player.putTitleNms("MARK ERROR", 1000);
+                            if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                             ex.printStackTrace();
                         }
                         break;
@@ -201,6 +215,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                             marksManager.getNext(true);
                         } catch (Exception ex) {
                             player.putTitleNms("MARK ERROR", 1000);
+                            if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                             ex.printStackTrace();
                         }
                         break;
@@ -213,6 +228,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                             }catch(Exception e){e.printStackTrace();}
                         } catch (Exception ex) {
                             player.putTitleNms("MARK ERROR", 1000);
+                            if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
                             ex.printStackTrace();
                         }
                         break;
@@ -238,7 +254,10 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             case MODE_ANIMATION:
                 try {
                     lastTuple = marksManager.getCurrent();
-                } catch (Exception ex) {ex.printStackTrace();}
+                } catch (Exception e) {
+                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    e.printStackTrace();
+                }
                 break;
             case MODE_ESSAY:
                 String applied="", coming="";
@@ -246,7 +265,10 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     applied = marksManager.getPrevious(false).getKey();
                     coming = marksManager.getCurrent().getKey();
                     //coming = marksManager.getNext(false).getKey(); 
-                }catch(Exception e){e.printStackTrace();}
+                }catch(Exception e){
+                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    e.printStackTrace();
+                }
                 lastTuple = new Tuple(applied,coming,"");
                 break;
         }
@@ -298,9 +320,10 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     marksManager.getCurrent().setValue(text);
                     this.tupleRevelator.setTuple(marksManager.getCurrent());
                     player.putTitleNms("VALUE CHANGED", 1000);
-                } catch (Exception ex) {
+                } catch (Exception e) {
                     player.putTitleNms("ERROR CHANGING...", 1000);
-                    ex.printStackTrace();
+                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    e.printStackTrace();
                 }
                 
             }
@@ -310,9 +333,10 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     marksManager.getCurrent().setKey(text);
                     this.tupleRevelator.setTuple(marksManager.getCurrent());
                     player.putTitleNms("KEY CHANGED", 1000);
-                } catch (Exception ex) {
+                } catch (Exception e) {
                     player.putTitleNms("ERROR CHANGING...", 1000);
-                    ex.printStackTrace();
+                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    e.printStackTrace();
                 }
                 
             }
@@ -329,7 +353,8 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 this.player.resetTranslation();
                 this.tupleRevelator.setTuple(t);
             }catch(Exception e){
-                //e.printStackTrace();
+                if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                e.printStackTrace();
             }
         }   
     }

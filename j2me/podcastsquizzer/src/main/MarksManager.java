@@ -23,13 +23,13 @@ public class MarksManager{
         this.tupleFinder = new TupleFinder(marksVector);
     }
             
-    public void saveMarks(FileActionListener fal, String id) throws Exception{
+    public void saveMarks(FileActionListener fal, String id, String path) throws Exception{
         if (this.marksVector==null){
             throw new Exception("Marks Vector not loaded.");
         }
         marksVector.trimToSize();
         if (marksVector.size()!=0) {
-            HybridFile.saveFile(fal, id);   
+            HybridFile.saveFile(fal, id, path);
         }
     }
     

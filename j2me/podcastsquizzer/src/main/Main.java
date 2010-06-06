@@ -20,7 +20,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     
     private Parser parser;          /* General text parser. */
     private RMSTuple rmsTuple;      /* Object that saves tuples by using RMS. */
-    private String lastfilepath;    /* Path of the last listening loaded. */
+    private String lastfilepath;    /* Path of the last file loaded (only podcast/glossary/hybrid files). */
     
     private final String 
             LAST_LISTENING_FILE_KEY = 
@@ -528,16 +528,18 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                             throw new Exception("Invalid hybrid file (must be TXT and is "+ extension +").");
                         text = FileServices.readTXTFile(path, true);
                         parser.txt2vectors(text, glossary, transcript, HybridFile.GLOSSARY_GROUP_SEPARATOR);
-                        playerForm.setTranscript(transcript);
-                        playerForm.setGlossary(glossary);
-                        //hybridItem.setText("OK: Hybrid fil successfully loaded ('"+FileServices.getStandardPath(path)+"').");
+                        lastfilepath = path;
+                        //playerForm.setTranscript(transcript);
+                        //playerForm.setGlossary(glossary);
+                        playerForm.setTranscriptAndGlossaryAndPath(transcript, glossary, path);
                         hybridItem.setText("OK: Hybrid fil successfully loaded ('"+path+"').");
                     } catch (Exception ex) {
                         hybridItem.setText("CANNOT load hybrid file ('" + path + "'). " + ex.getMessage() + ". A new one was created.");
                         //hybridItem.setText("CANNOT load hybrid file ('" + FileServices.getStandardPath(path) + "'). "+ ex.getMessage()+". A new one was created.");
                         try {
-                            playerForm.setTranscript(new Vector());
-                            playerForm.setGlossary(new Vector());
+                            //playerForm.setTranscript(new Vector());
+                            //playerForm.setGlossary(new Vector());
+                            playerForm.setTranscriptAndGlossaryAndPath(new Vector(), new Vector(), path);
                         } catch (Exception ex1) {
                             ex1.printStackTrace();
                         }

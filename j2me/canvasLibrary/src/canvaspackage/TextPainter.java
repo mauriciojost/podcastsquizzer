@@ -16,7 +16,7 @@ public class TextPainter {
     private Font font;          /* Font used to paint the text. */
     private int baseLine = 0;   /* Line that's going to be printed first. */
     private int backgroundColor = 0x101010;
-    private int borderColor = 0xFFFFFF;
+    private int borderColor = 0x7777FF;
     private int fontColor = 0xFFFFFF;
     private int linesPerPage=0;
     private Vector lines;

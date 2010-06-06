@@ -33,7 +33,6 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     private Font fontSmall = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL);
     private Font fontMedium = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_MEDIUM);
     
-    private String currentListeningPath;
     private String timeText = "0:00/0:00";
     private String messageTitle = "";
     private String helpText = "helpText";
@@ -57,6 +56,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     private int backgroundColor = 0x000000;
     private Image lastScreen = null;
     private PodcastsLoader podcastsLoader= null;
+    private String path = null;
     //</editor-fold>
     
     //list = new List("list", Choice.IMPLICIT);
@@ -174,7 +174,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         this.podcastsLoader = pl;
     }
     
-    public synchronized void setGlossary(Vector gv) throws Exception{
+    private synchronized void setGlossary(Vector gv) throws Exception{
         //this.glossaryVector = gv;
         
         Enumeration it = this.getScreenHandlerEnumerator();
@@ -190,7 +190,6 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     
     public synchronized void setListening(String currentListeningPath) throws Exception{
-        this.currentListeningPath = currentListeningPath;
         MediaServices.getMediaServices().load(currentListeningPath);
     }
     
@@ -224,7 +223,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     //</editor-fold>
 
-    public synchronized void setTranscript(Vector gv) throws Exception{
+    private synchronized void setTranscript(Vector gv) throws Exception{
         
         Enumeration it = this.getScreenHandlerEnumerator();
         ScreenHandler current;
@@ -432,5 +431,14 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         this.podcastsLoader.loadPodcast(PodcastsLoader.PREVIOUS);
     }
 
+    public synchronized void setTranscriptAndGlossaryAndPath(Vector transcript, Vector glossary, String path) throws Exception{
+        this.setGlossary(glossary);
+        this.setTranscript(transcript);
+        this.path = path;
+    }
+
+    public synchronized String getPathFileWithExtension(String addedExtension){
+        return FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + "." + addedExtension ;
+    }
 }
 
