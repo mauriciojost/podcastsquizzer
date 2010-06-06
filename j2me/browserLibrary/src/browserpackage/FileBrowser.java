@@ -366,4 +366,12 @@ public class FileBrowser extends List implements  CommandListener {
         return lista;
     }
 
+    public String getCurrentPath(){
+        return currDirName;
+    }
+
+    public void setCurrentPath(String path){
+        this.openDir(path);
+    }
+
 }

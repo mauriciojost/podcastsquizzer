@@ -9,14 +9,17 @@ public class TupleRevelator {
     private static final Tuple EMPTY_TUPLE = new Tuple(EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);
     public static final int MODE_123 = 0;
     public static final int MODE_213 = 1;
-    public static final int MODE_ALL = 2;
-    public static final String[] MODE_NAME = {"A.AB.ABC","B.AB.ABC", "ABC.ABC.ABC"};
-    public static final int AMOUNT_OF_MODES = 3;
+    public static final int MODE_AC_ABC = 2;
+    public static final int MODE_ALL = 3;
+
+    public static final String[] MODE_NAME = {"A.AB.ABC","B.AB.ABC", "AC.ABC.ABC", "ABC.ABC.ABC"};
+    public static final int AMOUNT_OF_MODES = 4;
     public static final String HIDEN_TEXT = Word.NORMAL_RED + "<hidden>";
+    public static final String EMPTY_TEXT = Word.NORMAL_RED + "<empty>";
     
     private TuplesShowerInterface tuplesshower;
     private Tuple currentTuple;
-    private int mode = TupleRevelator.MODE_123;
+    private int mode = TupleRevelator.MODE_AC_ABC;
     private int stage = 0; 
     private Tuple lastTuple = EMPTY_TUPLE;
     
@@ -80,18 +83,26 @@ public class TupleRevelator {
             switch (mode) {
                 case TupleRevelator.MODE_123:
                     if (stage==0) {
-                        tuple = new Tuple(this.currentTuple.getKey(),HIDEN_TEXT,HIDEN_TEXT);
+                        tuple = new Tuple(this.currentTuple.getKey(),hideIfItIsNotEmpty(this.currentTuple.getValue()),hideIfItIsNotEmpty(this.currentTuple.getExtra()));
                     } else if (stage==1) {
-                        tuple = new Tuple(this.currentTuple.getKey(),this.currentTuple.getValue(),HIDEN_TEXT);
+                        tuple = new Tuple(this.currentTuple.getKey(),this.currentTuple.getValue(),hideIfItIsNotEmpty(this.currentTuple.getExtra()));
+                    } else {
+                        tuple = new Tuple(this.currentTuple.getKey(),this.currentTuple.getValue(),this.currentTuple.getExtra());
+                    }
+                    break;
+
+                case TupleRevelator.MODE_AC_ABC:
+                    if (stage==0) {
+                        tuple = new Tuple(this.currentTuple.getKey(), hideIfItIsNotEmpty(this.currentTuple.getValue()), this.currentTuple.getExtra());
                     } else {
                         tuple = new Tuple(this.currentTuple.getKey(),this.currentTuple.getValue(),this.currentTuple.getExtra());
                     }
                     break;
                 case TupleRevelator.MODE_213:
                     if (stage==0) {
-                        tuple = new Tuple(HIDEN_TEXT,this.currentTuple.getValue(),HIDEN_TEXT);
+                        tuple = new Tuple(HIDEN_TEXT,this.currentTuple.getValue(),hideIfItIsNotEmpty(this.currentTuple.getExtra()));
                     } else if (stage==1) {
-                        tuple = new Tuple(this.currentTuple.getKey(),this.currentTuple.getValue(),HIDEN_TEXT);
+                        tuple = new Tuple(this.currentTuple.getKey(),this.currentTuple.getValue(),hideIfItIsNotEmpty(this.currentTuple.getExtra()));
                     } else {
                         tuple = new Tuple(this.currentTuple.getKey(),this.currentTuple.getValue(),this.currentTuple.getExtra());
                     }
@@ -119,5 +130,13 @@ public class TupleRevelator {
     
     public Tuple getLastTuple(){
         return this.lastTuple;
+    }
+
+    private String hideIfItIsNotEmpty(String str){
+        if (str.trim().compareTo("")==0){
+            return EMPTY_TEXT;
+        }else{
+            return HIDEN_TEXT;
+        }
     }
 }

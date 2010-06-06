@@ -74,7 +74,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 try{
                     player.putTitleNms("SAVING MARKS...", 2000);
                     
-                    marksManager.saveMarks(this, "saveMarks", player.getPath());
+                    marksManager.saveMarks(this, "saveMarks", player.getPathFileWithExtension(".txt"));
                 }catch(Exception e){
                     player.putTitleNms("MARKS NOT SAVED", 10000);
                     if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
@@ -353,7 +353,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 this.player.resetTranslation();
                 this.tupleRevelator.setTuple(t);
             }catch(Exception e){
-                if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                //if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
                 e.printStackTrace();
             }
         }   

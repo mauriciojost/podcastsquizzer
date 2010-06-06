@@ -29,7 +29,14 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     private final String
             DICTIONARY_FILE_KEY = 
             "dictionarypath";       /* Key for the dictionary path. */
+
+    private final String
+            LAST_DIRECTORY_KEY =
+            "lastdirectory";        /* Key for the last directory browsed. */
     
+    private String lastDirectory = null;
+
+
     //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
     private Command exitCommand;
     private Command browseGlossaryCommand;
@@ -58,6 +65,7 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
                 this.getDisplay(), 
                 this.getForm(), 
                 this);                      /* Creating browser. */
+        
         parser = new Parser("=");           /* Creating parser. */
         playerForm = new PlayerForm(
                 this.getDisplay(),
@@ -71,6 +79,12 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
             ex.printStackTrace();
         }
         
+        Tuple direc = rmsTuple.getTupleByKey(LAST_DIRECTORY_KEY);
+        if (direc!=null){
+            this.lastDirectory = direc.getValue();
+            browser.setCurrentPath(direc.getValue());
+        }
+
         this.playerCommandStatus(false);
     }
     
@@ -487,7 +501,13 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
     public void browserReady(String title, String path) {
         if (path==null)
             return;
-
+        lastDirectory = browser.getCurrentPath();
+        this.rmsTuple.addTuple(new Tuple(this.LAST_DIRECTORY_KEY, browser.getCurrentPath()));
+        try{
+            this.rmsTuple.saveRMSTuple();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         if (title.compareTo("Dictionary")==0){
             this.loadDictionaryFile(path);
         }else if (title.compareTo("Hybrid")==0){
@@ -563,8 +583,13 @@ public class Main extends MIDlet implements CommandListener, BrowserReadyListene
 
                 public void run() {
                    try{
-                        
+                        String extension;
                         otherItem.setText("Loading '"+path+"'...");
+
+                        extension = FileServices.getExtensionFromPath(path).toUpperCase();
+                        if (extension.compareTo("TXT")!=0)
+                            throw new Exception("Invalid dictionary file (must be TXT and is "+ extension +").");
+                        
                         playerForm.addDictionary(path);
                         rmsTuple.addTuple(new Tuple(DICTIONARY_FILE_KEY,path));    
                         rmsTuple.saveRMSTuple();

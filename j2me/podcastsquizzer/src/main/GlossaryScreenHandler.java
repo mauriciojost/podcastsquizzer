@@ -4,6 +4,7 @@ import canvaspackage.Word;
 import miscellaneouspackage.Tuple;
 import java.util.Vector;
 import javax.microedition.lcdui.Display;
+import javax.microedition.lcdui.Image;
 import javax.microedition.media.Player;
 import persistencepackage.*;
 import textboxpackage.*;
@@ -21,15 +22,26 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
     private Tuple lastTuple = EMPTY_TUPLE;
     private TextBoxForm textBoxForm;
     private int cuentaTerminos = 0;
-    private Sorter sorter;    
+    private Sorter sorter;
+    private Image backgroundImage = null;
     
     public GlossaryScreenHandler (Display display, Playerable player){
         this.display = display;
         this.player = player;
+        
         this.tupleRevelator = new TupleRevelator(this);
         this.textBoxForm = new TextBoxForm(display, player.getDisplayable(), this);
         sorter = new Sorter(new TupleAsStringsComparator(Tuple.INDEX_KEY));
         this.setMainElement(new Vector());
+        
+        try {
+            backgroundImage = Image.createImage("/help_listening.png");
+        } catch (Exception ex) {
+            player.putTitleNms("ERROR IMAGE...", 1000);
+            if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
+            ex.printStackTrace();
+        }
+        player.setBackgroundImage(backgroundImage);
         this.refreshScreen();
     }
     
@@ -265,7 +277,6 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
             if (text!=null){
                 try {
                     iterator.getCurrent().setKey(text);
-                    //iterator.getCurrent().addGroupID("-");
                     this.tupleRevelator.setTuple(iterator.getCurrent());
                     player.putTitleNms("KEY CHANGED", 1000);
                 } catch (Exception ex) {

@@ -57,6 +57,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     private Image lastScreen = null;
     private PodcastsLoader podcastsLoader= null;
     private String path = null;
+    private Image backgroundImage = null;
     //</editor-fold>
     
     //list = new List("list", Choice.IMPLICIT);
@@ -75,12 +76,14 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         this.setFullScreenMode(true);
         lastScreen = Image.createImage(getWidth(), getHeight());
         Rectangle rec = new Rectangle(hborder,vborder,this.getWidth()-(hborder*2), this.getHeight()-(vborder*2));
-        this.titleTextPainter = new TextPainter(fontMedium, rec.newSetHeight(vspace));
+        this.titleTextPainter = new TextPainter(fontMedium, rec.newRectangleWithThisHeight(vspace));
         this.titleTextPainter.setBackgroundColor(0x221111);
-        Rectangle mainRec = rec.newSetY(vspace+2).newMoveHeight(-2*vspace-2);
+
+        Rectangle mainRec = rec.newRectangleWithThisY(vspace+2).newRectangleWithOffsetInHeight(-2*vspace-2);
         this.mainTextPainter = new TextPainter(fontSmall, mainRec);
         this.mainTextPainter.setBackgroundColor(0x111122);
-        this.helpTextPainter = new TextPainter(fontSmall, rec.newSetHeight(vspace).newMoveY(mainRec.getHeigth()+vspace));
+
+        this.helpTextPainter = new TextPainter(fontSmall, rec.newRectangleWithThisHeight(vspace).newRectangleWithOffsetInY(mainRec.getHeigth()+vspace));
         this.helpTextPainter.setBackgroundColor(0x221111);
         this.helpTextPainter.setFontColor(0x999999);
         
@@ -413,12 +416,17 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     
     public synchronized void repaintIfNecessary(){
-        Graphics g = lastScreen.getGraphics();        
+        Graphics g = lastScreen.getGraphics();
+
         
         titleTextPainter.paintText(g, this.titleText);
         mainTextPainter.setTranslation(yTranslation);
         mainTextPainter.paintTextComplex(g, true);
         helpTextPainter.paintText(g, this.helpText);
+        if (this.backgroundImage!=null){
+            g.drawImage(this.backgroundImage, 0, 0, Graphics.TOP | Graphics.LEFT);
+        }
+
         this.repaint();
     }
 
@@ -439,6 +447,11 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
 
     public synchronized String getPathFileWithExtension(String addedExtension){
         return FileServices.getDirectory(path) + FileServices.getFilenameWExtensionFromPath(path) + "." + addedExtension ;
+    }
+
+    public void setBackgroundImage(Image img) {
+        this.backgroundImage = img;
+        this.repaintIfNecessary();
     }
 }
 

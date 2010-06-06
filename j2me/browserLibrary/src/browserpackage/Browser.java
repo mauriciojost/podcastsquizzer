@@ -82,4 +82,13 @@ public class Browser implements CommandListener{
         return fbrowser.getCurrDirFiles(currDirName, filter);
     }
 
+    public String getCurrentPath(){
+        return fbrowser.getCurrentPath();
+    }
+
+    public void setCurrentPath(String path){
+        if (path!=null){
+            fbrowser.setCurrentPath(path);
+        }
+    }
 }

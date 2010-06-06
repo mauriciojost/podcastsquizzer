@@ -44,30 +44,30 @@ public class Rectangle {
     }
     
     
-    public Rectangle newMoveX(int a){
+    public Rectangle newRectangleWithOffsetInX(int a){
         return new Rectangle(x+a,y,width,height);
     }
-    public Rectangle newMoveY(int a){
+    public Rectangle newRectangleWithOffsetInY(int a){
         return new Rectangle(x,y+a,width,height);
     }
-    public Rectangle newMoveWidth(int a){
+    public Rectangle newRectangleWithOffsetInWidth(int a){
         return new Rectangle(x,y,width+a,height);
     }
-    public Rectangle newMoveHeight(int a){
+    public Rectangle newRectangleWithOffsetInHeight(int a){
         return new Rectangle(x,y,width,height+a);
     }
     
     
-    public Rectangle newSetX(int a){
+    public Rectangle newRectangleWithThisX(int a){
         return new Rectangle(a,y,width,height);
     }
-    public Rectangle newSetY(int a){
+    public Rectangle newRectangleWithThisY(int a){
         return new Rectangle(x,a,width,height);
     }
-    public Rectangle newSetWidth(int a){
+    public Rectangle newRectangleWithThisWidth(int a){
         return new Rectangle(x,y,a,height);
     }
-    public Rectangle newSetHeight(int a){
+    public Rectangle newRectangleWithThisHeight(int a){
         return new Rectangle(x,y,width,a);
     }
     

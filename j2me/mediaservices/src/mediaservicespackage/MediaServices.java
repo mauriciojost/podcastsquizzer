@@ -16,7 +16,6 @@ public class MediaServices implements Runnable{
     //private PlayerListener playerListener;
     private Vector vectorPlayerListeners;
     public static final int TIME_FACTOR = 1000000;
-    private String path;
     
     private MediaServices(){
         vectorPlayerListeners = new Vector();
@@ -34,8 +33,6 @@ public class MediaServices implements Runnable{
     public void load(String path1) throws Exception {
         VolumeControl vc;
         
-        
-        this.path = path1;
         String path2 = path1;
             
         if (player != null) {
