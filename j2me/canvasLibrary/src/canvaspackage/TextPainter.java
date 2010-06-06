@@ -4,6 +4,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
 
 /**
  * This class provides the user with the ability to write a text in a graphic, 
@@ -22,6 +23,9 @@ public class TextPainter {
     private Vector lines;
     private boolean repaintRequired = true;
             
+    public Rectangle getBounds(){
+        return bounds;
+    }
     
     public TextPainter(Font font, Rectangle bounds){
         this.font = font;
@@ -80,23 +84,30 @@ public class TextPainter {
         repaintRequired = true;
         
     }
-    
-    public void paintTextComplex(Graphics g, boolean avoidable_painting){       
+
+    public boolean repaintIsRequired(boolean avoidable_painting){
+        return ((repaintRequired == true)||(avoidable_painting==false));
+    }
+
+
+    public boolean paintTextComplex(Graphics g, boolean avoidable_painting, Image background){
         int row, aux;
         int currentColor;
         Vector line;
         Enumeration iterator;
+        boolean repainted=false;
         
-        
-        if ((repaintRequired == true)||(avoidable_painting==false)){ /* If it's required because of a change, or, it's not-avoidable. */
+        if (repaintRequired == true || avoidable_painting==false){ /* If it's required because of a change, or, it's not-avoidable. */
             row = 0;
             
             iterator = lines.elements();
 
             currentColor = g.getColor();
-            
+
             paintBackground(g);
-            
+            if (background!=null){
+                g.drawImage(background, bounds.getX(), bounds.getY(), 0);
+            }
             int line_number = 0, lines_painted=0;
 
             while(iterator.hasMoreElements()){
@@ -115,9 +126,11 @@ public class TextPainter {
             }
             
             paintBorder(g);
-            g.setColor(currentColor);   
+            g.setColor(currentColor);
+            repainted = true;
         }
         repaintRequired = false;
+        return repainted;
     }
     
     public Vector breakDownLines(Vector words, int max_width){

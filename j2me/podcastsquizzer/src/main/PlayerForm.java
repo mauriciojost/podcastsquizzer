@@ -416,16 +416,13 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     
     public synchronized void repaintIfNecessary(){
-        Graphics g = lastScreen.getGraphics();
 
-        
+        Graphics g = lastScreen.getGraphics();
         titleTextPainter.paintText(g, this.titleText);
         mainTextPainter.setTranslation(yTranslation);
-        mainTextPainter.paintTextComplex(g, true);
+        mainTextPainter.paintTextComplex(g, true, this.backgroundImage);
         helpTextPainter.paintText(g, this.helpText);
-        if (this.backgroundImage!=null){
-            g.drawImage(this.backgroundImage, 0, 0, Graphics.TOP | Graphics.LEFT);
-        }
+        
 
         this.repaint();
     }
@@ -450,7 +447,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
 
     public void setBackgroundImage(Image img) {
-        this.backgroundImage = img;
+        this.backgroundImage = ImageServices.scale(img, mainTextPainter.getBounds().getWidth(), mainTextPainter.getBounds().getHeigth());
         this.repaintIfNecessary();
     }
 }
