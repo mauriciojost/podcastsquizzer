@@ -13,9 +13,9 @@ import tuplesshowerpackage.*;
 public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterface, FileActionListener, TextBoxFormReadyListener {
     private static final String EMPTY_STRING = Word.NORMAL_RED + "<empty>";
     private static final Tuple EMPTY_TUPLE = new Tuple(EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);
-    private static final int MODE_ANIMATION = 0;
-    private static final int MODE_ESSAY = 1;
-    private static final int NUM_OF_MODES = 2;
+    private static final int LISTENING_MODE_ANIMATION = 0;
+    private static final int LISTENING_MODE_ESSAY = 1;
+    private static final int LISTENING_NUM_OF_MODES = 2;
     private static final String[] modeNames = {"PLAYING","ESSAYING"};
     
     private Playerable player;
@@ -25,8 +25,8 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
     private Tuple lastTuple = EMPTY_TUPLE;
     
     private MarksManager marksManager;
-    private int mode = MODE_ANIMATION;
-    
+    private int mode = LISTENING_MODE_ANIMATION;
+    private String mainText = "";
     
     /*
      * Ir para adelante o para atrás en los marks también cambia el tema. 
@@ -77,7 +77,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     marksManager.saveMarks(this, "saveMarks", player.getPathFileWithExtension(".txt"));
                 }catch(Exception e){
                     player.putTitleNms("MARKS NOT SAVED", 10000);
-                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    if (Definitions.DEBUG_MODE==true){
+                        this.setText(e.getMessage());
+                    }
                     e.printStackTrace();
                 }
                 break;
@@ -101,7 +103,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 try{
                     MediaServices.getMediaServices().pause();
                 }catch(Exception e){
-                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    if (Definitions.DEBUG_MODE==true){this.setText(e.getMessage());}
                     e.printStackTrace();
                 }
                 this.textBoxForm.setTitle("Transcript");
@@ -109,7 +111,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     this.textBoxForm.setText(marksManager.getCurrent().getKey());
                 } catch (Exception ex) {
                     this.textBoxForm.setText("");
-                    if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
+                    if (Definitions.DEBUG_MODE==true){
+                        this.setText(ex.getMessage());
+                    }
                     ex.printStackTrace();
                 }
                 display.setCurrent(this.textBoxForm.getDisplayable());
@@ -122,7 +126,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                 try {
                     MediaServices.getMediaServices().pause();
                 }catch(Exception e){
-                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    if (Definitions.DEBUG_MODE==true){
+                        this.setText(e.getMessage());
+                    }
                     e.printStackTrace();
                 }
                 this.textBoxForm.setTitle("Add comment");
@@ -130,7 +136,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     this.textBoxForm.setText(marksManager.getCurrent().getValue());
                 } catch (Exception ex) {
                     this.textBoxForm.setText("");
-                    if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
+                    if (Definitions.DEBUG_MODE==true){
+                        this.setText(ex.getMessage());
+                    }
                     ex.printStackTrace();
                 }
                 display.setCurrent(this.textBoxForm.getDisplayable());
@@ -146,7 +154,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     player.putTitleNms("NEW MARK: " + mark, 1000);
                 }catch(Exception e){
                     player.putTitleNms("ERROR ADDING MARK...",1000);
-                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    if (Definitions.DEBUG_MODE==true){
+                        this.setText(e.getMessage());
+                    }
                     e.printStackTrace();
                 }
                 break;
@@ -154,18 +164,20 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             //<editor-fold defaultstate="collapsed" desc=" 7 PREV ">
             case '7':
                 switch(mode){
-                    case MODE_ESSAY:
+                    case LISTENING_MODE_ESSAY:
                         
                         try {
                             player.putTitleNms("PREVIOUS MARK", 1000);
                             marksManager.getPrevious(true);  
                         } catch (Exception ex) {
                             player.putTitleNms("MARK ERROR", 1000);
-                            if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
+                            if (Definitions.DEBUG_MODE==true){
+                                this.setText(ex.getMessage());
+                            }
                             ex.printStackTrace();
                         }
                         break;
-                    case MODE_ANIMATION:
+                    case LISTENING_MODE_ANIMATION:
                         try {
                         
                             player.putTitleNms("PREVIOUS MARK", 1000);
@@ -175,7 +187,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                             }catch(Exception e){e.printStackTrace();}
                         } catch (Exception ex) {
                             player.putTitleNms("MARK ERROR", 1000);
-                            if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
+                            if (Definitions.DEBUG_MODE==true){
+                                this.setText(ex.getMessage());
+                            }
                             ex.printStackTrace();
                         }
                         break;
@@ -186,7 +200,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             //<editor-fold defaultstate="collapsed" desc=" 8 APPLY MARK/NEXT MODE REVELATION ">
             case '8':
                 switch(mode){
-                    case MODE_ESSAY:
+                    case LISTENING_MODE_ESSAY:
                         try {
                             player.putTitleNms("APPLIED MARK", 1000);
                             player.resetTranslation();
@@ -195,11 +209,13 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                             this.refreshScreen();
                         } catch (Exception ex) {
                             player.putTitleNms("MARK ERROR", 1000);
-                            if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
+                            if (Definitions.DEBUG_MODE==true){
+                                this.setText(ex.getMessage());
+                            }
                             ex.printStackTrace();
                         }
                         break;
-                    case MODE_ANIMATION:
+                    case LISTENING_MODE_ANIMATION:
                         this.tupleRevelator.nextMode();
                         player.putTitleNms("REV. ("+this.tupleRevelator.getCurrentModeName()+")", 1000);
                         break;
@@ -209,17 +225,19 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
             //<editor-fold defaultstate="collapsed" desc=" 9 NEXT ">
             case '9':
                 switch(mode){
-                    case MODE_ESSAY:     
+                    case LISTENING_MODE_ESSAY:
                         try {
                             player.putTitleNms("NEXT MARK", 1000);
                             marksManager.getNext(true);
                         } catch (Exception ex) {
                             player.putTitleNms("MARK ERROR", 1000);
-                            if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
+                            if (Definitions.DEBUG_MODE==true){
+                                this.setText(ex.getMessage());
+                            }
                             ex.printStackTrace();
                         }
                         break;
-                    case MODE_ANIMATION:
+                    case LISTENING_MODE_ANIMATION:
                         try {
                             player.putTitleNms("NEXT MARK", 1000);                    
                             Tuple next = marksManager.getNext(true);
@@ -228,7 +246,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                             }catch(Exception e){e.printStackTrace();}
                         } catch (Exception ex) {
                             player.putTitleNms("MARK ERROR", 1000);
-                            if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
+                            if (Definitions.DEBUG_MODE==true){
+                                this.setText(ex.getMessage());
+                            }
                             ex.printStackTrace();
                         }
                         break;
@@ -248,25 +268,29 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
 
     public String updateScreenAccordingToMode(boolean change_mode){
         if (change_mode){
-            mode = (mode + 1) % NUM_OF_MODES;
+            mode = (mode + 1) % LISTENING_NUM_OF_MODES;
         }
         switch(mode){
-            case MODE_ANIMATION:
+            case LISTENING_MODE_ANIMATION:
                 try {
                     lastTuple = marksManager.getCurrent();
                 } catch (Exception e) {
-                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    if (Definitions.DEBUG_MODE==true){
+                        this.setText(e.getMessage());
+                    }
                     e.printStackTrace();
                 }
                 break;
-            case MODE_ESSAY:
+            case LISTENING_MODE_ESSAY:
                 String applied="", coming="";
                 try{
                     applied = marksManager.getPrevious(false).getKey();
                     coming = marksManager.getCurrent().getKey();
                     //coming = marksManager.getNext(false).getKey(); 
                 }catch(Exception e){
-                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    if (Definitions.DEBUG_MODE==true){
+                        this.setText(e.getMessage());
+                    }
                     e.printStackTrace();
                 }
                 lastTuple = new Tuple(applied,coming,"");
@@ -277,14 +301,14 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
     }
     
     public String getModeName(int mode){
-        return modeNames[Math.abs(mode)%NUM_OF_MODES];
+        return modeNames[Math.abs(mode)%LISTENING_NUM_OF_MODES];
     }
     
     public void setValues(Tuple tuple) {
         String str="";
         this.lastTuple = tuple;
         String current = this.marksManager.getCurrentTupleIndex()+1 +"/"+ this.marksManager.getSize();
-        if (mode==MODE_ANIMATION){
+        if (mode==LISTENING_MODE_ANIMATION){
             str =   Word.BOLD_BLUE+"<"+getModeName(mode)+">\n" + 
                     Word.BOLD_BLUE+"Transcript("+current+") \n" + 
                     tuple.getKey() + 
@@ -292,14 +316,14 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     tuple.getValue() +
                     "\n"+Word.BOLD_BLUE+"Time \n" + 
                     tuple.getExtra();
-        }else if (mode==MODE_ESSAY){
+        }else if (mode==LISTENING_MODE_ESSAY){
             str =   Word.BOLD_BLUE+"<"+getModeName(mode)+">\n" +
                     Word.BOLD_BLUE+"Current "+Word.BOLD_BLUE+"(already "+Word.BOLD_BLUE+"applied)("+current+") \n" + 
                     tuple.getKey() + "\n" + 
                     Word.BOLD_BLUE+"Next "+Word.BOLD_BLUE+"(press "+Word.BOLD_BLUE+"when "+Word.BOLD_BLUE+"it's "+Word.BOLD_BLUE+"heard)("+current+") \n" + 
                     tuple.getValue()+ "\n" ;    
         }
-        this.player.setText(str);
+        this.setText(str);
     }
     
     
@@ -322,7 +346,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     player.putTitleNms("VALUE CHANGED", 1000);
                 } catch (Exception e) {
                     player.putTitleNms("ERROR CHANGING...", 1000);
-                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    if (Definitions.DEBUG_MODE==true){
+                        this.setText(e.getMessage());
+                    }
                     e.printStackTrace();
                 }
                 
@@ -335,7 +361,9 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
                     player.putTitleNms("KEY CHANGED", 1000);
                 } catch (Exception e) {
                     player.putTitleNms("ERROR CHANGING...", 1000);
-                    if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                    if (Definitions.DEBUG_MODE==true){
+                        this.setText(e.getMessage());
+                    }
                     e.printStackTrace();
                 }
                 
@@ -347,13 +375,13 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
         int current;
         Tuple t;
         current = ((Integer)obj).intValue();
-        if ((MediaServices.getMediaServices().isItPlaying()) && (this.mode==MODE_ANIMATION)){
+        if ((MediaServices.getMediaServices().isItPlaying()) && (this.mode==LISTENING_MODE_ANIMATION)){
             try{
                 t = this.marksManager.getMark(current);
                 this.player.resetTranslation();
                 this.tupleRevelator.setTuple(t);
             }catch(Exception e){
-                //if (Definitions.DEBUG_MODE==true){player.setText(e.getMessage());}
+                //if (Definitions.DEBUG_MODE==true){this.setText(e.getMessage());}
                 e.printStackTrace();
             }
         }   
@@ -393,6 +421,15 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
          
          "/0 . SAVE ALL MARKS (save all the marks into a file)"+ "\n";
          return marksKeys + animatedKeys;
+    }
+
+    private void setText(String t){
+        this.mainText = t;
+        this.player.setText(this, t);
+    }
+
+    public String getMainStringToPaint() {
+        return this.mainText;
     }
 
 }

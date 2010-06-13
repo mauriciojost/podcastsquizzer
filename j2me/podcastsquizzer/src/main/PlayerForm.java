@@ -209,9 +209,13 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         this.screenHandlersVector.trimToSize();
     }
 
-    private synchronized ScreenHandler getScreenHandlerAt(int i){
-        this.screenHandlersVector.trimToSize();
-        return (ScreenHandler) this.screenHandlersVector.elementAt(i);
+    private synchronized ScreenHandler getScreenHandlerAt(int i) throws Exception{
+        try{
+            this.screenHandlersVector.trimToSize();
+            return (ScreenHandler) this.screenHandlersVector.elementAt(i);
+        }catch(Exception e){
+            throw new Exception("The requested mode ("+i+") doesn't exist yet.");
+        }
     }
 
     private synchronized int getAmountOfScreenHandler(){
@@ -240,11 +244,13 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     
     public void buildHelpText(int i){
-        
-        String[] helpKeys = ((ScreenHandler)(this.getScreenHandlerAt(this.mode))).getKeysHelp();
-        helpText =            helpKeys[(i+0)%helpKeys.length] + " * ";
-        helpText = helpText + helpKeys[(i+1)%helpKeys.length] + " * ";
-        helpText = helpText + helpKeys[(i+2)%helpKeys.length];
+        try{
+            String[] helpKeys = ((ScreenHandler)(this.getScreenHandlerAt(this.mode))).getKeysHelp();
+            helpText =            helpKeys[(i+0)%helpKeys.length] + " * ";
+            helpText = helpText + helpKeys[(i+1)%helpKeys.length] + " * ";
+            helpText = helpText + helpKeys[(i+2)%helpKeys.length];
+        }catch(Exception e){
+        }
         this.repaintIfNecessary();
     }
     
@@ -253,7 +259,11 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         if (titleTimeCounter>0) { /* El mensaje debe ser mostrado aún. */
             titleText = ">" + this.messageTitle;
         } else {
-            titleText = ((ScreenHandler)(this.getScreenHandlerAt(this.mode))).getName()+ " " + this.timeText;
+            try{
+                titleText = ((ScreenHandler)(this.getScreenHandlerAt(this.mode))).getName()+ " " + this.timeText;
+            }catch(Exception e){
+                titleText = "PodcastsQuizzer";
+            }
         }
         this.repaintIfNecessary();
     }
@@ -270,9 +280,12 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     protected void keyPressed(int keyCode) {
         agileKey = false;
         boolean catched=false;
-        
-        catched = ((ScreenHandler)this.getScreenHandlerAt(this.mode)).keyPressed(keyCode);
-        
+
+        try{
+            catched = ((ScreenHandler)this.getScreenHandlerAt(this.mode)).keyPressed(keyCode);
+        }catch(Exception e){
+            catched = false;
+        }
         if (catched==false){
             this.modeDefaultKeyPressed(keyCode);
         }
@@ -284,6 +297,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
 
     private String changeMode(boolean initialize) {
+        int old_mode = mode;
         if (this.getAmountOfScreenHandler()>0){
             if (initialize) {
                 this.mode = 0;
@@ -292,12 +306,21 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
             }
         
             this.resetTranslation();
-            ScreenHandler currentSH = ((ScreenHandler)this.getScreenHandlerAt(this.mode));
-            currentSH.refreshScreen();
-            return currentSH.getName();
+            try{
+                ScreenHandler currentSH = getCurrentScreenHandler();
+                currentSH.refreshScreen();
+                return currentSH.getName();
+            }catch(Exception e){
+                mode = old_mode;
+                return "This mode doesn't exist.";
+            }
         }else{
-            return "No screen handler.";
+            return "There is no screen handler.";
         }
+    }
+
+    private ScreenHandler getCurrentScreenHandler() throws Exception{
+        return ((ScreenHandler)this.getScreenHandlerAt(this.mode));
     }
 
     //<editor-fold defaultstate="collapsed" desc=" Default Key Handling ">
@@ -382,7 +405,11 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         current_sec =  (pl.getMediaTime()/MediaServices.TIME_FACTOR);
         duration_sec = (pl.getDuration() /MediaServices.TIME_FACTOR);
         this.setTimeText(current_sec, duration_sec);
-        ((ScreenHandler)this.getScreenHandlerAt(this.mode)).playerUpdate(pl, str, new Integer((int)current_sec));
+        try{
+            ((ScreenHandler)this.getScreenHandlerAt(this.mode)).playerUpdate(pl, str, new Integer((int)current_sec));
+        }catch(Exception e){
+
+        }
         if ((duration_sec>0) && (current_sec >= (duration_sec -1)) && (pl.getState()==Player.STARTED)){
             this.requestActionForEndOfTheCurrentSong();
         }
@@ -393,9 +420,18 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         buildTitle();
     }
       
-    public synchronized void setText(String text){
-        this.mainTextPainter.setText(text);
-        this.repaintIfNecessary();
+    public synchronized void setText(ScreenHandler sh, String text){
+        ScreenHandler csh;
+
+        try{
+            csh = getCurrentScreenHandler();
+            if (csh == sh){
+                this.mainTextPainter.setText(text);
+            }
+            this.repaintIfNecessary();
+        }catch(Exception e){
+        }
+
     }
     
     private void goPreviousForm(){
@@ -416,15 +452,16 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
     
     public synchronized void repaintIfNecessary(){
+        if (this.isShown()){
+            Graphics g = lastScreen.getGraphics();
+            titleTextPainter.paintText(g, this.titleText);
+            mainTextPainter.setTranslation(yTranslation);
+            mainTextPainter.paintTextComplex(g, true, this.backgroundImage);
+            helpTextPainter.paintText(g, this.helpText);
 
-        Graphics g = lastScreen.getGraphics();
-        titleTextPainter.paintText(g, this.titleText);
-        mainTextPainter.setTranslation(yTranslation);
-        mainTextPainter.paintTextComplex(g, true, this.backgroundImage);
-        helpTextPainter.paintText(g, this.helpText);
-        
 
-        this.repaint();
+            this.repaint();
+        }
     }
 
 

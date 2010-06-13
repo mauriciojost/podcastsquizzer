@@ -10,6 +10,7 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
     private Key2Text key2text;
     private String expressionBeingSearched = "";
     private String meaningOfTheExpression="";
+    private String mainText = "";
     
     public DictionaryScreenHandler(Playerable player){
         this.player = player;
@@ -44,9 +45,9 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
 
     public void refreshScreen() {   
         try {
-            player.setText(Word.BOLD_BLUE+ "Word: " + Word.BOLD_BLUE + expressionBeingSearched +  " \n" + highlightWord(meaningOfTheExpression, this.expressionBeingSearched));
+            this.setText(Word.BOLD_BLUE+ "Word: " + Word.BOLD_BLUE + expressionBeingSearched +  " \n" + highlightWord(meaningOfTheExpression, this.expressionBeingSearched));
         } catch (Exception ex) {
-            if (Definitions.DEBUG_MODE==true){player.setText(ex.getMessage());}
+            if (Definitions.DEBUG_MODE==true){this.setText(ex.getMessage());}
             ex.printStackTrace();
         }
     }
@@ -79,6 +80,14 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
         }catch(Exception e){
             return base_text;
         }
+    }
+
+    private void setText(String t){
+        this.mainText = t;
+        this.player.setText(this, t);
+    }
+    public String getMainStringToPaint() {
+        return this.mainText;
     }
     
 }
