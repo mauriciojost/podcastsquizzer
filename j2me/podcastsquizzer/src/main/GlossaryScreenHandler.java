@@ -36,13 +36,13 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
         this.setMainElement(new Vector());
         
         try {
-            backgroundImage = Image.createImage("/help_listening.png");
+            backgroundImage = Image.createImage("/help_glossary.png");
         } catch (Exception ex) {
             player.putTitleNms("ERROR IMAGE...", 1000);
             if (Definitions.DEBUG_MODE==true){this.setText(ex.getMessage());}
             ex.printStackTrace();
         }
-        player.setBackgroundImage(backgroundImage);
+        
         this.refreshScreen();
     }
     
@@ -311,10 +311,15 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
 
     private void setText(String t){
         this.mainText = t;
-        this.player.setText(this, t);
+        this.player.notifyChangeInScreenHandlerText(this);
     }
+
     public String getMainStringToPaint() {
         return this.mainText;
+    }
+
+    public Image getBackgroundImage() {
+        return this.backgroundImage;
     }
 
     

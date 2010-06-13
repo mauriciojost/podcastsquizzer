@@ -2,6 +2,7 @@ package main;
 
 import canvaspackage.Key2Text;
 import canvaspackage.Word;
+import javax.microedition.lcdui.Image;
 import javax.microedition.media.Player;
 
 public class DictionaryScreenHandler implements ScreenHandler, DictionaryListener{
@@ -11,11 +12,15 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
     private String expressionBeingSearched = "";
     private String meaningOfTheExpression="";
     private String mainText = "";
+    private Image backgroundImage;
     
     public DictionaryScreenHandler(Playerable player){
         this.player = player;
         key2text = new Key2Text();
         dictionary = new Dictionary(this);
+
+        backgroundImage = null;
+
     }
     
     public void setMainElement(Object main_element) throws Exception{
@@ -30,12 +35,15 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
         meaningOfTheExpression = Word.NORMAL_RED+"<searching>";
         this.refreshScreen();
 
-        if (keyCode=='*'){
-            dictionary.findMeaning(expressionBeingSearched);
-        }else{
-            dictionary.findMeaning(expressionBeingSearched=key2text.newKey(keyCode).toUpperCase());
+        switch(keyCode){
+            case '*':
+                dictionary.findMeaning(expressionBeingSearched);
+                break;
+            default:
+                dictionary.findMeaning(expressionBeingSearched=key2text.newKey(keyCode).toUpperCase());
         }
-        return ((keyCode>='0')&&(keyCode<='9'));
+        
+        return true/*((keyCode>='0')&&(keyCode<='9'))*/;
     }
 
     public void expressionFound(String meaning) {
@@ -84,10 +92,14 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
 
     private void setText(String t){
         this.mainText = t;
-        this.player.setText(this, t);
+        this.player.notifyChangeInScreenHandlerText(this);
     }
     public String getMainStringToPaint() {
         return this.mainText;
+    }
+
+    public Image getBackgroundImage() {
+        return this.backgroundImage;
     }
     
 }

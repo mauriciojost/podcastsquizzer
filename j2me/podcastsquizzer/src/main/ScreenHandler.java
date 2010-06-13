@@ -1,5 +1,6 @@
 package main;
 
+import javax.microedition.lcdui.Image;
 import javax.microedition.media.PlayerListener;
 
 public interface ScreenHandler extends PlayerListener{
@@ -10,4 +11,5 @@ public interface ScreenHandler extends PlayerListener{
     public void refreshScreen();
     public String getHelp();
     public String[] getKeysHelp();
+    public Image getBackgroundImage();
 }

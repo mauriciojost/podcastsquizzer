@@ -286,10 +286,23 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         }catch(Exception e){
             catched = false;
         }
+        
         if (catched==false){
             this.modeDefaultKeyPressed(keyCode);
         }
-        
+
+        switch(keyCode){
+            case PlayerForm.KEY_MISC_LEFT:
+                String mn = this.changeMode(false);
+                this.putTitleNms("MODE " + mn, 1000);
+                this.buildTitle();
+                this.repaintIfNecessary();
+                break;
+            case PlayerForm.KEY_MISC_RIGHT:
+                goPreviousForm();
+                break;
+        }
+
         if (agileKey==false){
             this.buildTitle();
             this.repaintIfNecessary();
@@ -308,6 +321,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
             this.resetTranslation();
             try{
                 ScreenHandler currentSH = getCurrentScreenHandler();
+                this.setBackgroundImage(currentSH.getBackgroundImage());
                 currentSH.refreshScreen();
                 return currentSH.getName();
             }catch(Exception e){
@@ -328,15 +342,6 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
 
         switch(keyCode){
 
-            case PlayerForm.KEY_MISC_LEFT:
-                String mn = this.changeMode(false);
-                this.putTitleNms("MODE " + mn, 1000);
-                this.buildTitle();
-                this.repaintIfNecessary();
-                break;
-            case PlayerForm.KEY_MISC_RIGHT:
-                goPreviousForm();
-                break;
             default:
                 
                 switch(this.getGameAction(keyCode)){
@@ -420,13 +425,13 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
         buildTitle();
     }
       
-    public synchronized void setText(ScreenHandler sh, String text){
+    public synchronized void notifyChangeInScreenHandlerText(ScreenHandler sh){
         ScreenHandler csh;
 
         try{
             csh = getCurrentScreenHandler();
             if (csh == sh){
-                this.mainTextPainter.setText(text);
+                this.mainTextPainter.setText(csh.getMainStringToPaint());
             }
             this.repaintIfNecessary();
         }catch(Exception e){
@@ -484,8 +489,12 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
     }
 
     public void setBackgroundImage(Image img) {
-        this.backgroundImage = ImageServices.scale(img, mainTextPainter.getBounds().getWidth(), mainTextPainter.getBounds().getHeigth());
-        this.repaintIfNecessary();
+        if (img!=null){
+            this.backgroundImage = ImageServices.nothing(img, mainTextPainter.getBounds().getWidth(), mainTextPainter.getBounds().getHeigth());
+            this.repaintIfNecessary();
+        }else{
+            this.backgroundImage = null;
+        }
     }
 }
 

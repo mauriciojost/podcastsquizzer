@@ -4,6 +4,7 @@ import canvaspackage.Word;
 import miscellaneouspackage.Tuple;
 import java.util.Vector;
 import javax.microedition.lcdui.Display;
+import javax.microedition.lcdui.Image;
 import javax.microedition.media.Player;
 import mediaservicespackage.*;
 import persistencepackage.*;
@@ -27,6 +28,7 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
     private MarksManager marksManager;
     private int mode = LISTENING_MODE_ANIMATION;
     private String mainText = "";
+    private Image backgroundImage;
     
     /*
      * Ir para adelante o para atrás en los marks también cambia el tema. 
@@ -41,9 +43,19 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
         
         this.textBoxForm = new TextBoxForm(display, player.getDisplayable(), this);
         this.tupleRevelator = new TupleRevelator(this);
+        try {
+            backgroundImage = Image.createImage("/help_listening.png");
+        } catch (Exception ex) {
+            player.putTitleNms("ERROR IMAGE...", 1000);
+            if (Definitions.DEBUG_MODE==true){this.setText(ex.getMessage());}
+            ex.printStackTrace();
+        }
+
         this.setMainElement(new Vector());
         this.refreshScreen();
         //public TextBoxForm(Display display, Displayable previous, TextBoxFormReadyListener listener){
+
+
     }
     
     public String[] getKeysHelp() {
@@ -425,11 +437,15 @@ public class ListeningScreenHandler implements ScreenHandler, TuplesShowerInterf
 
     private void setText(String t){
         this.mainText = t;
-        this.player.setText(this, t);
+        this.player.notifyChangeInScreenHandlerText(this);
     }
 
     public String getMainStringToPaint() {
         return this.mainText;
+    }
+
+    public Image getBackgroundImage() {
+        return this.backgroundImage;
     }
 
 }
