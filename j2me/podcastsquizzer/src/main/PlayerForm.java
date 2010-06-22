@@ -490,7 +490,7 @@ public class PlayerForm extends Canvas implements PlayerListener, Playerable {
 
     public void setBackgroundImage(Image img) {
         if (img!=null){
-            this.backgroundImage = ImageServices.nothing(img, mainTextPainter.getBounds().getWidth(), mainTextPainter.getBounds().getHeigth());
+            this.backgroundImage = ImageServices.scale(img, mainTextPainter.getBounds().getWidth(), mainTextPainter.getBounds().getHeigth());
             this.repaintIfNecessary();
         }else{
             this.backgroundImage = null;

@@ -23,7 +23,6 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
     private TextBoxForm textBoxForm;
     private int cuentaTerminos = 0;
     private Sorter sorter;
-    private Image backgroundImage = null;
     private String mainText = "";
     
     public GlossaryScreenHandler (Display display, Playerable player){
@@ -34,14 +33,6 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
         this.textBoxForm = new TextBoxForm(display, player.getDisplayable(), this);
         sorter = new Sorter(new TupleAsStringsComparator(Tuple.INDEX_KEY));
         this.setMainElement(new Vector());
-        
-        try {
-            backgroundImage = Image.createImage("/help_glossary.png");
-        } catch (Exception ex) {
-            player.putTitleNms("ERROR IMAGE...", 1000);
-            if (Definitions.DEBUG_MODE==true){this.setText(ex.getMessage());}
-            ex.printStackTrace();
-        }
         
         this.refreshScreen();
     }
@@ -319,7 +310,15 @@ public class GlossaryScreenHandler implements ScreenHandler, TuplesShowerInterfa
     }
 
     public Image getBackgroundImage() {
-        return this.backgroundImage;
+        Image backgroundImage=null;
+        try {
+            backgroundImage = Image.createImage("/help_glossary.png");
+        } catch (Exception ex) {
+            player.putTitleNms("ERROR IMAGE...", 1000);
+            if (Definitions.DEBUG_MODE==true){this.setText(ex.getMessage());}
+            ex.printStackTrace();
+        }
+        return backgroundImage;
     }
 
     

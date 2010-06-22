@@ -12,14 +12,11 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
     private String expressionBeingSearched = "";
     private String meaningOfTheExpression="";
     private String mainText = "";
-    private Image backgroundImage;
     
     public DictionaryScreenHandler(Playerable player){
         this.player = player;
         key2text = new Key2Text();
         dictionary = new Dictionary(this);
-
-        backgroundImage = null;
 
     }
     
@@ -99,7 +96,7 @@ public class DictionaryScreenHandler implements ScreenHandler, DictionaryListene
     }
 
     public Image getBackgroundImage() {
-        return this.backgroundImage;
+        return null;
     }
     
 }
